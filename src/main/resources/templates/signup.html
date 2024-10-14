@@ -436,7 +436,7 @@
         <nav class="nav" id="mainNav">
             <a th:href="@{/home}">홈</a>
             <a th:href="@{/intro}">소개</a>
-            <a th:href="@{contact}">문의</a>
+            <a th:href="@{/contact}">문의</a>
             <!-- 드롭다운 메뉴 추가 -->
             <div class="dropdown">
                 <button id="userMenuButton">▼</button>
@@ -456,10 +456,10 @@
 <div class="main-content">
     <div class="subtitle">
         <h2>회원가입</h2>
-        <img src="main_logo.png" alt="Main Logo">
+        <img th:src="@{/images/main_logo.png}" alt="Main Logo">
         <p class="description">필요한 정보를 입력해 주세요.</p>
     </div>
-    <form id="registerForm" action="/signup/insert" method="post" onsubmit="return handleRegister(event)">
+    <form id="registerForm">
         <div class="user-details">
             <!-- 입력 필드: 이름 -->
             <div class="form-group">
@@ -471,17 +471,20 @@
                 <label for="nickname">닉네임</label>
                 <input type="text" id="nickname" name="nickname" placeholder="닉네임을 입력하세요." required>
                 <button type="button" class="check-button" onclick="checkNickname()">중복 확인</button>
+                <small id="nicknameMessage" class="error"></small>
             </div>
             <!-- 입력 필드: 이메일 -->
             <div class="form-group">
                 <label for="email">이메일</label>
                 <input type="email" id="email" name="email" placeholder="이메일을 입력하세요." required>
                 <button type="button" class="check-button" onclick="checkEmail()">중복 확인</button>
+                <small id="emailMessage" class="error"></small>
             </div>
             <!-- 입력 필드: 연락처 -->
             <div class="form-group">
                 <label for="contact">연락처</label>
-                <input type="tel" id="contact" name="contact" placeholder="연락처를 입력하세요." required pattern="^[0-9\-+() ]+$" title="유효한 연락처를 입력해 주세요.">
+                <input type="tel" id="contact" name="phone_number" placeholder="연락처를 입력하세요." required pattern="^[0-9()+\- ]+$" title="유효한 연락처를 입력해 주세요.">
+                <small id="contactMessage" class="error"></small> <!-- 연락처 메시지 추가 (선택 사항) -->
             </div>
             <!-- 입력 필드: 비밀번호 -->
             <div class="form-group">
@@ -492,6 +495,7 @@
             <div class="form-group">
                 <label for="confirm_password">비밀번호 확인</label>
                 <input type="password" id="confirm_password" name="confirm_password" placeholder="다시 한번 비밀번호를 입력하세요." required>
+                <small id="passwordMessage" class="error"></small>
             </div>
         </div>
         <!-- 제출 버튼 -->
@@ -499,6 +503,7 @@
             <input type="submit" value="가입하기">
             <button type="button" class="cancel-button" onclick="resetForm()">취소</button>
         </div>
+        <div id="message"></div>
     </form>
 </div>
 
@@ -534,13 +539,13 @@
             <h4>소셜 미디어</h4>
             <div class="social-icons">
                 <a href="https://www.facebook.com/yourprofile" aria-label="페이스북">
-                    <img src="facebook_icon.png" alt="Facebook">
+                    <img th:src="@{/images/facebook_icon.png}" alt="Facebook">
                 </a>
                 <a href="https://www.twitter.com/yourprofile" aria-label="트위터">
-                    <img src="twitter_icon.png" alt="Twitter">
+                    <img th:src="@{/images/twitter_icon.png}" alt="Twitter">
                 </a>
                 <a href="https://www.instagram.com/yourprofile" aria-label="인스타그램">
-                    <img src="instagram_icon.png" alt="Instagram">
+                    <img th:src="@{/images/instagram_icon.png}" alt="Instagram">
                 </a>
             </div>
         </div>
@@ -552,43 +557,229 @@
 </footer>
 
 <!-- 스크립트 -->
-<script th:src="@{/js/signup.js}">
-    // 폼 검증 함수
-        function handleRegister(event) {
-            const password = document.getElementById('password').value.trim();
-            const confirmPassword = document.getElementById('confirm_password').value.trim();
+<script>
+    let isNicknameChecked = false;
+    let isEmailChecked = false;
 
-            if (password !== confirmPassword) {
-                alert('비밀번호가 일치하지 않습니다.');
-                event.preventDefault();
-                return false;
+    async function checkNickname() {
+        const nickname = document.getElementById('nickname').value.trim();
+        const message = document.getElementById('nicknameMessage');
+
+        if (nickname === '') {
+            if (message) {
+                message.textContent = '닉네임을 입력해 주세요.';
+                message.style.color = 'red';
             }
-            return true;
+            isNicknameChecked = false;
+            return;
         }
 
-        // 폼 리셋 함수
-        function resetForm() {
-            document.getElementById('registerForm').reset();
-        }
+        try {
+            const response = await fetch('/api/signup/check-nickname', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: new URLSearchParams({ nickname })
+            });
 
-        // 닉네임 중복 체크 함수
-        function checkNickname() {
-            const nickname = document.getElementById('nickname').value.trim();
-            if (nickname === '') {
-                alert('닉네임을 입력해 주세요.');
-                return;
-            }
-            alert('닉네임 중복 확인 요청이 완료되었습니다!');
-        }
+            const isAvailable = await response.json();
 
-        function checkEmail() {
-            const email = document.getElementById('email').value.trim();
-            if (email === '') {
-                alert('이메일을 입력해 주세요.');
-                return;
+            if (message) {
+                if (isAvailable) {
+                    message.textContent = '사용 가능한 닉네임입니다.';
+                    message.style.color = 'green';
+                    isNicknameChecked = true;
+                } else {
+                    message.textContent = '이미 사용 중인 닉네임입니다.';
+                    message.style.color = 'red';
+                    isNicknameChecked = false;
+                }
             }
-            alert('이메일 중복 확인 요청이 완료되었습니다!');
+
+        } catch (error) {
+            console.error('Error:', error);
+            if (message) {
+                message.textContent = '닉네임 중복 확인 중 오류가 발생했습니다.';
+                message.style.color = 'red';
+            }
+            isNicknameChecked = false;
+        }
     }
+
+    async function checkEmail() {
+        const email = document.getElementById('email').value.trim();
+        const message = document.getElementById('emailMessage');
+
+        if (email === '') {
+            if (message) {
+                message.textContent = '이메일을 입력해 주세요.';
+                message.style.color = 'red';
+            }
+            isEmailChecked = false;
+            return;
+        }
+
+        try {
+            const response = await fetch('/api/signup/check-email', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: new URLSearchParams({ email })
+            });
+
+            const isAvailable = await response.json();
+
+            if (message) {
+                if (isAvailable) {
+                    message.textContent = '사용 가능한 이메일입니다.';
+                    message.style.color = 'green';
+                    isEmailChecked = true;
+                } else {
+                    message.textContent = '이미 사용 중인 이메일입니다.';
+                    message.style.color = 'red';
+                    isEmailChecked = false;
+                }
+            }
+
+        } catch (error) {
+            console.error('Error:', error);
+            if (message) {
+                message.textContent = '이메일 중복 확인 중 오류가 발생했습니다.';
+                message.style.color = 'red';
+            }
+            isEmailChecked = false;
+        }
+    }
+
+    async function handleRegister(event) {
+        event.preventDefault();
+
+        const name = document.getElementById('name').value.trim();
+        const nickname = document.getElementById('nickname').value.trim();
+        const email = document.getElementById('email').value.trim();
+        const phone_number = document.getElementById('contact').value.trim();
+        const password = document.getElementById('password').value.trim();
+        const confirmPassword = document.getElementById('confirm_password').value.trim();
+
+        let valid = true;
+
+        // 초기화
+        document.getElementById('nicknameMessage').textContent = '';
+        document.getElementById('emailMessage').textContent = '';
+        document.getElementById('passwordMessage').textContent = '';
+        document.getElementById('message').textContent = '';
+
+        // 닉네임 및 이메일 중복 확인 여부 검증
+        if (!isNicknameChecked) {
+            const nicknameMsg = document.getElementById('nicknameMessage');
+            if (nicknameMsg) {
+                nicknameMsg.textContent = '닉네임 중복 확인을 해주세요.';
+                nicknameMsg.style.color = 'red';
+            }
+            valid = false;
+        }
+
+        if (!isEmailChecked) {
+            const emailMsg = document.getElementById('emailMessage');
+            if (emailMsg) {
+                emailMsg.textContent = '이메일 중복 확인을 해주세요.';
+                emailMsg.style.color = 'red';
+            }
+            valid = false;
+        }
+
+        // 비밀번호 일치 여부 확인
+        if (password !== confirmPassword) {
+            const passwordMsg = document.getElementById('passwordMessage');
+            if (passwordMsg) {
+                passwordMsg.textContent = '비밀번호가 일치하지 않습니다.';
+                passwordMsg.style.color = 'red';
+            }
+            valid = false;
+        }
+
+        // 비밀번호 길이 확인
+        if (password.length < 4) {
+            const passwordMsg = document.getElementById('passwordMessage');
+            if (passwordMsg) {
+                passwordMsg.textContent = '비밀번호는 최소 4자 이상이어야 합니다.';
+                passwordMsg.style.color = 'red';
+            }
+            valid = false;
+        }
+
+        if (!valid) {
+            return; // 폼 제출 중단
+        }
+
+        // 회원가입 데이터 전송
+        try {
+            const response = await fetch('/api/signup', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ name, nickname, email, phone_number, password })
+            });
+
+            const result = await response.text();
+            const status = response.status;
+
+            const messageDiv = document.getElementById('message');
+            if (messageDiv) {
+                if (status === 200) {
+                    // 회원가입 성공 시 alert 표시
+                    alert("회원가입에 성공하셨습니다.");
+
+                    // 기존 메시지 표시 (선택 사항)
+                    messageDiv.textContent = result;
+                    messageDiv.style.color = 'green';
+
+                    // 폼 리셋
+                    resetForm();
+
+                    // 성공 시 로그인 페이지로 리다이렉트
+                    window.location.href = '/login';
+                } else {
+                    messageDiv.textContent = result;
+                    messageDiv.style.color = 'red';
+                }
+            }
+
+        } catch (error) {
+            console.error('Error:', error);
+            const messageDiv = document.getElementById('message');
+            if (messageDiv) {
+                messageDiv.textContent = '회원가입 중 오류가 발생했습니다.';
+                messageDiv.style.color = 'red';
+            }
+        }
+    }
+
+    // 폼 리셋 함수
+    function resetForm() {
+        document.getElementById('registerForm').reset();
+        isNicknameChecked = false;
+        isEmailChecked = false;
+        const nicknameMsg = document.getElementById('nicknameMessage');
+        if (nicknameMsg) nicknameMsg.textContent = '';
+        const emailMsg = document.getElementById('emailMessage');
+        if (emailMsg) emailMsg.textContent = '';
+        const passwordMsg = document.getElementById('passwordMessage');
+        if (passwordMsg) passwordMsg.textContent = '';
+        const messageDiv = document.getElementById('message');
+        if (messageDiv) messageDiv.textContent = '';
+    }
+
+    // 이벤트 리스너 추가
+    document.addEventListener('DOMContentLoaded', () => {
+        const registerForm = document.getElementById('registerForm');
+        if (registerForm) {
+            registerForm.addEventListener('submit', handleRegister);
+        }
+    });
 </script>
 </body>
 </html>
