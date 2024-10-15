@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>로그인 | 먹코살코</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- 파비콘 설정 -->
+    <link rel="shortcut icon" th:href="@{/images/mini_logo.jpg}">
+
+    <!-- 메인 스타일시트 -->
+    <style>
+        /* 기본 리셋 및 스타일 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "맑은 고딕", sans-serif;
+            background-color: #f9f9f9;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        /* 헤더 및 내비게이션 바 전체 너비 설정 */
+        .header {
+            width: 100%;
+            background-color: #fff; /* 배경색 */
+            border-bottom: 2px solid #FF885B; /* 테두리 추가 및 색상 변경 */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* 헤더에 그림자 추가 */
+            /* 고정 헤더 position: fixed;  */
+            top: 0;
+            left: 0;
+            z-index: 600;
+        }
+
+        /* 컨테이너 스타일 */
+        .container {
+            max-width: 1200px;
+            margin: 80px auto 0 auto;
+            padding: 20px;
+        }
+
+        /* 헤더 내부 컨텐츠 정렬 */
+        .header .container-inner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px;
+        }
+
+        /* 로고 스타일 */
+        .header .logo {
+            display: flex;
+            align-items: center;
+            margin-left: 30px;
+        }
+
+        .header .logo img {
+            width: 50px;
+            height: auto;
+            margin-right: 10px;
+        }
+
+        .header .logo h1 {
+            font-size: 24px;
+            color: #FF885B;
+        }
+
+        /* 내비게이션 스타일 */
+        .nav {
+            display: flex;
+            gap: 25px;
+            position: relative;
+            align-items: center;
+            margin-right: 30px;
+        }
+
+        .nav a {
+            text-decoration: none;
+            color: #333;
+            font-weight: bold;
+            transition: color 0.5s;
+            padding: 8px 12px;
+        }
+
+        .nav a:hover {
+            color: #FF885B;
+        }
+
+        /* 드롭다운 메뉴 스타일 */
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            color: #333;
+            font-weight: bold;
+        }
+
+        .dropdown button:hover {
+            color: #FF885B;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            right: 0;
+            background-color: #fff;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px rgba(0,0,0,0.2);
+            border: 1px solid #ddd;
+            z-index: 1;
+            border-radius: 5px;
+        }
+
+        .dropdown-content a {
+            color: #333;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            transition: background-color 0.3s;
+        }
+
+        .dropdown-content a:hover {
+            background-color: #f1f1f1;
+            color: #FF885B;
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        /* 메인 콘텐츠 스타일 */
+        .main-content {
+            width: 800px;
+            margin: 75px auto; /* 상단 여백 추가 및 가운데 정렬 */
+            background-color: #fff;
+            padding: 30px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            margin-bottom: 100px;
+        }
+
+        .main-content h2 {
+            font-size: 28px;
+            color: #FF885B;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .main-content img {
+            display: block;
+            margin: 0 auto 20px auto; /* 가운데 정렬 및 하단 여백 추가 */
+            width: 150px; /* 원하는 크기로 조정 */
+            height: auto;
+        }
+
+        .description {
+            text-align: center;
+            font-size: 15px;
+            color: #666;
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+
+        /* 폼 요소 스타일 */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #333;
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="password"],
+        .form-group input[type="email"] {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1.5px solid #FF885B;
+            border-radius: 5px;
+            font-size: 16px;
+            resize: none;
+            box-sizing: border-box;
+            font-family: "맑은 고딕", sans-serif;
+        }
+
+        /* 플레이스홀더 스타일 */
+        input::placeholder {
+            white-space: pre-line;
+            color: #999;
+        }
+
+        /* 버튼 컨테이너 스타일 */
+        .button-container {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        /* 버튼 스타일 */
+        .button-container input[type="submit"],
+        .button-container .cancel-button {
+            background-color: #FF885B;
+            color: #fff;
+            border: none;
+            padding: 12px 30px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin: 0 10px;
+        }
+
+        /* 취소 버튼 별도 스타일 */
+        .button-container .cancel-button {
+            background-color: #ccc;
+            color: #333;
+        }
+
+        /* 버튼 호버 효과 */
+        .button-container input[type="submit"]:hover {
+            background-color: #e07a4d;
+        }
+
+        .button-container .cancel-button:hover {
+            background-color: #999;
+        }
+
+        /* 폼 하단 추가 링크 스타일 */
+        .form-footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .form-footer a {
+            color: #FF885B;
+            text-decoration: none;
+            margin: 0 10px;
+            transition: color 0.3s;
+        }
+
+        .form-footer a:hover {
+            color: #e07a4d;
+        }
+
+        /* 푸터 스타일 */
+        footer {
+            background-color: #FF885B;
+            color: #fff;
+            padding: 20px 10px;
+            margin-top: 40px;
+        }
+
+        .footer-container {
+            max-width: 1500px;
+            height: 80%;
+            width: 100%; /* 전체 너비 */
+            margin: 0 auto;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 100px;
+            padding: 10px 0px;
+        }
+
+        .footer-section {
+            flex: 1 1 200px;
+        }
+
+        .footer-section h4 {
+            margin-bottom: 15px;
+            font-size: 18px;
+            border-bottom: 2px solid #fff;
+            display: inline-block;
+            padding-bottom: 5px;
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section ul li {
+            margin-bottom: 10px;
+        }
+
+        .footer-section ul li a {
+            color: #fff;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-section ul li a:hover {
+            color: #e07a4d;
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .social-icons a img {
+            width: 24px;
+            height: 24px;
+            filter: invert(100%);
+            transition: filter 0.3s;
+        }
+
+        .social-icons a:hover img {
+            filter: invert(75%) sepia(100%) saturate(500%) hue-rotate(300deg);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            font-size: 14px;
+            border-top: 1px solid rgba(255, 255, 255, 0.3);
+            padding-top: 10px;
+        }
+
+
+        /* 반응형 디자인 */
+        @media (max-width: 768px) {
+            .header .container-inner {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .nav {
+                flex-direction: column;
+                gap: 10px;
+                margin-top: 10px;
+            }
+
+            .footer-container {
+                flex-direction: column;
+                align-items: center;
+                padding: 0 10px; /* 좌우 padding 축소 */
+            }
+
+            .footer-section {
+                flex: 1 1 100%;
+                text-align: center;
+            }
+
+            .social-icons {
+                justify-content: center;
+            }
+
+            .main-content {
+                width: 90%;
+                padding: 20px;
+            }
+
+            .main-content h2 {
+                font-size: 24px;
+            }
+
+            .button-container input[type="submit"],
+            .button-container .cancel-button {
+                width: 100%;
+                padding: 10px 0;
+                font-size: 14px;
+                margin: 10px 0;
+            }
+
+            .footer-section {
+                text-align: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header .logo h1 {
+                font-size: 20px;
+            }
+
+            .nav a {
+                font-size: 14px;
+            }
+
+            .button-container input[type="submit"],
+            .button-container .cancel-button {
+                width: 100%;
+                padding: 10px 0;
+                font-size: 14px;
+                margin: 10px 0;
+            }
+
+            .footer-section {
+                text-align: center;
+            }
+        }
+            /* 오류 메시지 스타일 */
+            .error-message {
+                color: red;
+                text-align: center;
+                margin-bottom: 20px;
+            }
+
+    </style>
+</head>
+<body>
+<!-- 헤더: 로고와 네비게이션 -->
+<div class="header">
+    <div class="container-inner">
+        <div class="logo">
+            <img th:src="@{/images/main_logo.png}" alt="Main Logo">
+            <h1>먹코살코</h1>
+        </div>
+        <nav class="nav" id="mainNav">
+            <a th:href="@{/home}">홈</a>
+            <a th:href="@{/intro}">소개</a>
+            <a th:href="@{/contact}">문의</a>
+            <!-- 드롭다운 메뉴 추가 -->
+            <div class="dropdown">
+                <button id="userMenuButton">▼</button>
+                <div class="dropdown-content" id="userMenu">
+                    <!-- 로그인 전 메뉴 -->
+                    <a th:href="@{/login}" id="loginLink">로그인</a>
+                    <!-- 로그인 후 메뉴 (숨김 상태) -->
+                    <a th:href="@{/myinfo}" id="profileLink" style="display: none;">내 정보 페이지</a>
+                    <a th:href="@{/logout}" id="logoutLink" style="display: none;">로그아웃</a>
+                </div>
+            </div>
+        </nav>
+    </div>
+</div>
+
+<!-- 메인 콘텐츠: 로그인 폼 -->
+<div class="main-content">
+    <div class="subtitle">
+        <h2>로그인</h2>
+        <img th:src="@{/images/main_logo.png}" alt="Main Logo">
+        <p class="description">로그인 정보를 입력해 주세요.</p>
+    </div>
+
+    <form id="loginForm" th:action="@{/login}" method="post" th:object="${loginDTO}" onsubmit="return handleLogin(event)">
+        <div class="form-group">
+            <label for="userid">아이디 (이메일)</label>
+            <input type="email" id="userid" name="email" placeholder="이메일을 입력해 주세요. Ex) example@domain.com" th:field="*{email}" required>
+        </div>
+        <div class="form-group">
+            <label for="userpw">비밀번호</label>
+            <input type="password" id="userpw" name="password" placeholder="비밀번호를 입력해 주세요." th:field="*{password}" required>
+        </div>
+
+        <!-- 오류 메시지 표시 -->
+        <div th:if="${errorMessage}" class="error-message">
+            <p th:text="${errorMessage}"></p>
+            <script th:inline="javascript">
+                /*<![CDATA[*/
+                alert([[${errorMessage}]]);
+                /*]]>*/
+            </script>
+        </div>
+
+        <div class="button-container">
+            <input type="submit" value="로그인">
+            <button type="button" class="cancel-button" onclick="resetForm()">취소</button>
+        </div>
+
+        <!-- 버튼 아래에 추가된 링크 -->
+        <p class="form-footer">
+            로그인에 문제가 있나요?<br>
+            <a th:href="@{/signup}">회원가입</a>
+            <a th:href="@{/findemail}">ID 찾기</a>
+            <a th:href="@{/pwreset}">PW 초기화</a>
+        </p>
+    </form>
+</div>
+
+<!-- 푸터 섹션 -->
+<footer>
+    <div class="footer-container">
+        <!-- 회사 소개 -->
+        <div class="footer-section">
+            <h4>프로젝트 소개</h4>
+            <p>먹코살코은 최고의 맛집 제공하기 위해 최선을 다하고 있습니다.</p>
+        </div>
+        <!-- 빠른 링크 -->
+        <div class="footer-section">
+            <h4>빠른 링크</h4>
+            <ul>
+                <li><a th:href="@{/home}">홈</a></li>
+                <li><a th:href="@{/intro}">소개</a></li>
+                <li><a th:href="@{/service}">서비스</a></li>
+                <li><a th:href="@{/contact}">문의</a></li>
+            </ul>
+        </div>
+        <!-- 연락처 -->
+        <div class="footer-section">
+            <h4>연락처</h4>
+            <ul>
+                <li>전화: 02-112-7777</li>
+                <li>이메일: admin@taste_police.com</li>
+                <li>주소: 서울특별시 송파구 중대로 135, 서관 12층</li>
+            </ul>
+        </div>
+        <!-- 소셜 미디어 -->
+        <div class="footer-section">
+            <h4>소셜 미디어</h4>
+            <div class="social-icons">
+                <a href="https://www.facebook.com/yourprofile" aria-label="페이스북">
+                    <img th:src="@{/images/facebook_icon.png}" alt="Facebook">
+                </a>
+                <a href="https://www.twitter.com/yourprofile" aria-label="트위터">
+                    <img th:src="@{/images/twitter_icon.png}" alt="Twitter">
+                </a>
+                <a href="https://www.instagram.com/yourprofile" aria-label="인스타그램">
+                    <img th:src="@{/images/instagram_icon.png}" alt="Instagram">
+                </a>
+            </div>
+        </div>
+    </div>
+    <!-- 푸터 하단 정보 -->
+    <div class="footer-bottom">
+        &copy; 2024 먹코살코. All rights reserved.
+    </div>
+</footer>
+
+<!-- 스크립트 -->
+<script>
+    // 간단한 폼 검증 함수
+    function handleLogin(event) {
+        const email = document.getElementById('userid').value.trim();
+        const password = document.getElementById('userpw').value.trim();
+
+        if (email === '' || password === '') {
+            alert('모든 필드를 채워주세요.');
+            event.preventDefault();
+            return false;
+        }
+
+        // 추가적인 검증 로직 (예: 이메일 형식 등)이 필요하면 여기에 추가
+
+        return true;
+    }
+
+    // 폼 리셋 함수
+    function resetForm() {
+        document.getElementById('loginForm').reset();
+        clearMessages();
+    }
+
+    // 메시지 초기화 함수
+    function clearMessages() {
+        const errorMsg = document.querySelector('.error-message');
+        if (successMsg) successMsg.innerText = '';
+        if (errorMsg) errorMsg.innerText = '';
+    }
+</script>
+</body>
+</html>
+
