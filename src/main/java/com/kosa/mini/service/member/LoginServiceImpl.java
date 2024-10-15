@@ -32,6 +32,7 @@ public class LoginServiceImpl implements LoginService {
 
         // UserSessionDTO로 매핑
         UserSessionDTO userSession = new UserSessionDTO();
+        userSession.setMemberId(member.getMemberId());
         userSession.setName(member.getName());
         userSession.setEmail(member.getEmail());
         userSession.setNickname(member.getNickname());
