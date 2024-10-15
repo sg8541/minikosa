@@ -78,7 +78,7 @@
                                     <div class="place_brand_box">
                                         <span>###브랜드 이름</span>
                                     </div>
-                                    <h2 class="restaurant_title" th:text="${content.storeName}">###식당 상호명</h2>
+                                    <h2 class="restaurant_title" th:text="${content.storeName}"></h2>
                                     <div class="evalution_box">
                                         <img width="48" height="48" src="https://img.icons8.com/color/48/filled-star--v1.png" alt="filled-star--v1" class="icon_star" />
                                         <span class="evalution_link">평점 : </span>
@@ -147,6 +147,7 @@
                         </div>
                     </div>
                 </div>
+
                 <!--메뉴 박스 시작-->
                 <div class="menu_info">
                     <div class="menu_info_title_box">
@@ -154,12 +155,13 @@
                     </div>
                     <div class="menu_image_wrap">
                         <div class="menu_image_present">
-                            <a href="#none" class="view_menu" style="background-image: url(/images/images.jfif);">
-                            </a>
+                            <!--<a href="#none" class="view_menu" style="background-image: url(/images/images.jfif);">
+                            </a>-->
                         </div>
                         <!--메뉴 목록 : 추후 기능 확장 때 고려하기-->
                         <strong class="screen_out">메뉴 목록</strong>
                         <ul class="menu_list">
+                            <th:block th:each="menu : ${menu}">
                             <li>
                                 <a href="#none" class="link_photo">
                                     <span class="inner_photo">
@@ -168,9 +170,12 @@
                                 </a>
                                 <div class="menu_title_box">
                                     <em class="screen_out">명 : </em>
-                                    <span class="menu_text">보노보노 하트맛</span>
+                                    <span class="menu_text" th:text="${menu.menuName}"></span>
+                                    <em class="screen_out">가격 : </em>
+                                    <span class="price_menu" th:text="${menu.price}"></span>
                                 </div>
                             </li>
+                            </th:block>
                         </ul>
                     </div>
                 </div>
@@ -417,6 +422,7 @@
             </div>
         </div>
     </div>
+
     <script>
         /* 지도 api */
         var container = document.getElementById('map'); //지도를 담을 영역의 DOM 레퍼런스

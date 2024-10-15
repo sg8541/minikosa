@@ -1,6 +1,7 @@
 package mybatis.dao;
 
-import com.kosa.mini.domain.member.StoreContentDTO;
+import com.kosa.mini.domain.store.MenuDTO;
+import com.kosa.mini.domain.store.StoreContentDTO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 
@@ -11,20 +12,28 @@ public interface StoreContentMapper {
 
     // 가게 정보
     @Select("SELECT " +
-            "    store_id as 'storeId', " +
-            "    store_name as 'storeName', " +
-            "    postcode as 'postCode', " +
-            "    road_address as 'roadAddress', " +
-            "    detail_address as 'detailAddress', " +
-            "    extra_address as 'extraAddress', " +
-            "    store_description as 'storeDescription', " +
-            "    contact_number as 'contactNumber', " +
-//            "    opening_time, " +
-//            "    closing_time, " +
-            "    website_info as 'webSiteInfo'" +
+            "    store_id, " +
+            "    store_name, " +
+            "    postcode, " +
+            "    road_address, " +
+            "    detail_address, " +
+            "    extra_address, " +
+            "    store_description, " +
+            "    contact_number, " +
+            "    website_info " +
             "FROM " +
             "    stores " +
             "WHERE " +
             "    store_id = #{num}")
     public StoreContentDTO storeInfo(int num);
+
+    // 가게 메뉴
+    @Select("SELECT " +
+            "   menu_name, " +
+            "   price " +
+            "FROM " +
+            "   menus " +
+            "WHERE " +
+            "   store_id = #{num}")
+    public List<MenuDTO> getStoreMenuAll(int num);
 }

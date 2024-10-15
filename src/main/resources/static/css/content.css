@@ -621,8 +621,9 @@ button {
     font-size: 17px;
     height: 23px;
     letter-spacing: -2px;
-    line-height: 10px;
+    /*line-height: 10px;*/
     /* padding: 10px 0 0;*/
+    margin-bottom:10px;
 }
 
 .place_info_detail {
@@ -827,14 +828,15 @@ button {
 }
 
 .menu_info .menu_title_box {
+    margin-top: 10px;
     font-size: 0;
     overflow: hidden;
 }
 
 .menu_info .menu_text {
     display: block;
-    font-size: 15px;
-    line-height: 18px;
+    font-size: 24px;
+   /* line-height: 18px;*/
 }
 
 .menu_text {
@@ -844,6 +846,16 @@ button {
     width: 100%;
     word-break: break-all;
     /*word-break:break-word는 더이상 지원하지 않음*/
+}
+
+.menu_info .price_menu {
+    display: block;
+    font-family: Arial,sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: 0;
+    /*line-height: 16px;*/
+    padding-top: 5px;
 }
 
 .map_container {

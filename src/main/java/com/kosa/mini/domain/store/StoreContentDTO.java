@@ -1,6 +1,8 @@
-package com.kosa.mini.domain.member;
+package com.kosa.mini.domain.store;
 
 import lombok.Data;
+
+import java.util.List;
 
 @Data
 public class StoreContentDTO {
@@ -13,8 +15,6 @@ public class StoreContentDTO {
    private String storeDescription;
    private String webSiteInfo;
    private String contactNumber;
-
-   private String menuName;
-   private int price;
+//   private List<MenuDTO> menuDTO;
 
 }
