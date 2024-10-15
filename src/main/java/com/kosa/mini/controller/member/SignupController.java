@@ -28,20 +28,23 @@ public class SignupController {
     @PostMapping("/signup")
     public String sign(@Valid @ModelAttribute("signupDTO") SignupDTO dto, BindingResult bindingResult, Model model) {
         if(bindingResult.hasErrors()) {
-            return "signup"; // 입력값 검증 실패 시 회원가입 페이지로 되돌아감
+            model.addAttribute("signupDTO", dto); // 오류 발생 시 signupDTO를 다시 모델에 추가
+            return "signup";
         }
 
         try {
             boolean success = signUpService.signUp(dto);
             if(success) {
-                return "redirect:/login"; // 성공 시 로그인 페이지로 리다이렉트
+                return "redirect:/login";
             } else {
                 model.addAttribute("errorMessage", "회원가입에 실패했습니다.");
+                model.addAttribute("signupDTO", dto); // 실패 시에도 signupDTO 추가
                 return "signup";
             }
         } catch (DuplicateEmailException | DuplicateNicknameException | SignupException e) {
             model.addAttribute("errorMessage", e.getMessage());
-            return "signup"; // 예외 발생 시 회원가입 페이지로 되돌아가면서 오류 메시지 표시
+            model.addAttribute("signupDTO", dto); // 예외 발생 시에도 signupDTO 추가
+            return "signup";
         }
     }
 
