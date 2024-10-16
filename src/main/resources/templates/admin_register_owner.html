@@ -713,7 +713,7 @@
         `;
         }
 
-        // 매칭 함수 수정
+        // 매칭 함수
         function assignOwner() {
             if (!selectedUser || !selectedStore) {
                 alert('사용자와 가게를 모두 선택해주세요.');
@@ -731,11 +731,8 @@
                 .then(response => {
                     if (response.ok) {
                         alert('사장님이 가게에 성공적으로 매칭되었습니다.');
-                        // 매칭 후 선택 초기화
-                        selectedUser = null;
-                        selectedStore = null;
-                        document.getElementById('selectedUserBox').innerHTML = '선택된 사용자가 없습니다.';
-                        document.getElementById('selectedStoreBox').innerHTML = '선택된 가게가 없습니다.';
+                        // 매칭 후 이동
+                        window.location.href = '/content';
                     } else {
                         response.text().then(text => {
                             alert('매칭 실패: ' + text);
