@@ -35,64 +35,73 @@ public class StoreContentController {
         return "content";
     }
 
-    // 가게 정보 삭제
-    @GetMapping("/{num}/close")
-    public String closeStore(@PathVariable int num) {
+    /*가게 유저 리뷰 작성 및 수정*/
+    @PostMapping("/{num}/review")
+    public String insertAndUpdateReviews(@PathVariable int num,
+                                         Model model,
+                                         int storeId,
+                                         int memberId,
+                                         String reviewText,
+                                         int rating,
+                                         int reviewId) {
+        final int NO_DATA = 0;
 
-        boolean success = service.coloseStore(num);
-        if (success) {
-            return "redirect:/home";
-        } else {
-            return "redirect:/store/{num}";
-        }
-    }
-
-        /*가게 유저 리뷰 작성 및 수정*/
-        @PostMapping("/{num}/review")
-        public String insertAndUpdateReviews ( @PathVariable int num,
-        Model model,
-        int storeId,
-        int memberId,
-        String reviewText,
-        int rating,
-        int reviewId){
-            final int NO_DATA = 0;
-
-            if (reviewId == NO_DATA) {
-                boolean success = service.insertUserReview(storeId, memberId, reviewText, rating);
-                if (success) {
-                    return "redirect:/store/{num}";
-                } else {
-                    return "redirect:/store/{num}";
-                }
-            } else {
-                StoreReviewDTO reviewDTO = new StoreReviewDTO();
-                reviewDTO.setReviewId(reviewId);
-                reviewDTO.setReviewText(reviewText);
-                reviewDTO.setRating(rating);
-                reviewDTO.setMemberId(memberId);
-                reviewDTO.setStoreId(storeId);
-                boolean success = service.updateUserReview(reviewDTO);
-                if (success) {
-                    return "redirect:/store/{num}";
-                } else {
-                    return "redirect:/store/{num}";
-                }
-            }
-        }
-        // 유저 댓글 삭제
-        @PostMapping("/{num}/review/{memberId}")
-        public String deleteReviews ( @PathVariable int num,
-        @PathVariable int memberId){
-
-            boolean success = service.deleteUserReview(memberId);
+        if (reviewId == NO_DATA) {
+            boolean success = service.insertUserReview(storeId, memberId, reviewText, rating);
             if (success) {
                 return "redirect:/store/{num}";
             } else {
                 return "redirect:/store/{num}";
             }
+        } else {
+            StoreReviewDTO reviewDTO = new StoreReviewDTO();
+            reviewDTO.setReviewId(reviewId);
+            reviewDTO.setReviewText(reviewText);
+            reviewDTO.setRating(rating);
+            reviewDTO.setMemberId(memberId);
+            reviewDTO.setStoreId(storeId);
+            boolean success = service.updateUserReview(reviewDTO);
+            if (success) {
+                return "redirect:/store/{num}";
+            } else {
+                return "redirect:/store/{num}";
+            }
+        }
+    }
 
+    // 유저 댓글 삭제
+    @PostMapping("/{num}/review/{memberId}")
+    public String deleteReviews(@PathVariable int num,
+                                @PathVariable int memberId) {
+
+        boolean success = service.deleteUserReview(memberId);
+        if (success) {
+            return "redirect:/store/{num}";
+        } else {
+            return "redirect:/store/{num}";
         }
 
+    }
 
+    // 가게 정보 수정
+    @GetMapping("/{num}/locate")
+    public String editeStore(@PathVariable int num) {
+        System.out.println("가게 수정 페이지로 이동~~~~~~~~~~~~~~");
+        return "redirect:/home";
+    }
+
+    // 가게 정보 삭제
+    @PostMapping("/{num}/close")
+    public String closeStore(@PathVariable int num) {
+
+        boolean success = service.coloseStore(num);
+        if (success) {
+            System.out.println("삭제 성공~~~~~~~~~~~~~");
+            return "redirect:/home";
+        } else {
+            return "redirect:/store/{num}";
+        }
+    }
 }
+
+
