@@ -25,6 +25,10 @@ public class StoreContentServiceImpl implements StoreContentService {
     }
 
     @Override
+    public boolean coloseStore(int num) {
+        return dao.deleteStore(num);
+    }
+
     public boolean insertUserReview(int storeId, int memberId, String reviewText, int rating) {
         return dao.insertUserReview(storeId, memberId, reviewText, rating);
     }
@@ -54,5 +58,6 @@ public class StoreContentServiceImpl implements StoreContentService {
     public boolean coloseStore(int num) {
         return dao.deleteStore(num);
     }
+
 
 }

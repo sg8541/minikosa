@@ -1,7 +1,11 @@
 package mybatis.dao;
 
+import org.apache.ibatis.annotations.Delete;
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Select;
 import com.kosa.mini.domain.store.*;
 import org.apache.ibatis.annotations.*;
+
 
 import java.util.List;
 
@@ -42,6 +46,7 @@ public interface StoreContentMapper {
             "WHERE " +
             "   store_id = #{num}")
     public List<MenuDTO> getStoreMenuAll(int num);
+
 
     // 가게 리뷰 + 답글
     @Select("select " +

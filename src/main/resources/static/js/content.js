@@ -17,7 +17,10 @@ aBtn.forEach(function (btn) {
             result = getMessage(message);
             if (result) {
                 const form = this.closest('form');
-                form.action = "search_view.html";
+
+                const actionUrl = this.getAttribute('data-action');
+                form.method = 'get';
+                form.action = actionUrl;
                 form.submit();
             }
 
@@ -26,7 +29,9 @@ aBtn.forEach(function (btn) {
             result = getMessage(message);
             if (result) {
                 const form = this.closest('form');
-                form.action = "main.html";
+                const actionUrl = this.getAttribute('data-action');
+                form.method = 'post';
+                form.action = actionUrl;
                 form.submit();
             }
 
