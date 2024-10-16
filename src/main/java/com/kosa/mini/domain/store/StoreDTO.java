@@ -7,6 +7,7 @@ import java.util.List;
 
 @Data
 public class StoreDTO {
+    private Long storeId;
     private String storeName;
     private String postcode;
     private String roadAddress;

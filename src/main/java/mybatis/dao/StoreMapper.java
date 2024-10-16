@@ -1,7 +1,9 @@
 package mybatis.dao;
 
+import com.kosa.mini.domain.member.Member;
 import com.kosa.mini.domain.store.Menu;
 import com.kosa.mini.domain.store.Store;
+import com.kosa.mini.domain.store.StoreDTO;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;
@@ -23,5 +25,17 @@ public interface StoreMapper {
             "</script>"
     })
     void insertMenus(@Param("storeId") Long storeId, @Param("menus") List<Menu> menus);
+
+    // 사장님 할당 메서드
+    @Update("UPDATE stores SET owner_id = #{ownerId} WHERE store_id = #{storeId}")
+    void assignOwnerToStore(@Param("storeId") Long storeId, @Param("ownerId") Long ownerId);
+
+    // 사용자 검색 메서드
+    @Select("SELECT member_id, name, nickname, email, phone_number FROM members WHERE email LIKE CONCAT('%', #{email}, '%')")
+    List<Member> searchMembersByEmail(@Param("email") String email);
+
+    // 가게 검색 메서드
+    @Select("SELECT store_id, store_name, road_address FROM stores WHERE store_name LIKE CONCAT('%', #{storeName}, '%')")
+    List<StoreDTO> searchStoresByName(@Param("storeName") String storeName);
 }
 

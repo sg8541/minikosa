@@ -1,5 +1,6 @@
 package com.kosa.mini.service.store;
 
+import com.kosa.mini.domain.member.Member;
 import com.kosa.mini.domain.store.MenuDTO;
 import com.kosa.mini.domain.store.Menu;
 import com.kosa.mini.domain.store.Store;
@@ -89,6 +90,21 @@ public class StoreServiceImpl implements StoreService {
             }
             storeMapper.insertMenus(store.getStoreId(), menus);
         }
+    }
+
+    @Override
+    public void assignOwnerToStore(Long storeId, Long ownerId) {
+        storeMapper.assignOwnerToStore(storeId, ownerId);
+    }
+
+    @Override
+    public List<Member> searchMembersByEmail(String email) {
+        return storeMapper.searchMembersByEmail(email);
+    }
+
+    @Override
+    public List<StoreDTO> searchStoresByName(String storeName) {
+        return storeMapper.searchStoresByName(storeName);
     }
 
     private String saveFile(MultipartFile file, String directory) throws IOException {
