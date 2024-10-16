@@ -24,11 +24,6 @@ public class StoreContentServiceImpl implements StoreContentService {
         return dao.getStoreMenuAll(num);
     }
 
-    @Override
-    public boolean coloseStore(int num) {
-        return dao.deleteStore(num);
-    }
-
     public boolean insertUserReview(int storeId, int memberId, String reviewText, int rating) {
         return dao.insertUserReview(storeId, memberId, reviewText, rating);
     }
