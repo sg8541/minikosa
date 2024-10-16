@@ -59,25 +59,15 @@
                             </span>
                                     <span class="frame_g">
                             </span>
-
                                     <!--가게 title(브랜드, 상호명, 평점 등)-->
                                     <div class="place_out_line">
                                         <!--관리자만 보이는 버튼-->
                                         <div class="btn_box">
                                             <th:block th:if="${session.loggedInUser.roleId} == 3">
-                                    <form>
-                                        <input type="hidden" name="storeId" value="${content.storeId}">
-                                        <input type="hidden" name="storeName" value="${content.storeName}">
-                                        <input type="hidden" name="postCode" value="${content.postCode}">
-                                        <input type="hidden" name="roadAddress" value="${content.roadAddress}">
-                                        <input type="hidden" name="detailAddress" value="${content.detailAddress}">
-                                        <input type="hidden" name="extraAddress" value="${content.extraAddress}">
-                                        <input type="hidden" name="storeDescription" value="${content.storeDescription}">
-                                        <input type="hidden" name="webSiteInfo" value="${content.webSiteInfo}">
-                                        <input type="hidden" name="contactNumber" value="${content.contactNumber}">
-                                        <button type="submit" class="admin_button" data-result="modify" th:data-action="|/store/${content.storeId}/locate|">수정</button>
-                                        <button type="submit" class="admin_button" data-result="del" th:data-action="|/store/${content.storeId}/close|">삭제</button>
-                                    </form>
+                                                <form method="post" th:action="|/store/${content.storeId}/close|">
+                                                    <button type="submit" class="admin_button" data-result="modify">수정</button>
+                                                    <button type="submit" class="admin_button" data-result="del" >삭제</button>
+                                                </form>
                                             </th:block>
                                         </div>
                                         <div class="place_inner">
@@ -95,7 +85,6 @@
                                                 <a href="#none" class="evalution_link" th:text="${content.countReview}">###1</a>
                                             </div>
                                         </div>
-
                                     </div>
                                 </div>
                             </div>

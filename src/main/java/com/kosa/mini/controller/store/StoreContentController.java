@@ -36,17 +36,6 @@ public class StoreContentController {
         return "content";
     }
 
-    // 가게 정보 삭제
-    @GetMapping("/{num}/close")
-    public String closeStore(@PathVariable int num){
-
-        boolean success = service.coloseStore(num);
-        if(success){
-            return "redirect:/home";
-        }else{
-            return "redirect:/store/{num}";
-        }
-
     /*가게 유저 리뷰 작성 및 수정*/
     @PostMapping("/{num}/review")
     public String insertAndUpdateReviews(@PathVariable int num,
