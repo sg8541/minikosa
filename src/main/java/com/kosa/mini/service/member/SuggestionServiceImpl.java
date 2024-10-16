@@ -20,7 +20,7 @@ public class SuggestionServiceImpl implements SuggestionService{
     @Override
     public void createSuggestion(SuggestionDTO suggestionDTO) {
         ContactUs contactUs = new ContactUs();
-        contactUs.setMemberId(suggestionDTO.getMember_id());
+        contactUs.setMemberId(suggestionDTO.getMemberId());
         contactUs.setTitle(suggestionDTO.getTitle());
         contactUs.setStoreName(suggestionDTO.getStoreName());
         contactUs.setContent(suggestionDTO.getContent());

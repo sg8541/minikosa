@@ -46,7 +46,7 @@ public class SuggestionController {
         }
 
         UserSessionDTO loggedInUser = (UserSessionDTO) loggedInUserObj;
-        suggestionDTO.setMember_id(loggedInUser.getMemberId());
+        suggestionDTO.setMemberId(loggedInUser.getMemberId());
 
         suggestionService.createSuggestion(suggestionDTO);
         model.addAttribute("successMessage", "제안이 성공적으로 접수되었습니다.");
