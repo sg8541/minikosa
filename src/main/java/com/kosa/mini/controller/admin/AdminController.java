@@ -27,6 +27,43 @@ public class AdminController {
         this.storeService = storeService;
     }
 
+    //맛집 등록 페이지
+    @GetMapping("create/store")
+    public String createStoreView(Model model, HttpSession session) {
+        // 현재 로그인된 사용자 정보 가져오기
+        UserSessionDTO loggedInUser = (UserSessionDTO) session.getAttribute("loggedInUser");
+        if (loggedInUser == null || !loggedInUser.getRoleId().equals(2)) { // roleId 2가 ADMIN
+            return "redirect:/access-denied";
+        }
+
+        model.addAttribute("storeDTO", new StoreDTO());
+        return "admin_create_store";
+    }
+
+    @PostMapping("create/store")
+    public String createStore(@Valid StoreDTO storeDTO,
+                              BindingResult bindingResult,
+                              Model model,
+                              HttpSession session) {
+        UserSessionDTO loggedInUser = (UserSessionDTO) session.getAttribute("loggedInUser");
+        if (loggedInUser == null || !loggedInUser.getRoleId().equals(2)) {
+            return "redirect:/access-denied";
+        }
+
+        if (bindingResult.hasErrors()) {
+            return "admin_create_store";
+        }
+
+        try {
+            storeService.createStore(storeDTO, storeDTO.getMenuDTOs());
+            model.addAttribute("successMessage", "가게와 메뉴가 성공적으로 등록되었습니다.");
+            return "redirect:/content";
+        } catch (Exception e) {
+            model.addAttribute("errorMessage", e.getMessage());
+            return "admin_create_store";
+        }
+    }
+
     // 사장 등록 페이지
     @GetMapping("/register/owner")
     public String registerOwnerView(HttpSession session) {
