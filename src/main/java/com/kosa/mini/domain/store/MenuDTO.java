@@ -1,13 +1,13 @@
 package com.kosa.mini.domain.store;
 
 import lombok.Data;
+import org.springframework.web.multipart.MultipartFile;
 
 @Data
 public class MenuDTO {
-        //private int menuId;         // menu_id
-        //private int storeId;        // store_id
-        private String menuName;        // menu_name
-        private int price;       // price
-        //private String menuPhoto;       // menu_photo
-
+        private Long menuId;
+        private Long storeId;
+        private String menuName;
+        private int price;
+        private MultipartFile storePhoto;
 }
