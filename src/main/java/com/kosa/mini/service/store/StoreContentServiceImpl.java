@@ -13,7 +13,6 @@ public class StoreContentServiceImpl implements StoreContentService {
     @Autowired
     private StoreContentMapper dao;
 
-
     @Override
     public StoreContentDTO storeInfo(int num) {
         return dao.storeInfo(num);
