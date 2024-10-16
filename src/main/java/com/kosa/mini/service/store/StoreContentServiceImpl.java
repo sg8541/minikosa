@@ -24,4 +24,9 @@ public class StoreContentServiceImpl implements StoreContentService {
     public List<MenuDTO> getStoreMenuAll(int num) {
         return dao.getStoreMenuAll(num);
     }
+
+    @Override
+    public boolean coloseStore(int num) {
+        return dao.deleteStore(num);
+    }
 }

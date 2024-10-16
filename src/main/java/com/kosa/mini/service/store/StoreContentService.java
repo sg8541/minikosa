@@ -10,5 +10,5 @@ public interface StoreContentService {
 
     public StoreContentDTO storeInfo(int num);
     public List<MenuDTO> getStoreMenuAll(int num);
-
+    public boolean coloseStore(int num);
 }

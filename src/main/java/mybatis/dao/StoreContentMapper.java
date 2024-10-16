@@ -2,6 +2,7 @@ package mybatis.dao;
 
 import com.kosa.mini.domain.store.MenuDTO;
 import com.kosa.mini.domain.store.StoreContentDTO;
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 
@@ -36,4 +37,8 @@ public interface StoreContentMapper {
             "WHERE " +
             "   store_id = #{num}")
     public List<MenuDTO> getStoreMenuAll(int num);
+
+    @Delete("delete from stores " +
+            "where store_id = #{num}")
+    public boolean deleteStore(int num);
 }
