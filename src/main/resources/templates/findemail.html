@@ -244,6 +244,25 @@
             background-color: #999;
         }
 
+        /* 폼 하단 추가 링크 스타일 */
+        .form-footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .form-footer a {
+            color: #FF885B;
+            text-decoration: none;
+            margin: 0 10px;
+            transition: color 0.3s;
+        }
+
+        .form-footer a:hover {
+            color: #e07a4d;
+        }
+
         /* 푸터 스타일 */
         footer {
             background-color: #FF885B;
@@ -418,7 +437,7 @@
         <nav class="nav" id="mainNav">
             <a th:href="@{/home}">홈</a>
             <a th:href="@{/intro}">소개</a>
-            <a th:href="@{/contact}">문의</a>
+            <a th:href="@{/suggestion}">문의</a>
             <!-- 드롭다운 메뉴 추가 -->
             <div class="dropdown">
                 <button id="userMenuButton">▼</button>
@@ -461,8 +480,15 @@
         </div>
         <div class="button-container">
             <input type="submit" value="이메일 찾기">
-            <button type="button" class="cancel-button" onclick="history.back()">뒤로가기</button>
+            <button type="button" class="cancel-button" onclick="resetForm()">취소</button>
         </div>
+        <!-- 버튼 아래에 추가된 링크 -->
+        <p class="form-footer">
+            로그인에 문제가 있나요?<br>
+            <a th:href="@{/signup}">회원가입</a>
+            <a th:href="@{/findemail}">ID 찾기</a>
+            <a th:href="@{/reset/password}">PW 초기화</a>
+        </p>
     </form>
 </div>
 
@@ -481,7 +507,7 @@
                 <li><a th:href="@{/home}">홈</a></li>
                 <li><a th:href="@{/intro}">소개</a></li>
                 <li><a th:href="@{/service}">서비스</a></li>
-                <li><a th:href="@{/contact}">문의</a></li>
+                <li><a th:href="@{/suggestion}">문의</a></li>
             </ul>
         </div>
         <!-- 연락처 -->
@@ -533,8 +559,11 @@
             alert('올바른 연락처 형식을 입력해주세요.');
             return false;
         }
-
         return true;
+    }
+    function resetForm() {
+        // 페이지를 새로고침하여 폼을 초기화
+        window.location.href = '/login';
     }
 </script>
 </body>

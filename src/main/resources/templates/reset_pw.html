@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>회원가입 | 먹코살코</title>
+    <title>비밀번호 초기화 | 먹코살코</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <!-- 파비콘 설정 -->
@@ -143,11 +143,12 @@
         /* 메인 콘텐츠 스타일 */
         .main-content {
             width: 800px;
-            margin: 75px auto 100px auto; /* 헤더와 본문 간격, 본문과 푸터 간격 */
+            margin: 75px auto; /* 상단 여백 추가 및 가운데 정렬 */
             background-color: #fff;
             padding: 30px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             border-radius: 8px;
+            margin-bottom: 100px;
         }
 
         .main-content h2 {
@@ -175,7 +176,6 @@
         /* 폼 요소 스타일 */
         .form-group {
             margin-bottom: 20px;
-            position: relative;
         }
 
         .form-group label {
@@ -186,9 +186,10 @@
         }
 
         .form-group input[type="text"],
-        .form-group input[type="password"],
+        .form-group input[type="tel"],
         .form-group input[type="email"],
-        .form-group input[type="tel"] {
+        .form-group input[type="password"],
+        .form-group textarea {
             width: 100%;
             padding: 12px 15px;
             border: 1.5px solid #FF885B;
@@ -199,26 +200,8 @@
             font-family: "맑은 고딕", sans-serif;
         }
 
-        /* 중복 체크 버튼 스타일 */
-        .form-group .check-button {
-            position: absolute;
-            right: 10px;
-            top: 43px;
-            padding: 6px 12px;
-            background-color: #FF885B;
-            color: #fff;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 12px;
-            transition: background-color 0.3s;
-        }
-
-        .form-group .check-button:hover {
-            background-color: #e07a4d;
-        }
-
         /* 플레이스홀더 스타일 */
+        textarea::placeholder,
         input::placeholder {
             white-space: pre-line;
             color: #999;
@@ -283,12 +266,11 @@
             background-color: #FF885B;
             color: #fff;
             padding: 20px 10px;
-            margin-top: 40px;
+            margin-top: 40px; /* 본문과 푸터 간격 */
         }
 
         .footer-container {
             max-width: 1500px;
-            height: 80%;
             width: 100%; /* 전체 너비 */
             margin: 0 auto;
             display: flex;
@@ -350,8 +332,6 @@
             border-top: 1px solid rgba(255, 255, 255, 0.3);
             padding-top: 10px;
         }
-
-
         /* 반응형 디자인 */
         @media (max-width: 768px) {
             .header .container-inner {
@@ -423,12 +403,6 @@
                 text-align: center;
             }
         }
-        /* 오류 메시지 스타일 */
-        .error-message {
-            color: red;
-            text-align: center;
-            margin-bottom: 20px;
-        }
     </style>
 </head>
 <body>
@@ -440,94 +414,96 @@
             <h1>먹코살코</h1>
         </div>
         <nav class="nav" id="mainNav">
-            <a th:href="@{/home}">홈</a>
-            <a th:href="@{/intro}">소개</a>
-            <a th:href="@{/suggestion}">문의</a>
+            <a href="home.html">홈</a>
+            <a href="../../../../../uiux/intro.html">소개</a>
+            <a href="contact.html">문의</a>
             <!-- 드롭다운 메뉴 추가 -->
             <div class="dropdown">
                 <button id="userMenuButton">▼</button>
                 <div class="dropdown-content" id="userMenu">
                     <!-- 로그인 전 메뉴 -->
-                    <a th:href="@{/login}" id="loginLink">로그인</a>
+                    <a href="#" id="loginLink">로그인</a>
                     <!-- 로그인 후 메뉴 (숨김 상태) -->
-                    <a th:href="@{/myinfo}" id="profileLink" style="display: none;">내 정보 페이지</a>
-                    <a th:href="@{/logout}" id="logoutLink" style="display: none;">로그아웃</a>
+                    <a href="myinfo.html" id="profileLink" style="display: none;">내 정보 페이지</a>
+                    <a href="home.html" id="logoutLink" style="display: none;">로그아웃</a>
                 </div>
             </div>
         </nav>
     </div>
 </div>
 
-<!-- 메인 콘텐츠: 회원가입 폼 -->
+<!-- 메인 콘텐츠: 비밀번호 초기화 통합 폼 -->
 <div class="main-content">
     <div class="subtitle">
-        <h2>회원가입</h2>
+        <h2>비밀번호 초기화</h2>
         <img th:src="@{/images/main_logo.png}" alt="Main Logo">
-        <p class="description">필요한 정보를 입력해 주세요.</p>
+        <p class="description">비밀번호를 초기화하기 위해 필요한 정보를 입력해 주세요.</p>
     </div>
 
     <!-- 오류 메시지 표시 -->
-    <div th:if="${errorMessage}" class="error-message">
+    <div th:if="${errorMessage}" style="color: red; text-align: center; margin-bottom: 20px;">
         <p th:text="${errorMessage}"></p>
     </div>
 
-    <form id="registerForm" action="/signup" method="post" th:object="${signupDTO}" onsubmit="return handleRegister(event)">
-        <div class="user-details">
-            <!-- 입력 필드: 이름 -->
+    <!-- 성공 메시지 표시 -->
+    <div th:if="${successMessage}" style="color: green; text-align: center; margin-bottom: 20px;">
+        <p th:text="${successMessage}"></p>
+    </div>
+
+    <!-- 사용자 정보 확인 폼 -->
+    <form th:action="@{/search/member}" method="post" th:if="${!passwordReset}">
+        <div id="userInfoSection">
             <div class="form-group">
                 <label for="name">이름</label>
-                <input type="text" id="name" name="name" placeholder="이름을 입력하세요." th:field="*{name}" required>
-                <div th:if="${#fields.hasErrors('name')}" class="error-message">
-                    <p th:errors="*{name}"></p>
-                </div>
+                <input type="text" id="name" name="name" placeholder="가입 시 입력한 이름을 입력해 주세요. Ex) 홍길동" required>
             </div>
-            <!-- 입력 필드: 닉네임 -->
-            <div class="form-group">
-                <label for="nickname">닉네임</label>
-                <input type="text" id="nickname" name="nickname" placeholder="닉네임을 입력하세요." th:field="*{nickname}" required>
-                <button type="button" class="check-button" onclick="checkNickname()">중복 확인</button>
-                <div id="nicknameFeedback" class="feedback-message"></div>
-                <div th:if="${#fields.hasErrors('nickname')}" class="error-message">
-                    <p th:errors="*{nickname}"></p>
-                </div>
-            </div>
-            <!-- 입력 필드: 이메일 -->
-            <div class="form-group">
-                <label for="email">이메일</label>
-                <input type="email" id="email" name="email" placeholder="이메일을 입력하세요." th:field="*{email}" required>
-                <button type="button" class="check-button" onclick="checkEmail()">중복 확인</button>
-                <div id="emailFeedback" class="feedback-message"></div>
-                <div th:if="${#fields.hasErrors('email')}" class="error-message">
-                    <p th:errors="*{email}"></p>
-                </div>
-            </div>
-            <!-- 입력 필드: 연락처 -->
             <div class="form-group">
                 <label for="contact">연락처</label>
-                <input type="tel" id="contact" name="phone_number" placeholder="연락처를 입력하세요." th:field="*{phone_number}" required pattern="^[0-9\-+() ]+$" title="유효한 연락처를 입력해 주세요.">
-                <div th:if="${#fields.hasErrors('phone_number')}" class="error-message">
-                    <p th:errors="*{phone_number}"></p>
-                </div>
+                <input type="tel" id="contact" name="phoneNumber" placeholder="'-'를 포함한 연락처를 입력해 주세요. Ex) 010-1234-5678" required pattern="^[0-9\-+() ]+$" title="유효한 연락처를 입력해 주세요.">
             </div>
-            <!-- 입력 필드: 비밀번호 -->
             <div class="form-group">
-                <label for="password">비밀번호</label>
-                <input type="password" id="password" name="password" placeholder="비밀번호를 입력하세요." th:field="*{password}" required>
-                <div th:if="${#fields.hasErrors('password')}" class="error-message">
-                    <p th:errors="*{password}"></p>
-                </div>
+                <label for="email">이메일</label>
+                <input type="email" id="email" name="email" placeholder="가입 시 사용한 이메일을 입력해 주세요. Ex) example@domain.com" required>
             </div>
-            <!-- 입력 필드: 비밀번호 확인 -->
+            <div class="button-container">
+                <input type="submit" value="회원 조회">
+                <button type="button" class="cancel-button" onclick="resetForm()">취소</button>
+            </div>
+        </div>
+        <!-- 버튼 아래에 추가된 링크 -->
+        <p class="form-footer">
+            로그인에 문제가 있나요?<br>
+            <a th:href="@{/signup}">회원가입</a>
+            <a th:href="@{/findemail}">ID 찾기</a>
+            <a th:href="@{/reset/password}">PW 초기화</a>
+        </p>
+    </form>
+
+    <!-- 비밀번호 초기화 폼 -->
+    <form th:action="@{/reset/password}" method="post" th:if="${passwordReset}">
+        <input type="hidden" name="email" th:value="${email}" />
+        <div id="passwordResetSection">
+
+            <div class="form-group">
+                <label for="new_password">새 비밀번호</label>
+                <input type="password" id="new_password" name="newPassword" placeholder="새로운 비밀번호를 입력해 주세요." required>
+            </div>
             <div class="form-group">
                 <label for="confirm_password">비밀번호 확인</label>
-                <input type="password" id="confirm_password" name="confirm_password" placeholder="다시 한번 비밀번호를 입력하세요." required>
+                <input type="password" id="confirm_password" name="confirmPassword" placeholder="비밀번호를 다시 입력해 주세요." required>
+            </div>
+            <div class="button-container">
+                <input type="submit" value="비밀번호 변경">
+                <button type="button" class="cancel-button" onclick="resetForm()">취소</button>
             </div>
         </div>
-        <!-- 제출 버튼 -->
-        <div class="button-container">
-            <input type="submit" value="가입하기">
-            <button type="button" class="cancel-button" onclick="resetForm()">취소</button>
-        </div>
+        <!-- 버튼 아래에 추가된 링크 -->
+        <p class="form-footer">
+            로그인에 문제가 있나요?<br>
+            <a th:href="@{/signup}">회원가입</a>
+            <a th:href="@{/findemail}">ID 찾기</a>
+            <a th:href="@{/reset/password}">PW 초기화</a>
+        </p>
     </form>
 </div>
 
@@ -544,7 +520,7 @@
             <h4>빠른 링크</h4>
             <ul>
                 <li><a th:href="@{/home}">홈</a></li>
-                <li><a th:href="@{/intro}">소개</a></li>
+                <li><a th:href="@{/intro}">팀원 소개</a></li>
                 <li><a th:href="@{/service}">서비스</a></li>
                 <li><a th:href="@{/suggestion}">문의</a></li>
             </ul>
@@ -582,89 +558,10 @@
 
 <!-- 스크립트 -->
 <script>
-    // 폼 검증 함수
-    function handleRegister(event) {
-        const password = document.getElementById('password').value.trim();
-        const confirmPassword = document.getElementById('confirm_password').value.trim();
-
-        if (password !== confirmPassword) {
-            alert('비밀번호가 일치하지 않습니다.');
-            event.preventDefault();
-            return false;
-        }
-        return true;
-    }
-
-    // 폼 리셋 함수
     function resetForm() {
-        document.getElementById('registerForm').reset();
-        clearFeedback();
-    }
-
-    // 피드백 메시지 초기화
-    function clearFeedback() {
-        document.getElementById('emailFeedback').innerText = '';
-        document.getElementById('nicknameFeedback').innerText = '';
-    }
-
-    // 닉네임 중복 체크 함수
-    async function checkNickname() {
-        const nickname = document.getElementById('nickname').value.trim();
-        const feedback = document.getElementById('nicknameFeedback');
-
-        if (nickname === '') {
-            feedback.style.color = 'red';
-            feedback.innerText = '닉네임을 입력해 주세요.';
-            return;
-        }
-
-        try {
-            const response = await fetch(`/signup/check-nickname?nickname=${encodeURIComponent(nickname)}`);
-            const data = await response.json();
-
-            if (data.exists) {
-                feedback.style.color = 'red';
-                feedback.innerText = '이미 사용 중인 닉네임입니다.';
-            } else {
-                feedback.style.color = 'green';
-                feedback.innerText = '사용 가능한 닉네임입니다.';
-            }
-        } catch (error) {
-            feedback.style.color = 'red';
-            feedback.innerText = '닉네임 중복 확인 중 오류가 발생했습니다.';
-            console.error('Error checking nickname:', error);
-        }
-    }
-
-    // 이메일 중복 체크 함수
-    async function checkEmail() {
-        const email = document.getElementById('email').value.trim();
-        const feedback = document.getElementById('emailFeedback');
-
-        if (email === '') {
-            feedback.style.color = 'red';
-            feedback.innerText = '이메일을 입력해 주세요.';
-            return;
-        }
-
-        try {
-            const response = await fetch(`/signup/check-email?email=${encodeURIComponent(email)}`);
-            const data = await response.json();
-
-            if (data.exists) {
-                feedback.style.color = 'red';
-                feedback.innerText = '이미 사용 중인 이메일입니다.';
-            } else {
-                feedback.style.color = 'green';
-                feedback.innerText = '사용 가능한 이메일입니다.';
-            }
-        } catch (error) {
-            feedback.style.color = 'red';
-            feedback.innerText = '이메일 중복 확인 중 오류가 발생했습니다.';
-            console.error('Error checking email:', error);
-        }
+        // 페이지를 새로고침하여 폼을 초기화
+        window.location.href = '/login';
     }
 </script>
-
 </body>
 </html>
