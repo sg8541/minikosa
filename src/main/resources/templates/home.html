@@ -71,20 +71,32 @@
                     <a href="/home">홈</a>
                     <a href="intro.html">소개</a>
                     <a href="/suggestion">문의</a>
-                    <!--<a href="search.html">-->
 
-
-                    <!--</a>-->
                     <!-- 드롭다운 메뉴 추가 -->
                     <div class="dropdown">
                         <button id="userMenuButton">▼</button>
 
                         <div class="dropdown-content" id="userMenu">
-                            <!-- 로그인 전 메뉴 -->
-                            <a href="/login" id="loginLink">로그인</a>
-                            <!-- 로그인 후 메뉴 (숨김 상태) -->
-                            <a href="myinfo.html" id="profileLink" style="display: none;">내 정보 페이지</a>
-                            <a href="home.html" id="logoutLink" style="display: none;">로그아웃</a>
+                            <!--/* 로그인 후 메뉴 (session.loggedInUser가 null이 아닐 때) */-->
+                            <th:block th:if="${#strings.isEmpty(session.loggedInUser)}">
+                                <a href="/login" id="loginLink">로그인</a>
+                            </th:block>
+                            <th:block th:if="${session.loggedInUser != null}">
+                                <th:block th:switch="${session.loggedInUser.roleId}">
+                                    <!--/* 관리자 상태 (roleId가 2일 때) */-->
+                                    <th:block th:case="2">
+                                        <a href="/admin/create/store" id="createLink">가게 가게</a>
+                                        <a href="/admin/register/" id="registerLink">사장 등록</a>
+                                        <a href="/editprofile" id="profileLink">내 정보 페이지</a>
+                                        <a href="/home" id="logoutLink">로그아웃</a>
+                                    </th:block>
+                                    <!--/* 일반 유저 상태 (roleId가 2가 아닐 때) */-->
+                                    <th:block th:case="*">
+                                        <a href="/editprofile" id="profileLink">내 정보 페이지</a>
+                                        <a href="/home" id="logoutLink">로그아웃</a>
+                                    </th:block>
+                                </th:block>
+                            </th:block>
                         </div>
                     </div>
                 </nav>
@@ -213,8 +225,6 @@
         </div>
     </footer>
     <!-- footer section -->
-    <!-- footer section -->
-
     <!-- jQery -->
     <script src="/js/home/jquery-3.4.1.min.js"></script>
     <!-- popper js -->
@@ -231,6 +241,5 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-nice-select/1.1.0/js/jquery.nice-select.min.js"></script>
     <!-- custom js -->
     <script src="/js/home/custom.js"></script>
-    <!-- End Google Map -->
 
 </body></html>
