@@ -1,8 +1,10 @@
 package com.kosa.mini.controller.admin;
 
+import com.kosa.mini.domain.member.ContactUs;
 import com.kosa.mini.domain.member.Member;
 import com.kosa.mini.domain.member.UserSessionDTO;
 import com.kosa.mini.domain.store.StoreDTO;
+import com.kosa.mini.service.member.SuggestionService;
 import com.kosa.mini.service.store.StoreService;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
@@ -21,10 +23,64 @@ import java.util.List;
 public class AdminController {
 
     private final StoreService storeService;
+    private final SuggestionService suggestionService;
 
     @Autowired
-    public AdminController(StoreService storeService) {
+    public AdminController(StoreService storeService, SuggestionService suggestionService) {
         this.storeService = storeService;
+        this.suggestionService = suggestionService;
+    }
+
+    @GetMapping("/suggestion/list")
+    public String showSuggestionList(
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "10") int size,
+            Model model, HttpSession session) {
+
+        UserSessionDTO loggedInUser = (UserSessionDTO) session.getAttribute("loggedInUser");
+        if (loggedInUser == null || !loggedInUser.getRoleId().equals(2)) { // roleId 2가 ADMIN
+            return "redirect:/access-denied";
+        }
+
+        int totalSuggestions = suggestionService.getTotalSuggestionCount();
+        int totalPages = (int) Math.ceil((double) totalSuggestions / size);
+        int offset = (page - 1) * size;
+
+        List<ContactUs> suggestions = suggestionService.getSuggestionsWithPagination(offset, size);
+
+
+        model.addAttribute("suggestions", suggestions);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", totalPages);
+        model.addAttribute("totalSuggestions", totalSuggestions);
+        model.addAttribute("pageSize", size);
+
+        return "admin_suggestion_list";
+    }
+
+    @GetMapping("/suggestion/{contactId}")
+    public String viewSuggestion(@PathVariable Long contactId, Model model, HttpSession session) {
+        UserSessionDTO loggedInUser = (UserSessionDTO) session.getAttribute("loggedInUser");
+        if (loggedInUser == null || !loggedInUser.getRoleId().equals(2)) { // roleId 2가 ADMIN
+            return "redirect:/access-denied";
+        }
+        // 조회수 증가
+        suggestionService.incrementViews(contactId);
+
+        ContactUs suggestion = suggestionService.getSuggestionById(contactId);
+        model.addAttribute("suggestion", suggestion);
+
+        return "admin_suggestion_view";
+    }
+
+    @PostMapping("/suggestion/delete/{contactId}")
+    public String deleteSuggestion(@PathVariable Long contactId, HttpSession session) {
+        UserSessionDTO loggedInUser = (UserSessionDTO) session.getAttribute("loggedInUser");
+        if (loggedInUser == null || !loggedInUser.getRoleId().equals(2)) { // roleId 2가 ADMIN
+            return "redirect:/access-denied";
+        }
+        suggestionService.deleteSuggestion(contactId);
+        return "redirect:/admin/suggestion/list";
     }
 
     //맛집 등록 페이지
@@ -86,7 +142,7 @@ public class AdminController {
         }
 
         try {
-            storeService.assignOwnerToStore(storeId, ownerId);
+            storeService.assignOwnerAndUpdateRole(storeId, ownerId);
             return ResponseEntity.ok("사장님이 가게에 성공적으로 매칭되었습니다.");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("매칭 중 오류가 발생했습니다.");
