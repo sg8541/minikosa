@@ -9,6 +9,7 @@ import mybatis.dao.StoreMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -92,11 +93,12 @@ public class StoreServiceImpl implements StoreService {
         }
     }
 
+    @Transactional
     @Override
-    public void assignOwnerToStore(Long storeId, Long ownerId) {
+    public void assignOwnerAndUpdateRole(Long storeId, Long ownerId) {
         storeMapper.assignOwnerToStore(storeId, ownerId);
+        storeMapper.updateMemberRole(ownerId);
     }
-
     @Override
     public List<Member> searchMembersByEmail(String email) {
         return storeMapper.searchMembersByEmail(email);

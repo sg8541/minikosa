@@ -8,11 +8,12 @@ import java.time.LocalDateTime;
 public class ContactUs {
     private Long contactId;
     private Long memberId;
+    private String memberName; // 작성자 이름
     private String title;
     private String storeName;
     private String content;
-    private LocalDateTime createdAt ; // 데이터베이스에 저장되는 비밀번호
+    private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private boolean isModified;
-
+    private int views; // 조회수 필드 추가
 }

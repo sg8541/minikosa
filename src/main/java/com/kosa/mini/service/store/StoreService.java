@@ -9,7 +9,7 @@ import java.util.List;
 public interface StoreService {
     void createStore(StoreDTO storeDTO, List<MenuDTO> menuDTOs) throws Exception;
 
-    void assignOwnerToStore(Long storeId, Long ownerId);
+    void assignOwnerAndUpdateRole(Long storeId, Long ownerId);
 
     List<Member> searchMembersByEmail(String email);
 

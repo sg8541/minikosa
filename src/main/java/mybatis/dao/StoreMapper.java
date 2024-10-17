@@ -30,6 +30,9 @@ public interface StoreMapper {
     @Update("UPDATE stores SET owner_id = #{ownerId} WHERE store_id = #{storeId}")
     void assignOwnerToStore(@Param("storeId") Long storeId, @Param("ownerId") Long ownerId);
 
+    @Update("UPDATE members SET role_id = 3 WHERE member_id = #{ownerId}")
+    void updateMemberRole(@Param("ownerId") Long ownerId);
+
     // 사용자 검색 메서드
     @Select("SELECT member_id, name, nickname, email, phone_number FROM members WHERE email LIKE CONCAT('%', #{email}, '%')")
     List<Member> searchMembersByEmail(@Param("email") String email);

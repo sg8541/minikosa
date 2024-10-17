@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>고객 요청 리스트 | 먹코살코</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- 파비콘 설정 -->
+    <link rel="shortcut icon" th:href="@{/images/mini_logo.jpg}">
+
+    <!-- 메인 스타일시트 -->
+    <style>
+        /* 기본 리셋 및 스타일 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "맑은 고딕", sans-serif;
+            background-color: #f9f9f9;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        /* 헤더 및 내비게이션 바 전체 너비 설정 */
+        .header {
+            width: 100%;
+            background-color: #fff; /* 배경색 */
+            border-bottom: 2px solid #FF885B; /* 테두리 추가 및 색상 변경 */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* 헤더에 그림자 추가 */
+            top: 0;
+            left: 0;
+            z-index: 600;
+        }
+
+        /* 컨테이너 스타일 */
+        .container {
+            max-width: 1200px;
+            margin: 80px auto 0 auto;
+            padding: 20px;
+        }
+
+        /* 헤더 내부 컨텐츠 정렬 */
+        .header .container-inner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px;
+        }
+
+        /* 로고 스타일 */
+        .header .logo {
+            display: flex;
+            align-items: center;
+            margin-left: 30px;
+        }
+
+        .header .logo img {
+            width: 50px;
+            height: auto;
+            margin-right: 10px;
+        }
+
+        .header .logo h1 {
+            font-size: 24px;
+            color: #FF885B;
+        }
+
+        /* 내비게이션 스타일 */
+        .nav {
+            display: flex;
+            gap: 25px;
+            position: relative;
+            align-items: center;
+            margin-right: 30px;
+        }
+
+        .nav a {
+            text-decoration: none;
+            color: #333;
+            font-weight: bold;
+            transition: color 0.5s;
+            padding: 8px 12px;
+        }
+
+        .nav a:hover {
+            color: #FF885B;
+        }
+
+        /* 드롭다운 메뉴 스타일 */
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            color: #333;
+            font-weight: bold;
+        }
+
+        .dropdown button:hover {
+            color: #FF885B;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            right: 0;
+            background-color: #fff;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px rgba(0,0,0,0.2);
+            border: 1px solid #ddd;
+            z-index: 1;
+            border-radius: 5px;
+        }
+
+        .dropdown-content a {
+            color: #333;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            transition: background-color 0.3s;
+        }
+
+        .dropdown-content a:hover {
+            background-color: #f1f1f1;
+            color: #FF885B;
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        /* 푸터 스타일 */
+        footer {
+            background-color: #FF885B;
+            color: #fff;
+            padding: 20px 10px;
+            margin-top: 40px;
+        }
+
+        .footer-container {
+            max-width: 1500px;
+            width: 100%;
+            margin: 0 auto;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 100px;
+            padding: 10px 0px;
+        }
+
+        .footer-section {
+            flex: 1 1 200px;
+        }
+
+        .footer-section h4 {
+            margin-bottom: 15px;
+            font-size: 18px;
+            border-bottom: 2px solid #fff;
+            display: inline-block;
+            padding-bottom: 5px;
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section ul li {
+            margin-bottom: 10px;
+        }
+
+        .footer-section ul li a {
+            color: #fff;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-section ul li a:hover {
+            color: #e07a4d;
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .social-icons a img {
+            width: 24px;
+            height: 24px;
+            filter: invert(100%);
+            transition: filter 0.3s;
+        }
+
+        .social-icons a:hover img {
+            filter: invert(75%) sepia(100%) saturate(500%) hue-rotate(300deg);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            font-size: 14px;
+            border-top: 1px solid rgba(255, 255, 255, 0.3);
+            padding-top: 10px;
+        }
+
+        /* 메인 콘텐츠 스타일 */
+        .main-content {
+            width: 800px;
+            margin: 75px auto;
+            background-color: #fff;
+            text-align: center;
+            padding: 30px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            margin-bottom: 100px;
+        }
+
+        .main-content h2 {
+            font-size: 28px;
+            color: #FF885B;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        /* 리스트 불릿 제거 */
+        .main-content ul {
+            list-style: none;
+        }
+
+        .main-content > ul > li:first-child {
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #FF885B;
+        }
+
+        .main-content > ul > li:nth-child(2) {
+            text-align: center;
+            font-size: 15px;
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        /* 이미지 크기 조정 */
+        .main-logo {
+            width: 150px;
+            height: auto;
+            margin: 10px auto;
+            display: block;
+        }
+
+        /* 검색 폼 영역 */
+        #liSearchOption {
+            margin-top: 30px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: center;
+        }
+
+        #liSearchOption > div {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        #selSearchOption, #txtKeyWord {
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        #liSearchOption input[type='button'] {
+            background-color: #FF885B;
+            border: none;
+            color: white;
+            padding: 8px 16px;
+            font-size: 14px;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+
+        #liSearchOption input[type='button']:hover {
+            background-color: #e07a4d;
+        }
+
+        /* 게시글 테이블 */
+        #ulTable {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        #ulTable > li > ul {
+            display: flex;
+            border-bottom: 1px solid #ddd;
+        }
+
+        #ulTable > li > ul > li {
+            padding: 10px;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        /* 헤더 스타일 */
+        #ulTable > li:first-child > ul > li {
+            background-color: #FF885B;
+            color: #fff;
+            font-weight: bold;
+        }
+
+        /* 열 너비 조정 */
+        #ulTable > li > ul > li:nth-child(1) {
+            width: 10%;
+        }
+        #ulTable > li > ul > li:nth-child(2) {
+            width: 45%;
+            text-align: left;
+            padding-left: 10px;
+        }
+        #ulTable > li > ul > li:nth-child(3) {
+            width: 20%;
+        }
+        #ulTable > li > ul > li:nth-child(4) {
+            width: 15%;
+        }
+        #ulTable > li > ul > li:nth-child(5) {
+            width: 10%;
+        }
+
+        /* 게시물 행 스타일 */
+        #ulTable > li > ul:hover {
+            background-color: #f9f9f9;
+        }
+
+        .left {
+            text-align: left;
+        }
+
+        /* 맛집 추가 버튼 */
+        #writeStore {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 20px;
+            gap: 10px;
+        }
+
+        #writeStore input[type='button'] {
+            background-color: #FF885B;
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        #writeStore input[type='button']:hover {
+            background-color: #e07a4d;
+        }
+
+        /* 페이징 영역 */
+        #divPaging {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 15px;
+        }
+
+        #divPaging > div {
+            margin: 0 5px;
+        }
+
+        #divPaging div {
+            padding: 5px 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        #divPaging div:hover {
+            background-color: #FF885B;
+            color: #fff;
+        }
+
+        #divPaging div b {
+            padding: 8px 12px;
+            border-radius: 4px;
+        }
+
+        /* 반응형 디자인 */
+        @media (max-width: 850px) {
+            .main-content {
+                width: 90%;
+                padding: 15px;
+            }
+
+            #ulTable > li > ul > li {
+                font-size: 12px;
+                padding: 8px;
+            }
+
+            #writeStore input[type='button'] {
+                padding: 8px 16px;
+                font-size: 14px;
+            }
+        }
+
+        /* 설명 텍스트 스타일 */
+        .description {
+            text-align: center;
+            font-size: 15px;
+            color: #666;
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+
+        /* 제목 링크에서 밑줄 제거 */
+        #ulTable .left a {
+            text-decoration: none;
+            color: inherit; /* 필요에 따라 색상 설정 */
+        }
+
+        #ulTable .left a:hover {
+            text-decoration: underline; /* 마우스를 올렸을 때 밑줄 표시 */
+        }
+
+        /* 또는 클래스를 사용하는 경우:
+        .title-link {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .title-link:hover {
+            text-decoration: underline;
+        }
+        */
+    </style>
+</head>
+<body>
+<!-- 헤더: 로고와 네비게이션 -->
+<div class="header">
+    <div class="container-inner">
+        <div class="logo">
+            <img th:src="@{/images/main_logo.png}" alt="Main Logo">
+            <h1>먹코살코</h1>
+        </div>
+        <nav class="nav" id="mainNav">
+            <a th:href="@{/home}">홈</a>
+            <a th:href="@{/intro}">팀원 소개</a>
+            <a th:href="@{/contact}">문의</a>
+            <!-- 드롭다운 메뉴 추가 -->
+            <div class="dropdown">
+                <button id="userMenuButton">▼</button>
+                <div class="dropdown-content" id="userMenu">
+                    <!-- 로그인 전 메뉴 -->
+                    <a th:href="@{/login}" id="loginLink">로그인</a>
+                    <!-- 로그인 후 메뉴 (숨김 상태) -->
+                    <a th:href="@{/myinfo}" id="profileLink" style="display: none;">내 정보 페이지</a>
+                    <a th:href="@{/logout}" id="logoutLink" style="display: none;">로그아웃</a>
+                </div>
+            </div>
+        </nav>
+    </div>
+</div>
+
+<!-- 메인 콘텐츠: 고객 요청 사항 게시판 -->
+<div class="main-content">
+    <ul>
+        <!-- 게시판 제목 -->
+        <h2>고객 요청 사항</h2>
+        <!-- 크기 조정된 이미지 추가 -->
+        <li><img th:src="@{/images/main_logo.png}" alt="Main Logo" class="main-logo"></li>
+        <!-- 게시판 설명 -->
+        <p class="description">사용자들이 요청한 내용을 정리한 페이지입니다.</p>
+
+        <!-- 검색 폼 영역 -->
+        <li id='liSearchOption'>
+            <div>
+                <select id='selSearchOption'>
+                    <option value='A'>제목+내용</option>
+                    <option value='T'>제목</option>
+                    <option value='C'>내용</option>
+                    <option value='W'>작성자</option>
+                </select>
+                <input id='txtKeyWord' type='text' placeholder='검색어를 입력하세요' />
+                <input type='button' value='검색' />
+            </div>
+        </li>
+
+        <!-- 게시글 테이블 -->
+        <li>
+            <ul id="ulTable">
+                <!-- 테이블 헤더 -->
+                <li>
+                    <ul>
+                        <li>No</li>
+                        <li>제목</li>
+                        <li>작성일</li>
+                        <li>작성자</li>
+                        <li>조회수</li>
+                    </ul>
+                </li>
+                <!-- 게시물 리스트 영역 -->
+                <!-- Thymeleaf를 사용하여 반복문으로 데이터 출력 -->
+                <li th:each="suggestion, iterStat : ${suggestions}">
+                    <ul>
+                        <li th:text="${totalSuggestions - ((currentPage - 1) * pageSize) - iterStat.index}"></li>
+                        <li class="left">
+                            <a th:href="@{/admin/suggestion/{id}(id=${suggestion.contactId})}"
+                               th:text="${suggestion.title}"></a>
+                            <!-- 또는 클래스 사용 시:
+                            <a class="title-link" th:href="@{/admin/suggestion/{id}(id=${suggestion.contactId})}"
+                               th:text="${suggestion.title}"></a>
+                            -->
+                        </li>
+                        <li th:text="${#temporals.format(suggestion.createdAt, 'yyyy.MM.dd')}"></li>
+                        <li th:text="${suggestion.memberName != null ? suggestion.memberName : 'Unknown'}"></li>
+                        <li th:text="${suggestion.views}"></li>
+                    </ul>
+                </li>
+
+                <!-- 빈 리스트 처리 -->
+                <li th:if="${#lists.isEmpty(suggestions)}">
+                    <p>등록된 요청 사항이 없습니다.</p>
+                </li>
+            </ul>
+        </li>
+
+        <!-- 맛집 추가 및 사장 등록 버튼 -->
+        <!-- 관리자만 접근 가능 -->
+        <li id="writeStore">
+            <input type="button" value="맛집 추가" onclick="location.href='/admin/create/store'" class="add-button" />
+            <input type="button" value="사장 등록" onclick="location.href='/admin/register/owner'" class="register-button" />
+        </li>
+
+        <!-- 게시판 페이징 영역 -->
+        <li>
+            <div id="divPaging">
+                <!-- 이전 페이지 버튼 -->
+                <div th:if="${currentPage > 1}">
+                    <a th:href="@{/admin/suggestion/list(page=${currentPage - 1}, size=${pageSize})}">◀</a>
+                </div>
+                <!-- 페이지 번호 -->
+                <div th:each="pageNum : ${#numbers.sequence(1, totalPages)}">
+                    <div th:if="${pageNum == currentPage}">
+                        <b th:text="${pageNum}"></b>
+                    </div>
+                    <div th:if="${pageNum != currentPage}">
+                        <a th:href="@{/admin/suggestion/list(page=${pageNum}, size=${pageSize})}" th:text="${pageNum}"></a>
+                    </div>
+                </div>
+                <!-- 다음 페이지 버튼 -->
+                <div th:if="${currentPage < totalPages}">
+                    <a th:href="@{/admin/suggestion/list(page=${currentPage + 1}, size=${pageSize})}">▶</a>
+                </div>
+            </div>
+        </li>
+    </ul>
+</div>
+
+<!-- 푸터 섹션 -->
+<footer>
+    <div class="footer-container">
+        <!-- 회사 소개 -->
+        <div class="footer-section">
+            <h4>프로젝트 소개</h4>
+            <p>먹코살코는 최고의 맛집을 제공하기 위해 최선을 다하고 있습니다.</p>
+        </div>
+        <!-- 빠른 링크 -->
+        <div class="footer-section">
+            <h4>빠른 링크</h4>
+            <ul>
+                <li><a th:href="@{/home}">홈</a></li>
+                <li><a th:href="@{/intro}">소개</a></li>
+                <li><a th:href="@{/service}">서비스</a></li>
+                <li><a th:href="@{/contact}">문의</a></li>
+            </ul>
+        </div>
+        <!-- 연락처 -->
+        <div class="footer-section">
+            <h4>연락처</h4>
+            <ul>
+                <li>전화: 02-112-7777</li>
+                <li>이메일: admin@taste_police.com</li>
+                <li>주소: 서울특별시 송파구 중대로 135, 서관 12층</li>
+            </ul>
+        </div>
+        <!-- 소셜 미디어 -->
+        <div class="footer-section">
+            <h4>소셜 미디어</h4>
+            <div class="social-icons">
+                <a href="https://www.facebook.com/yourprofile" aria-label="페이스북">
+                    <img th:src="@{/images/facebook_icon.png}" alt="Facebook">
+                </a>
+                <a href="https://www.twitter.com/yourprofile" aria-label="트위터">
+                    <img th:src="@{/images/twitter_icon.png}" alt="Twitter">
+                </a>
+                <a href="https://www.instagram.com/yourprofile" aria-label="인스타그램">
+                    <img th:src="@{/images/instagram_icon.png}" alt="Instagram">
+                </a>
+            </div>
+        </div>
+    </div>
+    <!-- 푸터 하단 정보 -->
+    <div class="footer-bottom">
+        &copy; 2024 먹코살코. All rights reserved.
+    </div>
+</footer>
+
+<!-- 스크립트 -->
+<script>
+    // 사용자 메뉴 표시 로직 (JavaScript)
+    document.addEventListener('DOMContentLoaded', function () {
+        var loggedInUser = /*[[${loggedInUser}]]*/ 'null';
+        var loginLink = document.getElementById('loginLink');
+        var profileLink = document.getElementById('profileLink');
+        var logoutLink = document.getElementById('logoutLink');
+
+        if (loggedInUser !== 'null') {
+            loginLink.style.display = 'none';
+            profileLink.style.display = 'block';
+            logoutLink.style.display = 'block';
+        } else {
+            loginLink.style.display = 'block';
+            profileLink.style.display = 'none';
+            logoutLink.style.display = 'none';
+        }
+    });
+</script>
+</body>
+</html>
