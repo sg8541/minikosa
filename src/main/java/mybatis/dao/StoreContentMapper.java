@@ -58,7 +58,9 @@ public interface StoreContentMapper {
             "on r.review_id = rr.reply_id " +
             "left join roles roles " +
             "on roles.role_id = rr.owner_id " +
-            "where r.store_id = #{num}")
+            "where r.store_id = #{num} " +
+            "order by r.created_at " +
+            "limit 4")
     public List<ReviewReplyDTO> getStoreReplyAll(int num);
 
     @Insert("insert into reviews " +

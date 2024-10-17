@@ -241,21 +241,12 @@
                                         <span class="text_score">점</span>
                                     </em>
                                     <span class="ico_star_rate ">
-                                <span class="ico_star_rate inner_star" style="width: 100%">
-                                </span></span>
-
-
+                                <span class="ico_star_rate inner_star" style="width: 100%"></span>
+                                    </span>
                                 </div>
                             </div>
 
                             <strong class="screen_out">추천 포인트</strong>
-                            <!--좋아요 태그 부분인데 안나타남-->
-                            <!--                    <div class="view_like_point">
-                                <span class="chip_like_point chip_type1">
-                                    <span class="ico_comm ico_like3"></span>
-                                    <span class="text_like">가성비dsdfsdfs</span>
-                                </span>
-                            </div>-->
                             <!--리뷰 댓글 시작-->
                             <form method="post" id="reviewList" th:action="|/store/${content.storeId}/review/${session.loggedInUser.memberId}|">
                                 <input type="hidden" name="storeId" th:value="${content.storeId}" />
@@ -274,7 +265,7 @@
                                                     <em class="screen_out">작성자 : </em>
                                                     <a href="#none" class="link_user">
                                                         <div class="inner_user">
-                                                            <span class="text_username" th:text="${session.loggedInUser.nickname}">###닉네임</span>
+                                                            <span class="text_username" th:text="${review.nickname}">###닉네임</span>
                                                         </div>
                                                     </a>
                                                     <span class="bar"></span>
@@ -322,12 +313,6 @@
                                                             <span id="re-comment" th:text="${review.replyText}">### 맛있게 드셔주셔서 감사합니다!</span>
 
                                                         </p>
-                                                        <!--               <textarea class="comment_write" name="" id="p-comment" type="text"></textarea>
-
-                                                        <div class="pro_write">
-                                                <button class="select_button" type="reset">다시쓰기</button>
-                                                <button class="select_button" id="p-write" type="submit">작성완료</button>
-                                            </div>-->
                                                     </div>
                                                     <div class="wrap_util">
 
