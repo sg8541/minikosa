@@ -17,12 +17,15 @@ public class WebConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(adminInterceptor)
                 .addPathPatterns("/admin/**"); // /admin/** 경로에 인터셉터 적용
-                //.excludePathPatterns("/admin/login", "/admin/register"); // 필요에 따라 제외할 경로 설정
+        //.excludePathPatterns("/admin/login", "/admin/register"); // 필요에 따라 제외할 경로 설정
     }
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/css/**", "/js/**", "/images/**")
-                .addResourceLocations("classpath:/static/css/", "classpath:/static/js/", "classpath:/static/images/");
+        registry.addResourceHandler("/uploads/stores/**")
+                .addResourceLocations("file:C:/uploads/stores/");
+        registry.addResourceHandler("/uploads/menus/**")
+                .addResourceLocations("file:C:/uploads/menus/");
     }
+
 }

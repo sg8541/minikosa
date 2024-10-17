@@ -18,6 +18,5 @@ public class StoreContentDTO {
    private int ownerId;
    private double ratingAvg;
    private int countReview;
-//   private List<MenuDTO> menuDTO;
-
+   private List<MenuDTO> menuDTO;
 }

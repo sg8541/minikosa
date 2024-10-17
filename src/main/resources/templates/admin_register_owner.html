@@ -625,27 +625,12 @@
 
     <!-- 스크립트 -->
     <script>
-        // 모의 데이터
-        const users = [
-            { name: "김슬기", nickname: "슬기", email: "slg@naver.com", contact: "010-1234-5678" },
-            { name: "장현수", nickname: "현수", email: "hys@gmail.com", contact: "010-2345-6789" },
-            { name: "정지용", nickname: "지용", email: "jy@gmail.com", contact: "010-3456-7890" },
-            { name: "한규현", nickname: "규현", email: "gh@naver.com", contact: "010-4567-8901" }
-        ];
-
-        const stores = [
-            { name: "KOSA 라멘집", address: "서울특별시 송파구" },
-            { name: "KOSA 한식집", address: "서울특별시 강남구" },
-            { name: "BHQ 욕설 리뷰 카페", address: "서울특별시 마포구" },
-            { name: "대만반점", address: "서울특별시 서초구" }
-        ];
-
         let selectedUser = null;
         let selectedStore = null;
 
         // 사용자 검색 함수
         function searchUser() {
-            const email = document.getElementById('searchEmail').value.trim().toLowerCase();
+            const email = document.getElementById('searchEmail').value.trim();
             const userList = document.getElementById('userList');
             userList.innerHTML = '';
 
@@ -654,19 +639,24 @@
                 return;
             }
 
-            const filteredUsers = users.filter(user => user.email.toLowerCase().includes(email));
+            fetch(`/admin/search/users?email=${encodeURIComponent(email)}`)
+                .then(response => response.json())
+                .then(users => {
+                    if (users.length === 0) {
+                        userList.innerHTML = '<li>검색 결과가 없습니다.</li>';
+                        return;
+                    }
 
-            if (filteredUsers.length === 0) {
-                userList.innerHTML = '<li>검색 결과가 없습니다.</li>';
-                return;
-            }
-
-            filteredUsers.forEach(user => {
-                const li = document.createElement('li');
-                li.textContent = `${user.name} (${user.nickname}) - ${user.email} - ${user.contact}`;
-                li.onclick = () => selectUser(user);
-                userList.appendChild(li);
-            });
+                    users.forEach(user => {
+                        const li = document.createElement('li');
+                        li.textContent = `${user.name} (${user.nickname}) - ${user.email} - ${user.phoneNumber}`;
+                        li.onclick = () => selectUser(user);
+                        userList.appendChild(li);
+                    });
+                })
+                .catch(error => {
+                    console.error('Error fetching users:', error);
+                });
         }
 
         // 사용자 선택 함수
@@ -674,23 +664,16 @@
             selectedUser = user;
             const selectedUserBox = document.getElementById('selectedUserBox');
             selectedUserBox.innerHTML = `
-                <button class="remove-btn" onclick="removeUser()">×</button>
-                <strong>${user.name} (${user.nickname})</strong><br>
-                이메일: ${user.email}<br>
-                연락처: ${user.contact}
-            `;
+            <button class="remove-btn" onclick="removeUser()">×</button>
+            <strong>${user.name} (${user.nickname})</strong><br>
+            이메일: ${user.email}<br>
+            연락처: ${user.phoneNumber}
+        `;
         }
 
-        // 사용자 제거 함수
-        function removeUser() {
-            selectedUser = null;
-            const selectedUserBox = document.getElementById('selectedUserBox');
-            selectedUserBox.innerHTML = '선택된 사용자가 없습니다.';
-        }
-
-        // 가게 검색 함수
+        // 가게 검색 함수 수정
         function searchStore() {
-            const storeName = document.getElementById('searchStore').value.trim().toLowerCase();
+            const storeName = document.getElementById('searchStore').value.trim();
             const storeList = document.getElementById('storeList');
             storeList.innerHTML = '';
 
@@ -699,19 +682,24 @@
                 return;
             }
 
-            const filteredStores = stores.filter(store => store.name.toLowerCase().includes(storeName));
+            fetch(`/admin/search/stores?storeName=${encodeURIComponent(storeName)}`)
+                .then(response => response.json())
+                .then(stores => {
+                    if (stores.length === 0) {
+                        storeList.innerHTML = '<li>검색 결과가 없습니다.</li>';
+                        return;
+                    }
 
-            if (filteredStores.length === 0) {
-                storeList.innerHTML = '<li>검색 결과가 없습니다.</li>';
-                return;
-            }
-
-            filteredStores.forEach(store => {
-                const li = document.createElement('li');
-                li.textContent = `${store.name} - ${store.address}`;
-                li.onclick = () => selectStore(store);
-                storeList.appendChild(li);
-            });
+                    stores.forEach(store => {
+                        const li = document.createElement('li');
+                        li.textContent = `${store.storeName} - ${store.roadAddress}`;
+                        li.onclick = () => selectStore(store);
+                        storeList.appendChild(li);
+                    });
+                })
+                .catch(error => {
+                    console.error('Error fetching stores:', error);
+                });
         }
 
         // 가게 선택 함수
@@ -719,17 +707,10 @@
             selectedStore = store;
             const selectedStoreBox = document.getElementById('selectedStoreBox');
             selectedStoreBox.innerHTML = `
-                <button class="remove-btn" onclick="removeStore()">×</button>
-                <strong>${store.name}</strong><br>
-                주소: ${store.address}
-            `;
-        }
-
-        // 가게 제거 함수
-        function removeStore() {
-            selectedStore = null;
-            const selectedStoreBox = document.getElementById('selectedStoreBox');
-            selectedStoreBox.innerHTML = '선택된 가게가 없습니다.';
+            <button class="remove-btn" onclick="removeStore()">×</button>
+            <strong>${store.storeName}</strong><br>
+            주소: ${store.roadAddress}
+        `;
         }
 
         // 매칭 함수
@@ -739,15 +720,29 @@
                 return;
             }
 
-            // 추후 백엔드 서버 측 처리.
-            // 여기서는 예시로 매칭 완료 메시지를 표시.
-            alert(`사용자 ${selectedUser.name}님이 가게 ${selectedStore.name}의 사장으로 등록되었습니다.`);
-            
-            // 매칭 후 선택 초기화
-            selectedUser = null;
-            selectedStore = null;
-            document.getElementById('selectedUserBox').innerHTML = '선택된 사용자가 없습니다.';
-            document.getElementById('selectedStoreBox').innerHTML = '선택된 가게가 없습니다.';
+            const formData = new FormData();
+            formData.append('storeId', selectedStore.storeId);
+            formData.append('ownerId', selectedUser.memberId);
+
+            fetch('/admin/assign/owner', {
+                method: 'POST',
+                body: formData
+            })
+                .then(response => {
+                    if (response.ok) {
+                        alert('사장님이 가게에 성공적으로 매칭되었습니다.');
+                        // 매칭 후 이동
+                        window.location.href = '/content';
+                    } else {
+                        response.text().then(text => {
+                            alert('매칭 실패: ' + text);
+                        });
+                    }
+                })
+                .catch(error => {
+                    console.error('Error assigning owner:', error);
+                    alert('매칭 중 오류가 발생했습니다.');
+                });
         }
     </script>
 </body>
