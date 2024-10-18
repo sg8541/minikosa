@@ -100,7 +100,7 @@ uBtn.forEach(function (btn) {
 /*사장 댓글 관련 기능*/
 
 /*답글 클릭 시*/
-function pWriteBox(reviewId) {
+function pWriteBox(reviewId, replyContainer) {
     let box = document.createElement("li");
     box.className = 'reply_comment_list';
     box.innerHTML =
@@ -164,6 +164,7 @@ pBtn.forEach(function (btn) {
             message = "해당 답글을 수정하시겠습니까?";
             result = getMessage(message);
             if (result) {
+                btn.style.display = 'none';
                 sessionStorage.setItem('scrollPosition', window.pageYOffset);
                 let tagContent = removeTag(replyContainer); // 기존 답글 내용을 가져옴
                 modifyReply(replyContainer, tagContent, reviewId, replyId); // 답글 수정 UI 생성

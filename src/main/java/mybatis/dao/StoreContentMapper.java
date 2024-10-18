@@ -62,7 +62,7 @@ public interface StoreContentMapper {
             "left join members m " +
             "on r.member_id = m.member_id " +
             "where r.store_id = #{num} " +
-            "order by r.created_at desc" +
+            "order by r.created_at desc " +
             "limit 4")
     public List<ReviewReplyDTO> getStoreReplyAll(int num);
 
