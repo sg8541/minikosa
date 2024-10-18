@@ -32,7 +32,7 @@ public class SuggestionServiceImpl implements SuggestionService {
 
     @Override
     public ContactUs getSuggestionById(Long contactId) {
-        suggestionMapper.incrementViews(contactId);
+//        suggestionMapper.incrementViews(contactId);
         return suggestionMapper.getContactUsById(contactId);
     }
 

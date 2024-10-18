@@ -6,7 +6,7 @@ import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
 @Mapper
-public interface ResetPassword {
+public interface ResetPasswordMapper {
 
     @Select("SELECT member_id, name, email, nickname, password, role_id, phone_number, created_at FROM members WHERE name = #{name} AND phone_number = #{phoneNumber} AND email = #{email}")
     ResetPasswordDTO searchMember(String name, String phoneNumber, String email);

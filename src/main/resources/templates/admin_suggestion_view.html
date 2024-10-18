@@ -140,6 +140,14 @@
       display: block;
     }
 
+    .description {
+      text-align: center;
+      font-size: 15px;
+      color: #666;
+      margin-top: 20px;
+      margin-bottom: 20px;
+    }
+
     /* 게시글 보기 스타일 */
     #viewPostWrapper {
       width: 800px;
@@ -374,7 +382,7 @@
 <div class="header">
   <div class="container-inner">
     <div class="logo">
-      <li><img th:src="@{/images/main_logo.png}" alt="Main Logo" class="main-logo"></li>
+      <img th:src="@{/images/main_logo.png}" alt="Main Logo" class="main-logo">
       <h1>먹코살코</h1>
     </div>
     <nav class="nav" id="mainNav">
@@ -398,12 +406,16 @@
 
 <!-- 게시글 보기 섹션 -->
 <div id="viewPostWrapper">
-  <!-- 게시글 제목 -->
-  <h2 th:text="${suggestion.title}"></h2>
+  <div class="subtitle">
+    <img th:src="@{/images/main_logo.png}" alt="Main Logo">
+    <p class="description">사용자가 서비스 개선을 위해 제안한 내용입니다.</p>
+    <!-- 게시글 제목 -->
+    <h2 th:text="${suggestion.title}"></h2>
+  </div>
   <!-- 게시글 메타 정보 -->
   <div class="post-meta">
-    <span>작성자: <span th:text="${suggestion.memberId}"></span></span> |
-    <span>작성일: <span th:text="${suggestion.createdAt}"></span></span> |
+    <span>작성자: <span th:text="${suggestion.memberName}"></span></span> |
+    <span>작성일: <span th:text="${#temporals.format(suggestion.createdAt, 'yyyy.MM.dd')}"></span></span> |
     <span>조회수: <span th:text="${suggestion.views}"></span></span>
   </div>
 
