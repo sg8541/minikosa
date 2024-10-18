@@ -15,6 +15,7 @@ public class StoreContentDTO {
    private String storeDescription;
    private String webSiteInfo;
    private String contactNumber;
+   private String storePhoto;
    private int ownerId;
    private double ratingAvg;
    private int countReview;
