@@ -40,5 +40,8 @@ public interface StoreMapper {
     // 가게 검색 메서드
     @Select("SELECT store_id, store_name, road_address FROM stores WHERE store_name LIKE CONCAT('%', #{storeName}, '%')")
     List<StoreDTO> searchStoresByName(@Param("storeName") String storeName);
+
+    @Select("SELECT * FROM stores WHERE owner_id = #{ownerId}")
+    Store findByOwnerId(@Param("ownerId") Long ownerId);
 }
 

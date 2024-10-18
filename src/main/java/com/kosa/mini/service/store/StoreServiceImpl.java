@@ -109,6 +109,11 @@ public class StoreServiceImpl implements StoreService {
         return storeMapper.searchStoresByName(storeName);
     }
 
+    @Override
+    public Store getStoreByOwnerId(Long ownerId) {
+        return storeMapper.findByOwnerId(ownerId);
+    }
+
     private String saveFile(MultipartFile file, String directory) throws IOException {
         File uploadDir = new File(directory);
         if (!uploadDir.exists() && !uploadDir.mkdirs()) {

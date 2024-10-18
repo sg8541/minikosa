@@ -1,18 +1,18 @@
 package com.kosa.mini.service.member;
 
 import com.kosa.mini.domain.member.ResetPasswordDTO;
-import mybatis.dao.ResetPassword;
+import mybatis.dao.ResetPasswordMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class ResetPasswordServiceImpl implements ResetPasswordService {
 
-    private final ResetPassword resetPassword;
+    private final ResetPasswordMapper resetPasswordMapper;
 
     @Autowired
-    public ResetPasswordServiceImpl(ResetPassword resetPassword) {
-        this.resetPassword = resetPassword;
+    public ResetPasswordServiceImpl(ResetPasswordMapper resetPasswordMapper) {
+        this.resetPasswordMapper = resetPasswordMapper;
     }
 
     @Override
@@ -23,12 +23,12 @@ public class ResetPasswordServiceImpl implements ResetPasswordService {
         }
 
         // 비밀번호 업데이트
-        int result = resetPassword.updatePassword(resetPasswordDTO.getNewPassword(), resetPasswordDTO.getEmail());
+        int result = resetPasswordMapper.updatePassword(resetPasswordDTO.getNewPassword(), resetPasswordDTO.getEmail());
         return result > 0;
     }
 
     @Override
     public ResetPasswordDTO searchMember(String name, String phoneNumber, String email) {
-        return resetPassword.searchMember(name, phoneNumber, email);
+        return resetPasswordMapper.searchMember(name, phoneNumber, email);
     }
 }

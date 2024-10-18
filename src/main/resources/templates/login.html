@@ -460,11 +460,6 @@
         <!-- 오류 메시지 표시 -->
         <div th:if="${errorMessage}" class="error-message">
             <p th:text="${errorMessage}"></p>
-            <script th:inline="javascript">
-                /*<![CDATA[*/
-                alert([[${errorMessage}]]);
-                /*]]>*/
-            </script>
         </div>
 
         <div class="button-container">
