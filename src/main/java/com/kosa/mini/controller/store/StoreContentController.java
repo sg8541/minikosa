@@ -1,17 +1,12 @@
 package com.kosa.mini.controller.store;
 
-import com.kosa.mini.domain.store.MenuDTO;
-import com.kosa.mini.domain.store.ReviewReplyDTO;
-import com.kosa.mini.domain.store.StoreContentDTO;
-import com.kosa.mini.domain.store.StoreReviewDTO;
+import com.kosa.mini.domain.store.*;
 import com.kosa.mini.service.store.StoreContentService;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -72,10 +67,12 @@ public class StoreContentController {
     // 유저 댓글 삭제
     @PostMapping("/{num}/review/{memberId}")
     public String deleteReviews(@PathVariable int num,
-                                @PathVariable int memberId) {
+                                @PathVariable int memberId,
+                                int reviewId) {
 
-        boolean success = service.deleteUserReview(memberId);
+        boolean success = service.deleteUserReview(memberId, reviewId);
         if (success) {
+            System.out.println("리뷰 삭제~~~~~~~");
             return "redirect:/store/{num}";
         } else {
             return "redirect:/store/{num}";
@@ -101,6 +98,50 @@ public class StoreContentController {
         } else {
             return "redirect:/store/{num}";
         }
+    }
+
+    // 사장의 답글
+    @PostMapping("/{reviewId}/reply")
+    public String replyToReview(@PathVariable int reviewId,
+                                ReplyDTO replyDTO,
+                                int storeId) {
+
+        boolean success = service.insertReply(replyDTO);
+        if (success) {
+            System.out.println(replyDTO.toString());
+            System.out.println("리플 작성 성공~~~~");
+            return "redirect:/store/" + storeId;
+        }
+        System.out.println("리플 작성 실패 ~~~~");
+        return "redirect:/store/" + storeId;
+    }
+
+    // 답글 수정
+    @PostMapping("/{reviewId}/reply/{replyId}")
+    public String updateReply(@PathVariable int reviewId,
+                              @PathVariable int replyId,
+                              String replyText,
+                              int storeId) {
+        boolean success = service.updateReply(replyText, replyId);
+        if (success) {
+            System.out.println("리플 수정 성공~~~~");
+            return "redirect:/store/" + storeId;
+        }
+        System.out.println("리플 작성 실패 ~~~~");
+        return "redirect:/store/" + storeId;
+    }
+
+    // 답글 삭제
+    @PostMapping("/reply/{replyId}")
+    public String updateReply(@PathVariable int replyId,
+                              int storeId) {
+        boolean success = service.deleteReply(replyId);
+        if (success) {
+            System.out.println("리플 삭제 성공~~~~");
+            return "redirect:/store/" + storeId;
+        }
+        System.out.println("리플 삭제 실패 ~~~~");
+        return "redirect:/store/" + storeId;
     }
 }
 
