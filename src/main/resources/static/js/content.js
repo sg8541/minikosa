@@ -126,7 +126,7 @@ function pWriteBox(reviewId) {
     if (submitBtn) {
         submitBtn.addEventListener('click', function (e) {
             e.preventDefault(); // 기본 폼 제출 동작 방지
-
+            sessionStorage.setItem('scrollPosition', window.pageYOffset);
             const form = document.getElementById('reviewList'); // 폼 선택
             const reviewInput = form.querySelector('input[name="reviewId"]'); // 숨겨진 input 선택
             reviewInput.value = reviewId; // 숨겨진 input에 reviewId 설정
@@ -152,6 +152,7 @@ pBtn.forEach(function (btn) {
             message = "해당 리뷰에 답글을 작성하시겠습니까?";
             result = getMessage(message);
             if (result) {
+                sessionStorage.setItem('scrollPosition', window.pageYOffset);
                 btn.style.display = 'none';
                 const reviewId = this.getAttribute('data-review-id');
                 pWriteBox(reviewId, replyContainer);
@@ -163,6 +164,7 @@ pBtn.forEach(function (btn) {
             message = "해당 답글을 수정하시겠습니까?";
             result = getMessage(message);
             if (result) {
+                sessionStorage.setItem('scrollPosition', window.pageYOffset);
                 let tagContent = removeTag(replyContainer); // 기존 답글 내용을 가져옴
                 modifyReply(replyContainer, tagContent, reviewId, replyId); // 답글 수정 UI 생성
             }
