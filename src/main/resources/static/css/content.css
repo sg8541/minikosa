@@ -835,8 +835,9 @@ button {
 
 .menu_info .menu_text {
     display: block;
-    font-size: 24px;
+    font-size: 20px;
    /* line-height: 18px;*/
+   margin-top:5px;
 }
 
 .menu_text {
@@ -851,7 +852,7 @@ button {
 .menu_info .price_menu {
     display: block;
     font-family: Arial,sans-serif;
-    font-size: 20px;
+    font-size: 18px;
     font-weight: 700;
     letter-spacing: 0;
     /*line-height: 16px;*/
