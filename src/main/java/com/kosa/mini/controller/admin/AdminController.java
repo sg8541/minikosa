@@ -113,7 +113,7 @@ public class AdminController {
         try {
             storeService.createStore(storeDTO, storeDTO.getMenuDTOs());
             model.addAttribute("successMessage", "가게와 메뉴가 성공적으로 등록되었습니다.");
-            return "redirect:/content";
+            return "redirect:/home";
         } catch (Exception e) {
             model.addAttribute("errorMessage", e.getMessage());
             return "admin_create_store";
