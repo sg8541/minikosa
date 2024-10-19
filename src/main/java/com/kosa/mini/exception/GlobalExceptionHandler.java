@@ -32,8 +32,7 @@ public class GlobalExceptionHandler {
   // 일반적인 예외 처리
   @ExceptionHandler(Exception.class)
   public String handleException(Exception ex, Model model) {
-    model.addAttribute("errorMessage", "알 수 없는 오류가 발생했습니다.");
-    model.addAttribute("signupDTO", new SignupDTO()); // signupDTO 추가
-    return "signup";
+    model.addAttribute("errorMessage", "에러가 발생했습니다.");
+    return "prepare-page";
   }
 }

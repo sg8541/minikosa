@@ -6,7 +6,7 @@
     <title>[[${content.storeName}]]</title>
 
     <!--타이틀 옆 이미지 아이콘-->
-    <link href="//t1.daumcdn.net/localimg/localimages/07/common/kakaomap_favicon.ico" rel="shortcut icon">
+    <link rel="shortcut icon" th:href="@{/images/mini_logo.jpg}">
     <link rel="stylesheet" href="/css/content.css">
     <script type="text/javascript" src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=913010ecf61096ff085a9717807d98df&libraries=services"></script>
 </head>
@@ -28,7 +28,7 @@
                 </div>
             </form>
             <a href="/home">홈</a>
-            <a href="/intro">소개</a>
+            <a href="/intro">팀 소개</a>
             <a href="/suggestion">문의</a>
             <!--<a href="search.html">-->
             <!--</a>-->
@@ -348,10 +348,10 @@
         <div class="footer-section">
             <h4>빠른 링크</h4>
             <ul>
-                <li><a href="#home">홈</a></li>
-                <li><a href="#about">소개</a></li>
-                <li><a href="#services">서비스</a></li>
-                <li><a href="#contact">문의</a></li>
+                <li><a href="/home">홈</a></li>
+                <li><a href="/team">프로젝트 소개</a></li>
+                <li><a href="/intro">팀 소개</a></li>
+                <li><a href="/suggestion">문의</a></li>
             </ul>
         </div>
         <!-- 연락처 -->
