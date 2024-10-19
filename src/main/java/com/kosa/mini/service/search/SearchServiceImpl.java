@@ -16,15 +16,29 @@ public class SearchServiceImpl implements SearchService {
     private SearchMapper searchMapper;
 
     @Override
-    public SearchResultDTO search(String query) {
+    public SearchResultDTO search(String query, String sort, String type) {
         SearchResultDTO result = new SearchResultDTO();
         result.setQuery(query);
 
-        List<StoreDTO> stores = searchMapper.searchStores(query);
+        // Initialize default sorts
+        String storeSort = "s.updated_at DESC";
+        String reviewSort = "rv.updated_at DESC";
+
+        if ("rating".equals(sort)) {
+            if ("store".equals(type)) {
+                storeSort = "ratingAvg DESC";
+            } else if ("review".equals(type)) {
+                reviewSort = "rv.rating DESC";
+            }
+        }
+
+        // Fetch and set store results
+        List<StoreDTO> stores = searchMapper.searchStores(query, storeSort);
         result.setStoreResults(stores);
         result.setStoreCount(searchMapper.countStoreResults(query));
 
-        List<StoreReviewDTO> reviews = searchMapper.searchReviews(query);
+        // Fetch and set review results
+        List<StoreReviewDTO> reviews = searchMapper.searchReviews(query, reviewSort);
         result.setReviewResults(reviews);
         result.setReviewCount(searchMapper.countReviewResults(query));
 
