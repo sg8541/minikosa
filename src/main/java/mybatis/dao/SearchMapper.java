@@ -24,7 +24,8 @@ public interface SearchMapper {
             "LEFT JOIN categories c ON s.category_id = c.category_id " +
             "WHERE s.store_name LIKE CONCAT('%', #{query}, '%') " +
             "OR s.store_description LIKE CONCAT('%', #{query}, '%') " +
-            "GROUP BY s.store_id")
+            "GROUP BY s.store_id " +
+            "ORDER BY s.updated_at DESC")
     List<StoreDTO> searchStores(@Param("query") String query);
 
     // 리뷰 검색
@@ -43,7 +44,8 @@ public interface SearchMapper {
             "JOIN members m ON rv.member_id = m.member_id " +
             "JOIN stores s ON rv.store_id = s.store_id " + // 가게 이름 가져오기
             "WHERE rv.review_text LIKE CONCAT('%', #{query}, '%') " +
-            "OR m.nickname LIKE CONCAT('%', #{query}, '%')")
+            "OR m.nickname LIKE CONCAT('%', #{query}, '%') " +
+            "ORDER BY rv.updated_at DESC")
     List<StoreReviewDTO> searchReviews(@Param("query") String query);
 
 

@@ -89,57 +89,65 @@
             <div id="resultArticle" class="search_result" style="display: block; margin-top: 0px;">
                 <div class="result_search">
                     <div class="search-result">
-                        <span>검색 결과 : </span>
-                        <span th:text="${searchResult.storeCount + searchResult.reviewCount}">0</span>
+                        <span>가게 검색 결과 : </span>
+                        <span th:text="${searchResult.storeCount}">0</span>
                         <span> 건</span>
                     </div>
                     <div class="result-sort">
                         <a href="#none"><span>최신순</span></a>
                         <a href="#none"><span>평점순</span></a>
                     </div>
-                    <section class="food_section layout_padding-bottom">
-                        <div class="container">
-                            <!-- 가게 검색 결과 -->
-                            <div class="filters-content">
-                                <div class="row grid">
-                                    <th:block th:each="store : ${searchResult.storeResults}">
-                                        <div th:class="'col-sm-6 col-lg-4 all ' + ${store.categoryName}">
-                                            <div class="box">
-                                                <a th:href="@{'/store/' + ${store.storeId}}">
-                                                    <div class="img-box">
-                                                        <img th:src="@{${store.storePhoto}}" alt="가게 사진">
-                                                    </div>
-                                                    <div class="detail-box">
-                                                        <h5 th:text="${store.storeName}">가게 이름</h5>
-                                                        <div class="detail-desc-info">
-                                                            <p th:text="${store.storeDescription}">가게 설명</p>
-                                                            <div class="detail-rate">
-                                                                <ul>
-                                                                    <li>
-                                                                        <img width="48" height="48"
-                                                                             src="https://img.icons8.com/color/48/filled-star--v1.png"
-                                                                             alt="filled-star--v1" class="icon_star"/>
-                                                                    </li>
-                                                                    <li>
-                                                                        <span class="rate_num" th:text="${store.ratingAvg}">4.5</span>
-                                                                    </li>
-                                                                </ul>
-                                                            </div>
+                </div>
+
+                <!-- 가게 검색 결과가 있을 때 -->
+                <section class="food_section layout_padding-bottom" th:if="${searchResult.storeCount} > 0">
+                    <div class="container">
+                        <!-- 가게 검색 결과 -->
+                        <div class="filters-content">
+                            <div class="row grid">
+                                <th:block th:each="store : ${searchResult.storeResults}">
+                                    <div th:class="'col-sm-6 col-lg-4 all ' + ${store.categoryName}">
+                                        <div class="box">
+                                            <a th:href="@{'/store/' + ${store.storeId}}">
+                                                <div class="img-box">
+                                                    <img th:src="@{${store.storePhoto}}" alt="가게 사진" onerror="this.onerror=null; this.src='/images/1.jpg';"/>
+                                                </div>
+                                                <div class="detail-box">
+                                                    <h5 th:text="${store.storeName}">가게 이름</h5>
+                                                    <div class="detail-desc-info">
+                                                        <p th:text="${store.storeDescription}">가게 설명</p>
+                                                        <div class="detail-rate">
+                                                            <ul>
+                                                                <li>
+                                                                    <img width="48" height="48"
+                                                                         src="https://img.icons8.com/color/48/filled-star--v1.png"
+                                                                         alt="filled-star--v1" class="icon_star"/>
+                                                                </li>
+                                                                <li>
+                                                                    <span class="rate_num" th:text="${store.ratingAvg}">4.5</span>
+                                                                </li>
+                                                            </ul>
                                                         </div>
                                                     </div>
-                                                </a>
-                                            </div>
+                                                </div>
+                                            </a>
                                         </div>
-                                    </th:block>
-                                </div>
-                            </div>
-                            <div class="btn-box">
-                                <a href="#none">
-                                    더보기
-                                </a>
+                                    </div>
+                                </th:block>
                             </div>
                         </div>
-                    </section>
+                        <div class="btn-box">
+                            <a href="#none" class="link_more">
+                                <span class="txt_more">가게 더보기</span>
+                                <span class="ico_comm ico_more"></span>
+                            </a>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 가게 검색 결과가 없을 때 -->
+                <div class="no-results" th:if="${searchResult.storeCount} == 0">
+                    <p>가게 검색 결과가 없습니다.</p>
                 </div>
             </div>
         </div>
@@ -149,7 +157,7 @@
             <div id="resultReview" class="search_result" style="display: block; margin-top: 0px;">
                 <div class="result_search">
                     <div class="search-result">
-                        <span>검색 결과 : </span>
+                        <span>리뷰 검색 결과 : </span>
                         <span th:text="${searchResult.reviewCount}">0</span>
                         <span> 건</span>
                     </div>
@@ -157,12 +165,14 @@
                         <a href="#none"><span>최신순</span></a>
                         <a href="#none"><span>평점순</span></a>
                     </div>
-                    <div class="comments_box">
-                        <strong class="total_comment">전체
-                            <span class="color_b" th:text="${searchResult.reviewCount}">0</span></strong>
-                        <div class="user_grade_box">
-                            <th:block th:each="review : ${searchResult.reviewResults}">
-                                <div class="grade_star">
+                </div>
+
+                <!-- 리뷰 검색 결과가 있을 때 -->
+                <th:block th:if="${searchResult.reviewCount} > 0">
+                    <th:block th:each="review : ${searchResult.reviewResults}">
+                        <div class="review-box">
+                            <div class="review-header">
+                                <div class="review-info">
                                     <a th:href="@{'/store/' + ${review.storeId}}" class="search_store_name"
                                        th:text="${review.storeName}">가게명</a>
                                     <div class="grade_star">
@@ -173,64 +183,43 @@
                                         <span class="text_score">점</span>
                                     </div>
                                 </div>
-                                <div class="comment_info">
-                                    <p class="text_comment">
-                                        <span th:text="${review.reviewText}">리뷰 내용</span>
-                                    </p>
+                                <div class="review-actions">
+                                    <a th:href="@{'/store/' + ${review.storeId}}" class="comment_user_button">리뷰 보러가기</a>
+                                    <button type="button" class="comment_user_button">수정</button>
+                                    <button type="button" class="comment_user_button">삭제</button>
                                 </div>
-                                <div class="unit_info">
-                                    <em class="screen_out">작성자 : </em>
-                                    <a href="#none" class="link_user">
-                                        <div class="inner_user">
-                                            <span class="text_username" th:text="${review.memberNickname}">닉네임</span>
-                                        </div>
-                                    </a>
-                                    <span class="bar"></span>
-                                    <span class="text_item">별점 : </span>
-                                    <span class="text_desc" th:text="${review.rating}">5</span>
-                                    <span class="bar"></span>
-                                    <span class="text_item">작성일 : </span>
-                                    <span class="time_write" th:text="${#dates.format(review.createdAt, 'yyyy.MM.dd')}">2024.09.30.</span>
-                                </div>
-<!--                                <div class="photo_group">-->
-<!--                                    <ul class="list_photo">-->
-<!--                                        &lt;!&ndash; 리뷰에 사진이 있는 경우 표시 &ndash;&gt;-->
-<!--                                        <th:block th:if="${review.reviewPhoto != null}">-->
-<!--                                            <li>-->
-<!--                                                <a th:href="@{${review.reviewPhoto}}" class="box_photo">-->
-<!--                                                    <img th:src="@{${review.reviewPhoto}}" width="139" height="139"-->
-<!--                                                         alt="후기사진" class="img_thumb">-->
-<!--                                                </a>-->
-<!--                                            </li>-->
-<!--                                        </th:block>-->
-<!--                                    </ul>-->
-<!--                                </div>-->
-                                <div class="wrap_util">
-                                    <form>
-                                        <button type="button" class="comment_user_button">답글</button>
-                                        <button type="button" class="comment_user_button">수정</button>
-                                        <button type="button" class="comment_user_button">삭제</button>
-                                    </form>
-                                </div>
-                                <hr/>
-                            </th:block>
+                            </div>
+                            <div class="comment_info">
+                                <p class="text_comment">
+                                    <span th:text="${review.reviewText}">리뷰 내용</span>
+                                </p>
+                            </div>
+                            <div class="unit_info">
+                                <span class="text_item">작성자(닉네임) : </span>
+                                <span class="text_username" th:text="${review.memberNickname}">닉네임</span>
+                                <span class="bar"></span>
+                                <span class="text_item">별점 : </span>
+                                <span class="text_desc" th:text="${review.rating}">별점</span>
+                                <span class="bar"></span>
+                                <span class="text_item">작성일 : </span>
+                                <span class="time_write" th:text="${#dates.format(review.createdAt, 'yyyy.MM.dd')}">2024.09.30.</span>
+                            </div>
                         </div>
+                    </th:block>
+                    <div class="btn-box">
                         <a href="#none" class="link_more">
                             <span class="txt_more">후기 더보기</span>
                             <span class="ico_comm ico_more"></span>
                         </a>
                     </div>
-                    <div class="btn-box">
-                        <a href="#none">
-                            더보기
-                        </a>
-                    </div>
+                </th:block>
+
+                <!-- 리뷰 검색 결과가 없을 때 -->
+                <div class="no-results" th:if="${searchResult.reviewCount} == 0">
+                    <p>리뷰 검색 결과가 없습니다.</p>
                 </div>
             </div>
         </div>
-
-    </div>
-</div>
 
 <!-- 푸터 섹션 -->
 <footer>
