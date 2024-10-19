@@ -17,9 +17,11 @@ public class SearchController {
     @GetMapping("/search")
     public String search(
             @RequestParam("q") String query,
+            @RequestParam(value = "sort", defaultValue = "latest") String sort,
+            @RequestParam(value = "type", defaultValue = "store") String type,
             Model model
     ){
-        SearchResultDTO searchResult = searchService.search(query);
+        SearchResultDTO searchResult = searchService.search(query, sort, type);
         model.addAttribute("searchResult", searchResult);
         return "search_view";
     }
