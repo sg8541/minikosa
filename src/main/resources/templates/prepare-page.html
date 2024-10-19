@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>준비중 | 먹코살코</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- 파비콘 설정 -->
+    <link rel="shortcut icon" th:href="@{/images/mini_logo.jpg}">
+
+<!-- 메인 스타일시트 -->
+<style>
+    /* 기본 리셋 및 스타일 */
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: "맑은 고딕", sans-serif;
+        background-color: #f9f9f9;
+        color: #333;
+        line-height: 1.6;
+    }
+
+    /* 헤더 및 내비게이션 바 전체 너비 설정 */
+    .header {
+        width: 100%;
+        background-color: #fff; /* 배경색 */
+        border-bottom: 2px solid #FF885B; /* 테두리 추가 및 색상 변경 */
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* 헤더에 그림자 추가 */
+        /* 고정 헤더 position: fixed;  */
+        top: 0;
+        left: 0;
+        z-index: 600;
+    }
+
+    /* 헤더 내부 컨텐츠 정렬 */
+    .header .container-inner {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 15px;
+    }
+
+    /* 로고 스타일 */
+    .header .logo {
+        display: flex;
+        align-items: center;
+        margin-left: 30px;
+    }
+
+    .header .logo img {
+        width: 50px;
+        height: auto;
+        margin-right: 10px;
+    }
+
+    .header .logo h1 {
+        font-size: 24px;
+        color: #FF885B;
+    }
+
+    /* 내비게이션 스타일 */
+    .nav {
+        display: flex;
+        gap: 25px;
+        position: relative;
+        align-items: center;
+        margin-right: 30px;
+    }
+
+    .nav a {
+        text-decoration: none;
+        color: #333;
+        font-weight: bold;
+        transition: color 0.5s;
+        padding: 8px 12px;
+    }
+
+    .nav a:hover {
+        color: #FF885B;
+    }
+
+    /* 드롭다운 메뉴 스타일 */
+    .dropdown {
+        position: relative;
+        display: inline-block;
+    }
+
+    .dropdown button {
+        background: none;
+        border: none;
+        cursor: pointer;
+        font-size: 16px;
+        display: flex;
+        align-items: center;
+        color: #333;
+        font-weight: bold;
+    }
+
+    .dropdown button:hover {
+        color: #FF885B;
+    }
+
+    .dropdown-content {
+        display: none;
+        position: absolute;
+        right: 0;
+        background-color: #fff;
+        min-width: 160px;
+        box-shadow: 0px 8px 16px rgba(0,0,0,0.2);
+        border: 1px solid #ddd;
+        z-index: 1;
+        border-radius: 5px;
+    }
+
+    .dropdown-content a {
+        color: #333;
+        padding: 12px 16px;
+        text-decoration: none;
+        display: block;
+        transition: background-color 0.3s;
+    }
+
+    .dropdown-content a:hover {
+        background-color: #f1f1f1;
+        color: #FF885B;
+    }
+
+    .dropdown:hover .dropdown-content {
+        display: block;
+    }
+
+    /* 메인 콘텐츠 스타일 */
+    .main-content {
+        width: 800px;
+        margin: 75px auto; /* 상단 여백 추가 및 가운데 정렬 */
+        background-color: #fff;
+        padding: 30px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
+        margin-bottom: 100px;
+    }
+
+    .main-content h2 {
+        font-size: 28px;
+        color: #FF885B;
+        margin-bottom: 20px;
+        text-align: center;
+    }
+
+    .main-content img {
+        display: block;
+        margin: 0 auto 20px auto; /* 가운데 정렬 및 하단 여백 추가 */
+        width: 150px; /* 원하는 크기로 조정 */
+        height: auto;
+    }
+
+    .description {
+        text-align: center;
+        font-size: 15px;
+        color: #666;
+        margin-top: 20px;
+        margin-bottom: 20px;
+    }
+
+    .description a,
+    .main-content a.description {
+        text-align: center;
+        font-size: 15px;
+        color: #FF885B;
+        margin-top: 10px;
+        display: block;
+        text-decoration: none;
+        transition: color 0.3s;
+    }
+
+    /* 푸터 스타일 */
+    footer {
+        background-color: #FF885B;
+        color: #fff;
+        padding: 20px 10px;
+        margin-top: 40px;
+    }
+
+    .footer-container {
+        max-width: 1500px;
+        height: 80%;
+        width: 100%; /* 전체 너비 */
+        margin: 0 auto;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        gap: 100px;
+        padding: 10px 0px;
+    }
+
+    .footer-section {
+        flex: 1 1 200px;
+    }
+
+    .footer-section h4 {
+        margin-bottom: 15px;
+        font-size: 18px;
+        border-bottom: 2px solid #fff;
+        display: inline-block;
+        padding-bottom: 5px;
+    }
+
+    .footer-section ul {
+        list-style: none;
+    }
+
+    .footer-section ul li {
+        margin-bottom: 10px;
+    }
+
+    .footer-section ul li a {
+        color: #fff;
+        text-decoration: none;
+        transition: color 0.3s;
+    }
+
+    .footer-section ul li a:hover {
+        color: #e07a4d;
+    }
+
+    .social-icons {
+        display: flex;
+        gap: 10px;
+    }
+
+    .social-icons a img {
+        width: 24px;
+        height: 24px;
+        filter: invert(100%);
+        transition: filter 0.3s;
+    }
+
+    .social-icons a:hover img {
+        filter: invert(75%) sepia(100%) saturate(500%) hue-rotate(300deg);
+    }
+
+    .footer-bottom {
+        text-align: center;
+        font-size: 14px;
+        border-top: 1px solid rgba(255, 255, 255, 0.3);
+        padding-top: 10px;
+    }
+
+
+    /* 반응형 디자인 */
+    @media (max-width: 768px) {
+        .header .container-inner {
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .nav {
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .footer-container {
+            flex-direction: column;
+            align-items: center;
+            padding: 0 10px; /* 좌우 padding 축소 */
+        }
+
+        .footer-section {
+            flex: 1 1 100%;
+            text-align: center;
+        }
+
+        .social-icons {
+            justify-content: center;
+        }
+
+        .main-content {
+            width: 90%;
+            padding: 20px;
+        }
+
+        .main-content h2 {
+            font-size: 24px;
+        }
+
+        .button-container input[type="submit"],
+        .button-container .cancel-button {
+            width: 100%;
+            padding: 10px 0;
+            font-size: 14px;
+            margin: 10px 0;
+        }
+
+        .footer-section {
+            text-align: center;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .header .logo h1 {
+            font-size: 20px;
+        }
+
+        .nav a {
+            font-size: 14px;
+        }
+
+        .button-container input[type="submit"],
+        .button-container .cancel-button {
+            width: 100%;
+            padding: 10px 0;
+            font-size: 14px;
+            margin: 10px 0;
+        }
+
+        .footer-section {
+            text-align: center;
+        }
+    }
+
+</style>
+</head>
+
+<!-- 헤더: 로고와 네비게이션 -->
+<div class="header">
+    <div class="container-inner">
+        <div class="logo">
+            <img th:src="@{/images/main_logo.png}" alt="Main Logo">
+            <h1>먹코살코</h1>
+        </div>
+        <nav class="nav" id="mainNav">
+            <a th:href="@{/home}">홈</a>
+            <a th:href="@{/intro}">팀 소개</a>
+            <a th:href="@{/suggestion}">문의</a>
+            <!-- 드롭다운 메뉴 추가 -->
+            <div class="dropdown">
+                <button id="userMenuButton">▼</button>
+                <div class="dropdown-content" id="userMenu">
+                    <!-- 로그인 전 메뉴 -->
+                    <a th:href="@{/login}" id="loginLink">로그인</a>
+                    <!-- 로그인 후 메뉴 (숨김 상태) -->
+                    <a th:href="@{/myinfo}" id="profileLink" style="display: none;">내 정보 페이지</a>
+                    <a th:href="@{/logout}" id="logoutLink" style="display: none;">로그아웃</a>
+                </div>
+            </div>
+        </nav>
+    </div>
+</div>
+
+<!-- 메인 콘텐츠: 로그인 폼 -->
+<div class="main-content">
+    <div class="subtitle">
+        <h2>준비중</h2>
+        <img th:src="@{/images/main_logo.png}" alt="Main Logo">
+        <p class="description">현재 런칭을 준비하고 있는 페이지 입니다.</p>
+        <a href="/suggestion" class="description">회원 제안</a>
+        <a href="/home" class="description">홈으로 돌아가기</a>
+    </div>
+</div>
+
+<!-- 푸터 섹션 -->
+<footer>
+    <div class="footer-container">
+        <!-- 회사 소개 -->
+        <div class="footer-section">
+            <h4>프로젝트 소개</h4>
+            <p>먹코살코은 최고의 맛집 제공하기 위해 최선을 다하고 있습니다.</p>
+        </div>
+        <!-- 빠른 링크 -->
+        <div class="footer-section">
+            <h4>빠른 링크</h4>
+            <ul>
+                <li><a th:href="@{/home}">홈</a></li>
+                <li><a th:href="@{/intro}">팀 소개</a></li>
+                <li><a th:href="@{/service}">서비스</a></li>
+                <li><a th:href="@{/suggestion}">문의</a></li>
+            </ul>
+        </div>
+        <!-- 연락처 -->
+        <div class="footer-section">
+            <h4>연락처</h4>
+            <ul>
+                <li>전화: 02-112-7777</li>
+                <li>이메일: admin@taste_police.com</li>
+                <li>주소: 서울특별시 송파구 중대로 135, 서관 12층</li>
+            </ul>
+        </div>
+        <!-- 소셜 미디어 -->
+        <div class="footer-section">
+            <h4>소셜 미디어</h4>
+            <div class="social-icons">
+                <a href="https://www.facebook.com/yourprofile" aria-label="페이스북">
+                    <img th:src="@{/images/facebook_icon.png}" alt="Facebook">
+                </a>
+                <a href="https://www.twitter.com/yourprofile" aria-label="트위터">
+                    <img th:src="@{/images/twitter_icon.png}" alt="Twitter">
+                </a>
+                <a href="https://www.instagram.com/yourprofile" aria-label="인스타그램">
+                    <img th:src="@{/images/instagram_icon.png}" alt="Instagram">
+                </a>
+            </div>
+        </div>
+    </div>
+    <!-- 푸터 하단 정보 -->
+    <div class="footer-bottom">
+        &copy; 2024 먹코살코. All rights reserved.
+    </div>
+</footer>
+
+</body>
+</html>
