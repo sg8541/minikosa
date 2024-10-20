@@ -2,6 +2,7 @@ package com.kosa.mini.controller.store;
 
 import com.kosa.mini.domain.store.*;
 import com.kosa.mini.service.store.StoreContentService;
+import com.kosa.mini.service.store.StoreService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,8 +16,15 @@ import java.util.List;
 @RequestMapping("/store/")
 public class StoreContentController {
 
-    @Autowired
     private StoreContentService service;
+    private StoreService storeService;
+
+    @Autowired
+    public StoreContentController(StoreContentService service, StoreService storeService) {
+        this.service = service;
+        this.storeService = storeService;
+    }
+
 
     // 가게 내용 + 댓글 정보 불러오기
     @GetMapping("/{num}")
@@ -82,10 +90,14 @@ public class StoreContentController {
     }
 
     // 가게 정보 수정
-    @GetMapping("/{num}/locate")
-    public String editeStore(@PathVariable int num) {
+    @GetMapping("/admin/edit")
+    public String editeStore(long storeId,
+                             StoreDTO storeDTO,
+                             Model model) {
+        storeDTO = storeService.storeInfo(storeId);
         System.out.println("가게 수정 페이지로 이동~~~~~~~~~~~~~~");
-        return "redirect:/home";
+        model.addAttribute("storeDTO", storeDTO);
+        return "admin_edit_store";
     }
 
     // 가게 정보 삭제

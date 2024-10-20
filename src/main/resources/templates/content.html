@@ -64,16 +64,8 @@
                             <div class="btn_box">
                                 <th:block th:if="${session.loggedInUser.roleId} == 2">
                                     <form>
-                                        <input type="hidden" name="storeId" value="${content.storeId}">
-                                        <input type="hidden" name="storeName" value="${content.storeName}">
-                                        <input type="hidden" name="postCode" value="${content.postCode}">
-                                        <input type="hidden" name="roadAddress" value="${content.roadAddress}">
-                                        <input type="hidden" name="detailAddress" value="${content.detailAddress}">
-                                        <input type="hidden" name="extraAddress" value="${content.extraAddress}">
-                                        <input type="hidden" name="storeDescription" value="${content.storeDescription}">
-                                        <input type="hidden" name="webSiteInfo" value="${content.webSiteInfo}">
-                                        <input type="hidden" name="contactNumber" value="${content.contactNumber}">
-                                        <button type="submit" class="admin_button" data-result="modify" th:data-action="|/store/${content.storeId}/locate|">수정</button>
+                                        <input type="hidden" name="storeId" th:value="${content.storeId}">
+                                        <button type="submit" class="admin_button" data-result="modify" >수정</button>
                                         <button type="submit" class="admin_button" data-result="del" th:data-action="|/store/${content.storeId}/close|">삭제</button>
                                     </form>
                                 </th:block>
@@ -103,7 +95,7 @@
                         </h4>
                         <div class="place_location">
                                 <span class="address_text">
-                                    [[${content.roadAddress}]] [[${content.detailAddress}]] (우) [[${content.postCode}]]
+                                    [[${content.roadAddress}]] [[${content.detailAddress}]] (우) [[${content.postcode}]]
                                 </span>
                             <span class="address_num_text">
                                     상세주소

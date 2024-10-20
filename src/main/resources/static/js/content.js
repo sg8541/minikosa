@@ -16,9 +16,8 @@ aBtn.forEach(function (btn) {
             result = getMessage(message);
             if (result) {
                 const form = this.closest('form');
-                const actionUrl = this.getAttribute('data-action');
                 form.method = 'get';
-                form.action = actionUrl;
+                form.action = 'admin/edit';
                 form.submit();
             }
         } else if (this.getAttribute('data-result') == 'del') {

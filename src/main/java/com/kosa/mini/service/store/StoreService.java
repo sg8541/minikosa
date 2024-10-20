@@ -17,4 +17,6 @@ public interface StoreService {
     List<StoreDTO> searchStoresByName(String storeName);
 
     Store getStoreByOwnerId(Long owerId);
+
+    StoreDTO storeInfo(long storeId);
 }

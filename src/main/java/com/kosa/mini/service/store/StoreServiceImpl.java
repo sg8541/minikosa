@@ -129,4 +129,8 @@ public class StoreServiceImpl implements StoreService {
 
         return uniqueFilename;
     }
+
+    public StoreDTO storeInfo(long storeId){
+        return storeMapper.findStore(storeId);
+    }
 }

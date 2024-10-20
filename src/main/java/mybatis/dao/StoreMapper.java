@@ -43,5 +43,11 @@ public interface StoreMapper {
 
     @Select("SELECT * FROM stores WHERE owner_id = #{ownerId}")
     Store findByOwnerId(@Param("ownerId") Long ownerId);
+
+    @Select("SELECT store_name, postcode, road_address, detail_address, extra_address, category_id, store_photo, store_description, " +
+            "owner_id, opening_time, closing_time, website_info, contact_number, created_at, updated_at, is_modified " +
+            "from stores " +
+            "where store_id = #{storeId}")
+    StoreDTO findStore(long storeId);
 }
 
