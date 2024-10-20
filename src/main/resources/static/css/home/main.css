@@ -46,6 +46,21 @@ h2 {
     }
 }
 
+@media(min-width: 1180px){
+    .header .logo {
+        margin-right: -450px;
+    }
+
+}
+
+@media(max-width: 1179px) {
+    .header .logo {
+        margin-right: 40px;
+    }
+
+
+}
+
 
 a,
 a:hover,
