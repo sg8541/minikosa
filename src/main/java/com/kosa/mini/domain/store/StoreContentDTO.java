@@ -8,7 +8,7 @@ import java.util.List;
 public class StoreContentDTO {
    private int storeId;
    private String storeName;
-   private String postCode;
+   private String postcode;
    private String roadAddress;
    private String detailAddress;
    private String extraAddress;
