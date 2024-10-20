@@ -2,6 +2,7 @@ package com.kosa.mini.controller.home;
 
 import com.kosa.mini.domain.search.SearchResultDTO;
 import com.kosa.mini.service.search.SearchService;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,12 +16,12 @@ public class SearchController {
     private SearchService searchService;
 
     @GetMapping("/search")
-    public String search(
+    public String searchView(
             @RequestParam("q") String query,
             @RequestParam(value = "sort", defaultValue = "latest") String sort,
             @RequestParam(value = "type", defaultValue = "store") String type,
-            Model model
-    ){
+            Model model){
+
         SearchResultDTO searchResult = searchService.search(query, sort, type);
         model.addAttribute("searchResult", searchResult);
         return "search_view";
