@@ -131,7 +131,7 @@
                             <div class="box">
                                 <a th:href="|/store/${store.storeId}|">
                                     <div class="img-box">
-                                        <img src="/images/1.jpg" alt="가게 사진">
+                                        <img th:src="${store.storePhoto}" alt="가게 사진">
                                     </div>
                                     <div class="detail-box">
                                         <h5 th:text="${store.storeName}">
