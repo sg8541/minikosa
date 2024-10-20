@@ -19,8 +19,7 @@
 <div class="header">
     <div class="container-inner">
         <div class="logo">
-            <img th:src="@{/images/main_logo.png}" alt="Main Logo">
-            <h1>먹코살코</h1>
+            <a th:href="@{/home}"><img th:src="@{/images/main_logo.png}" alt="Main Logo"></a>
         </div>
         <nav class="nav" id="mainNav">
             <a th:href="@{/home}">홈</a>
@@ -185,9 +184,23 @@
                                     </div>
                                 </div>
                                 <div class="review-actions">
-                                    <a th:href="@{'/store/' + ${review.storeId}}" class="comment_user_button">리뷰 보러가기</a>
-                                    <button type="button" class="comment_user_button">수정</button>
-                                    <button type="button" class="comment_user_button">삭제</button>
+                                    <th:block th:if="${#strings.isEmpty(session.loggedInUser)}">
+                                        <a th:href="@{'/store/' + ${review.storeId}}" class="comment_user_button">리뷰 보러가기</a>
+                                    </th:block>
+                                    <th:block th:if="${session.loggedInUser != null}">
+                                        <th:block th:switch="${session.loggedInUser.roleId}">
+                                            <!--/* 관리자 상태 (roleId가 2일 때) */-->
+                                            <th:block th:case="2">
+                                                <button type="button" class="comment_user_button">수정</button>
+                                                <button type="button" class="comment_user_button">삭제</button>
+                                                <a th:href="@{'/store/' + ${review.storeId}}" class="comment_user_button">리뷰 보러가기</a>
+                                            </th:block>
+                                            <!--/* 일반 유저 상태 (roleId가 2가 아닐 때) */-->
+                                            <th:block th:case="*">
+                                                <a th:href="@{'/store/' + ${review.storeId}}" class="comment_user_button">리뷰 보러가기</a>
+                                            </th:block>
+                                        </th:block>
+                                    </th:block>
                                 </div>
                             </div>
                             <div class="comment_info">

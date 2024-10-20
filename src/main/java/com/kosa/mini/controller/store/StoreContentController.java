@@ -21,15 +21,7 @@ public class StoreContentController {
     // 가게 내용 + 댓글 정보 불러오기
     @GetMapping("/{num}")
     public String getStoreInfo(@PathVariable int num,
-                               Model model,
-                               HttpSession session) {
-
-        // 로그인 상태인지 확인
-        Object loggedInUser = session.getAttribute("loggedInUser");
-        if (loggedInUser == null) {
-            return "redirect:/login";
-        }
-
+                               Model model) {
         StoreContentDTO store = service.storeInfo(num);
         List<MenuDTO> menu = service.getStoreMenuAll(num);
         List<ReviewReplyDTO> review = service.getStoreReplyAll(num);

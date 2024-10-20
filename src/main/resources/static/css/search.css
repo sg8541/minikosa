@@ -48,13 +48,13 @@ body {
 .header .logo {
     display: flex;
     align-items: center;
-    margin-left: 30px;
+    margin-left: 20px;
 }
 
 .header .logo img {
-    width: 50px;
+    width: 120px;
     height: auto;
-    margin-right: 10px;
+    margin-right: 5px;
 }
 
 .header .logo h1 {
