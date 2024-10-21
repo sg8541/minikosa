@@ -1,5 +1,8 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragments/layout}">
+
 <head>
     <meta charset="UTF-8">
     <title>접근 거부 | 먹코살코</title>
@@ -325,34 +328,12 @@
 
 </style>
 </head>
-
+<header layout.fragment="header"></header>
 <!-- 헤더: 로고와 네비게이션 -->
-<div class="header">
-    <div class="container-inner">
-        <div class="logo">
-            <img th:src="@{/images/main_logo.png}" alt="Main Logo">
-            <h1>먹코살코</h1>
-        </div>
-        <nav class="nav" id="mainNav">
-            <a th:href="@{/home}">홈</a>
-            <a th:href="@{/intro}">팀 소개</a>
-            <a th:href="@{/suggestion}">문의</a>
-            <!-- 드롭다운 메뉴 추가 -->
-            <div class="dropdown">
-                <button id="userMenuButton">▼</button>
-                <div class="dropdown-content" id="userMenu">
-                    <!-- 로그인 전 메뉴 -->
-                    <a th:href="@{/login}" id="loginLink">로그인</a>
-                    <!-- 로그인 후 메뉴 (숨김 상태) -->
-                    <a th:href="@{/myinfo}" id="profileLink" style="display: none;">내 정보 페이지</a>
-                    <a th:href="@{/logout}" id="logoutLink" style="display: none;">로그아웃</a>
-                </div>
-            </div>
-        </nav>
-    </div>
-</div>
+
 
 <!-- 메인 콘텐츠: 로그인 폼 -->
+<body layout:fragment="content">
 <div class="main-content">
     <div class="subtitle">
         <h2>접근 거부</h2>
@@ -361,55 +342,10 @@
         <a href="/home" class="description">홈으로 돌아가기</a>
     </div>
 </div>
-
-<!-- 푸터 섹션 -->
-<footer>
-    <div class="footer-container">
-        <!-- 회사 소개 -->
-        <div class="footer-section">
-            <h4>프로젝트 소개</h4>
-            <p>먹코살코은 최고의 맛집 제공하기 위해 최선을 다하고 있습니다.</p>
-        </div>
-        <!-- 빠른 링크 -->
-        <div class="footer-section">
-            <h4>빠른 링크</h4>
-            <ul>
-                <li><a th:href="@{/home}">홈</a></li>
-                <li><a th:href="@{/intro}">팀 소개</a></li>
-                <li><a th:href="@{/service}">서비스</a></li>
-                <li><a th:href="@{/suggestion}">문의</a></li>
-            </ul>
-        </div>
-        <!-- 연락처 -->
-        <div class="footer-section">
-            <h4>연락처</h4>
-            <ul>
-                <li>전화: 02-112-7777</li>
-                <li>이메일: admin@taste_police.com</li>
-                <li>주소: 서울특별시 송파구 중대로 135, 서관 12층</li>
-            </ul>
-        </div>
-        <!-- 소셜 미디어 -->
-        <div class="footer-section">
-            <h4>소셜 미디어</h4>
-            <div class="social-icons">
-                <a href="https://www.facebook.com/yourprofile" aria-label="페이스북">
-                    <img th:src="@{/images/facebook_icon.png}" alt="Facebook">
-                </a>
-                <a href="https://www.twitter.com/yourprofile" aria-label="트위터">
-                    <img th:src="@{/images/twitter_icon.png}" alt="Twitter">
-                </a>
-                <a href="https://www.instagram.com/yourprofile" aria-label="인스타그램">
-                    <img th:src="@{/images/instagram_icon.png}" alt="Instagram">
-                </a>
-            </div>
-        </div>
-    </div>
-    <!-- 푸터 하단 정보 -->
-    <div class="footer-bottom">
-        &copy; 2024 먹코살코. All rights reserved.
-    </div>
-</footer>
-
 </body>
+<!-- 푸터 섹션 -->
+<footer layout.fragment="footer"></footer>
+
+
+
 </html>
