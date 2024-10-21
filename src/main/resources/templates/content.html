@@ -74,6 +74,7 @@
                                 </span>
                         </div>
                     </div>
+                    <th:block th:if="${not #strings.isEmpty(content.webSiteInfo)}">
                     <div class="place_info_detail place_homepage">
                         <h4 class="info_title_detail">
                             <span class="place_info_icon">홈페이지</span>
@@ -85,6 +86,7 @@
                             </div>
                         </div>
                     </div>
+                    </th:block>
                     <div class="place_info_detail place_phone">
                         <h4 class="info_title_detail">
                             <span class="place_info_icon">전화번호</span>
@@ -134,7 +136,7 @@
                                     <em class="screen_out">명 : </em>
                                     <span class="menu_text" th:text="${menu.menuName}"></span>
                                     <em class="screen_out">가격 : </em>
-                                    <span class="price_menu" th:text="${menu.price}"></span>
+                                    <span class="price_menu" th:text="${#numbers.formatInteger(menu.price, 1, 'COMMA') + '원'}"></span>
                                 </div>
                             </li>
                         </th:block>
@@ -161,13 +163,13 @@
                             <div class="star-rating space-x-4 mx-auto" >
                                 <input type="radio" id="5-stars" name="rating" value="5" v-model="ratings" checked/>
                                 <label for="5-stars" class="star pr-4">★</label>
-                                <input type="radio" id="4-stars" name="rating" value="4" v-model="ratings" checked/>
+                                <input type="radio" id="4-stars" name="rating" value="4" v-model="ratings" />
                                 <label for="4-stars" class="star">★</label>
-                                <input type="radio" id="3-stars" name="rating" value="3" v-model="ratings" checked/>
+                                <input type="radio" id="3-stars" name="rating" value="3" v-model="ratings" />
                                 <label for="3-stars" class="star">★</label>
-                                <input type="radio" id="2-stars" name="rating" value="2" v-model="ratings" checked/>
+                                <input type="radio" id="2-stars" name="rating" value="2" v-model="ratings" />
                                 <label for="2-stars" class="star">★</label>
-                                <input type="radio" id="1-star" name="rating" value="1" v-model="ratings" checked/>
+                                <input type="radio" id="1-star" name="rating" value="1" v-model="ratings" />
                                 <label for="1-star" class="star">★</label>
                             </div>
                         </div>
@@ -272,10 +274,11 @@
                         </th:block>
                     </div>
                 </form>
+                <!--/*
                 <a href="#none" class="link_more">
                     <span class="txt_more">후기 더보기</span>
                     <span class="ico_comm ico_more"></span>
-                </a>
+                </a>*/-->
             </div>
         </div>
         <!--지도 시작-->
