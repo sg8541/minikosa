@@ -19,7 +19,7 @@ public class StoreContentServiceImpl implements StoreContentService {
     }
 
     @Override
-    public List<MenuDTO> getStoreMenuAll(int num) {
+    public List<Menu> getStoreMenuAll(int num) {
         return dao.getStoreMenuAll(num);
     }
 

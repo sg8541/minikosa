@@ -3,8 +3,6 @@ package com.kosa.mini.controller.store;
 import com.kosa.mini.domain.store.*;
 import com.kosa.mini.service.store.StoreContentService;
 import com.kosa.mini.service.store.StoreService;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -31,7 +29,7 @@ public class StoreContentController {
     public String getStoreInfo(@PathVariable int num,
                                Model model) {
         StoreContentDTO store = service.storeInfo(num);
-        List<MenuDTO> menu = service.getStoreMenuAll(num);
+        List<Menu> menu = service.getStoreMenuAll(num);
         List<ReviewReplyDTO> review = service.getStoreReplyAll(num);
         model.addAttribute("content", store);
         model.addAttribute("menu", menu);

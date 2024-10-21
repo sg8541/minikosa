@@ -41,12 +41,13 @@ public interface StoreContentMapper {
     // 가게 메뉴
     @Select("SELECT " +
             "   menu_name, " +
-            "   price " +
+            "   price, " +
+            "   menu_photo " +
             "FROM " +
             "   menus " +
             "WHERE " +
             "   store_id = #{num}")
-    public List<MenuDTO> getStoreMenuAll(int num);
+    public List<Menu> getStoreMenuAll(int num);
 
 
     // 가게 리뷰 + 답글
