@@ -1,0 +1,33 @@
+<!-- resources/templates/fragments/header.html -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Header Fragment</title>
+</head>
+<body>
+<div class="header" th:fragment="header">
+  <div class="container-inner">
+    <div class="logo">
+      <a th:href="@{/home}"><img th:src="@{/images/main_logo.png}" alt="Main Logo"></a>
+    </div>
+    <nav class="nav" id="mainNav">
+      <a th:href="@{/home}">홈</a>
+      <a th:href="@{/intro}">팀 소개</a>
+      <a th:href="@{/suggestion}">문의</a>
+      <!-- 드롭다운 메뉴 추가 -->
+      <div class="dropdown">
+        <button id="userMenuButton">▼</button>
+        <div class="dropdown-content" id="userMenu">
+          <!-- 로그인 전 메뉴 -->
+          <a th:href="@{/login}" id="loginLink">로그인</a>
+          <!-- 로그인 후 메뉴 (숨김 상태) -->
+          <a th:href="@{/myinfo}" id="profileLink" style="display: none;">내 정보 페이지</a>
+          <a th:href="@{/logout}" id="logoutLink" style="display: none;">로그아웃</a>
+        </div>
+      </div>
+    </nav>
+  </div>
+</div>
+</body>
+</html>
