@@ -129,7 +129,7 @@
                         <th:block th:each="store : ${store}">
                         <div th:class="|col-sm-6 col-lg-4 all ${store.categoryName}|">
                             <div class="box">
-                                <a th:href="|/store/${store.storeId}|">
+                                <a href="#" th:onclick="'checkLoginStatus(event, ' + ${store.storeId} + ')'" class="store-link">
                                     <div class="img-box">
                                         <img th:src="${store.storePhoto}" alt="가게 사진">
                                     </div>
@@ -171,8 +171,6 @@
             </div>
         </div>
     </section>
-
-
 
     <!-- footer section -->
     <footer class="footer_section">
@@ -221,8 +219,6 @@
 
             <p>
                 &copy;<span id="displayYear"></span> 먹코살코. All rights reserved.
-                Distributed By
-                <a target="_blank">ThemeWagon</a>
             </p>
         </div>
     </footer>

@@ -33,7 +33,6 @@ $(window).on('load', function () {
 });
 
 // 화면 메인 이미지 전환 js
-
 document.addEventListener('DOMContentLoaded', function () {
     let currentSlide = 0;
     const slides = document.querySelectorAll('#mySlider .slide');
@@ -81,7 +80,6 @@ document.addEventListener('DOMContentLoaded', function () {
     startSlideInterval(); // 자동 슬라이드 시작
 });
 
-
 // Select all links that should trigger the scrolling
     const links = document.querySelectorAll('a[data-category]');
 
@@ -98,3 +96,17 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
+function checkLoginStatus(event, storeId) {
+    const isLoggedIn = /*[[${session.loggedInUser != null}]]*/ false; // Thymeleaf로 로그인 상태 체크
+
+    if (!isLoggedIn) {
+        event.preventDefault(); // 기본 동작(페이지 이동) 막기
+        const userConfirmed = confirm("로그인이 필요한 서비스 입니다.\n로그인 하시겠습니까?");
+        if (userConfirmed) {
+            window.location.href = "/login"; // 로그인 페이지로 이동
+        }
+    } else {
+        // 로그인이 되어 있으면 해당 가게 페이지로 이동
+        window.location.href = `/store/${storeId}`;
+    }
+}

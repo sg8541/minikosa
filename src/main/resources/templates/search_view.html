@@ -71,7 +71,7 @@
                                 <th:block th:each="store : ${searchResult.storeResults}">
                                     <div th:class="'col-sm-6 col-lg-4 all ' + ${store.categoryName}">
                                         <div class="box">
-                                            <a th:href="@{'/store/' + ${store.storeId}}">
+                                            <a href="#" th:onclick="'checkLoginStatus(event, ' + ${store.storeId} + ')'">
                                                 <div class="img-box">
                                                     <img th:src="@{${store.storePhoto}}" alt="가게 사진" onerror="this.onerror=null; this.src='/images/1.jpg';"/>
                                                 </div>
@@ -148,7 +148,9 @@
                                 </div>
                                 <div class="review-actions">
                                     <th:block th:if="${#strings.isEmpty(session.loggedInUser)}">
-                                        <a th:href="@{'/store/' + ${review.storeId}}" class="comment_user_button">리뷰 보러가기</a>
+                                        <a href="#" th:onclick="'checkReviewLoginStatus(event, \'/store/' + ${review.storeId} + '\')'" class="comment_user_button">
+                                            리뷰 보러가기
+                                        </a>
                                     </th:block>
                                     <th:block th:if="${session.loggedInUser != null}">
                                         <th:block th:switch="${session.loggedInUser.roleId}">
@@ -156,11 +158,15 @@
                                             <th:block th:case="2">
                                                 <button type="button" class="comment_user_button">수정</button>
                                                 <button type="button" class="comment_user_button">삭제</button>
-                                                <a th:href="@{'/store/' + ${review.storeId}}" class="comment_user_button">리뷰 보러가기</a>
+                                                <a href="#" th:onclick="'checkReviewLoginStatus(event, \'/store/' + ${review.storeId} + '\')'" class="comment_user_button">
+                                                    리뷰 보러가기
+                                                </a>
                                             </th:block>
                                             <!--/* 일반 유저 상태 (roleId가 2가 아닐 때) */-->
                                             <th:block th:case="*">
-                                                <a th:href="@{'/store/' + ${review.storeId}}" class="comment_user_button">리뷰 보러가기</a>
+                                                <a href="#" th:onclick="'checkReviewLoginStatus(event, \'/store/' + ${review.storeId} + '\')'" class="comment_user_button">
+                                                    리뷰 보러가기
+                                                </a>
                                             </th:block>
                                         </th:block>
                                     </th:block>
@@ -274,6 +280,36 @@
                         document.getElementById('mReview').style.display = 'none';
                         document.getElementById('typeInput').value = 'store';
                     }
+                }
+            }
+
+            // 로그인 여부 확인 후 가게 페이지로 이동
+            function checkLoginStatus(event, storeId) {
+                const isLoggedIn = /*[[${session.loggedInUser != null}]]*/ false; // 로그인 상태 확인
+
+                if (!isLoggedIn) {
+                    event.preventDefault(); // 기본 동작(페이지 이동) 막기
+                    const userConfirmed = confirm("로그인 필요합니다.\n로그인 하시겠습니까?");
+                    if (userConfirmed) {
+                        window.location.href = "/login"; // 로그인 페이지로 이동
+                    }
+                } else {
+                    window.location.href = `/store/${storeId}`; // 가게 페이지로 이동
+                }
+            }
+
+            // 로그인 여부 확인 후 리뷰 페이지로 이동
+            function checkReviewLoginStatus(event, reviewUrl) {
+                const isLoggedIn = /*[[${session.loggedInUser != null}]]*/ false; // 로그인 상태 확인
+
+                if (!isLoggedIn) {
+                    event.preventDefault(); // 기본 동작 막기
+                    const userConfirmed = confirm("로그인 필요합니다.\n로그인 하시겠습니까?");
+                    if (userConfirmed) {
+                        window.location.href = "/login"; // 로그인 페이지로 이동
+                    }
+                } else {
+                    window.location.href = reviewUrl; // 리뷰 페이지로 이동
                 }
             }
         </script>
