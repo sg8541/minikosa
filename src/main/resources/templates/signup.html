@@ -253,7 +253,8 @@
     // 폼 리셋 함수
     function resetForm() {
         document.getElementById('registerForm').reset();
-        clearFeedback();
+        //clearFeedback();
+        window.history.back();
     }
 
     // 피드백 메시지 초기화

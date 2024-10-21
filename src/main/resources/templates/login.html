@@ -201,7 +201,9 @@
     // 폼 리셋 함수
     function resetForm() {
         document.getElementById('loginForm').reset();
-        clearMessages();
+        // clearMessages();
+        // window.history.back();
+        location.href="/home";
     }
 
     // 메시지 초기화 함수
