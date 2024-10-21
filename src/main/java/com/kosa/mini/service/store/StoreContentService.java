@@ -8,7 +8,7 @@ public interface StoreContentService {
 
     public StoreContentDTO storeInfo(int num);
 
-    public List<MenuDTO> getStoreMenuAll(int num);
+    public List<Menu> getStoreMenuAll(int num);
 
     public boolean insertUserReview(int storeId, int memberId, String reviewText, int rating);
 
