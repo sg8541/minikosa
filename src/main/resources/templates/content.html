@@ -134,7 +134,7 @@
                                     <em class="screen_out">명 : </em>
                                     <span class="menu_text" th:text="${menu.menuName}"></span>
                                     <em class="screen_out">가격 : </em>
-                                    <span class="price_menu" th:text="${menu.price}"></span>
+                                    <span class="price_menu" th:text="${#numbers.formatInteger(menu.price, 1, 'COMMA') + '원'}"></span>
                                 </div>
                             </li>
                         </th:block>
