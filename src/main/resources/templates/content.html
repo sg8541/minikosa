@@ -74,6 +74,7 @@
                                 </span>
                         </div>
                     </div>
+                    <th:block th:if="${not #strings.isEmpty(content.webSiteInfo)}">
                     <div class="place_info_detail place_homepage">
                         <h4 class="info_title_detail">
                             <span class="place_info_icon">홈페이지</span>
@@ -85,6 +86,7 @@
                             </div>
                         </div>
                     </div>
+                    </th:block>
                     <div class="place_info_detail place_phone">
                         <h4 class="info_title_detail">
                             <span class="place_info_icon">전화번호</span>
