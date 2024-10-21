@@ -1,5 +1,7 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{fragments/layout}">
 
 <head>
     <meta charset="UTF-8">
@@ -8,60 +10,13 @@
     <!--타이틀 옆 이미지 아이콘-->
     <link rel="shortcut icon" th:href="@{/images/mini_logo.jpg}">
     <link rel="stylesheet" href="/css/content.css">
+    <link rel="stylesheet" href="/css/headerFooter.css">
     <script type="text/javascript" src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=913010ecf61096ff085a9717807d98df&libraries=services"></script>
 </head>
 
-<body>
-<header th:replace="~{header.html :: header}"></header>
-<!--<header class="header">-->
-<!--    <div class="container-inner">-->
-<!--        <div class="logo">-->
-<!--            <a href="/home"><img src="/images/main_logo.png" alt="Main Logo"></a>-->
-<!--        </div>-->
-<!--        <nav class="nav" id="mainNav">-->
-<!--            <form method="get" action="/search" class="search-form d-inline-block">-->
-<!--                <div class="d-flex">-->
-<!--                    <input type="text" name="q" class="form-control" placeholder="Search..." maxlength="20">-->
-<!--                    <button type="submit" class="btn btn-search">-->
-<!--                        <img width="32" height="32" src="/images/icon_search2.png" alt="검색하기" />-->
-<!--                        <span class="icon-search"></span>-->
-<!--                    </button>-->
-<!--                </div>-->
-<!--            </form>-->
-<!--            <a href="/home">홈</a>-->
-<!--            <a href="/team">프로젝트 소개</a>-->
-<!--            <a href="/intro">팀 소개</a>-->
-<!--            <a href="/suggestion">문의</a>-->
-<!--            &lt;!&ndash; 드롭다운 메뉴 추가 &ndash;&gt;-->
-<!--            <div class="dropdown">-->
-<!--                <button id="userMenuButton">▼</button>-->
+<header layout.fragment="header"></header>
+<body layout:fragment="content">
 
-<!--                <div class="dropdown-content" id="userMenu">-->
-<!--                    &lt;!&ndash;/* 로그인 후 메뉴 (session.loggedInUser가 null이 아닐 때) */&ndash;&gt;-->
-<!--                    <th:block th:if="${#strings.isEmpty(session.loggedInUser)}">-->
-<!--                        <a href="/login" id="loginLink">로그인</a>-->
-<!--                    </th:block>-->
-<!--                    <th:block th:if="${session.loggedInUser != null}">-->
-<!--                        <th:block th:switch="${session.loggedInUser.roleId}">-->
-<!--                            &lt;!&ndash;/* 관리자 상태 (roleId가 2일 때) */&ndash;&gt;-->
-<!--                            <th:block th:case="2">-->
-<!--                                <a href="/admin/create/store" id="createLink">가게 등록</a>-->
-<!--                                <a href="/admin/register/owner" id="registerLink">사장 등록</a>-->
-<!--                                <a href="/editprofile" id="profileLink">내 정보 페이지</a>-->
-<!--                                <a href="/logout" id="logoutLink">로그아웃</a>-->
-<!--                            </th:block>-->
-<!--                            &lt;!&ndash;/* 일반 유저 상태 (roleId가 2가 아닐 때) */&ndash;&gt;-->
-<!--                            <th:block th:case="*">-->
-<!--                                <a href="/editprofile" id="profileLink">내 정보 페이지</a>-->
-<!--                                <a href="/logout" id="logoutLink">로그아웃</a>-->
-<!--                            </th:block>-->
-<!--                        </th:block>-->
-<!--                    </th:block>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--        </nav>-->
-<!--    </div>-->
-<!--</header>-->
 <div class="wap">
     <div id="" class="container">
         <div class="content_out_line">
@@ -226,7 +181,6 @@
                         </div>
                     </div>
                 </form>
-
             </div>
             <!--유저 댓글 시작-->
             <div class="comments_box">
@@ -341,10 +295,6 @@
         </div>
     </div>
 </div>
-
-
-<footer th:replace="~{footer.html :: footer}">
-</footer>
 <script th:inline="javascript">
     var storeLocation = "|[(${content.roadAddress})] [(${content.detailAddress})]|";
     var mapContainer = document.getElementById('map'), // 지도를 표시할 div
@@ -371,4 +321,6 @@
 </script>
 <script src="/js/content.js"></script>
 </body>
+<footer layout.fragment="footer"></footer>
+
 </html>

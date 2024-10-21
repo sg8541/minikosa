@@ -1,34 +1,17 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragments/layout}">
 <head>
     <meta charset="UTF-8">
     <title>팀 소개 | 먹코살코</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <!-- 파비콘 설정 -->
     <link rel="shortcut icon" th:href="@{/images/mini_logo.jpg}">
-    <<!-- 헤더 스타일시트 -->
-    <link rel="stylesheet" th:href="@{/css/fragments/header.css}">
-    <!-- 푸터 스타일시트 -->
-    <link rel="stylesheet" th:href="@{/css/fragment/footer.css}">
+    <link rel="stylesheet" href="/css/headerFooter.css">
 
     <!-- 메인 스타일시트 -->
     <style>
-        /* 기본 리셋 및 스타일 */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: "맑은 고딕", sans-serif;
-            background-color: #f9f9f9;
-            color: #333;
-            line-height: 1.6;
-        }
-
-
         /* 메인 콘텐츠 스타일 */
         .main-content {
             max-width: 1000px;
@@ -110,14 +93,149 @@
         .txt a:hover {
             color: #e07a4d;
         }
+        .social-icons {
+            display: flex;
+            gap: 10px;
+        }
 
+        .social-icons a img {
+            width: 24px;
+            height: 24px;
+            filter: invert(100%);
+            transition: filter 0.3s;
+        }
 
+        .social-icons a:hover img {
+            filter: invert(75%) sepia(100%) saturate(500%) hue-rotate(300deg);
+        }
+
+        /* 푸터 스타일 */
+        footer {
+            background-color: #FF885B;
+            color: #fff;
+            padding: 20px 10px;
+            margin-top: 40px;
+        }
+
+        .footer-container {
+            max-width: 1500px;
+            width: 100%;
+            margin: 0 auto;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 100px;
+            padding: 10px 0px;
+        }
+
+        .footer-section {
+            flex: 1 1 200px;
+        }
+
+        .footer-section h4 {
+            margin-bottom: 15px;
+            font-size: 18px;
+            border-bottom: 2px solid #fff;
+            display: inline-block;
+            padding-bottom: 5px;
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section ul li {
+            margin-bottom: 10px;
+        }
+
+        .footer-section ul li a {
+            color: #fff;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-section ul li a:hover {
+            color: #e07a4d;
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .social-icons a img {
+            width: 24px;
+            height: 24px;
+            filter: invert(100%);
+            transition: filter 0.3s;
+        }
+
+        .social-icons a:hover img {
+            filter: invert(75%) sepia(100%) saturate(500%) hue-rotate(300deg);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            font-size: 14px;
+            border-top: 1px solid rgba(255, 255, 255, 0.3);
+            padding-top: 10px;
+        }
+
+        /* 반응형 디자인 */
+        @media (max-width: 768px) {
+            .header .container-inner {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .nav {
+                flex-direction: column;
+                gap: 10px;
+                margin-top: 10px;
+            }
+
+            .footer-container {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .footer-section {
+                flex: 1 1 100%;
+                text-align: center;
+            }
+
+            .social-icons {
+                justify-content: center;
+            }
+
+            .team-list li {
+                flex: 1 1 100%;
+                max-width: 100%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header .logo h1 {
+                font-size: 20px;
+            }
+
+            .nav a {
+                font-size: 14px;
+            }
+
+            .team-list h4 {
+                font-size: 18px;
+            }
+
+            .txt {
+                font-size: 14px;
+            }
+        }
     </style>
 </head>
-<body>
-
-<!-- 헤더 불러오기 -->
-<div th:replace="fragments/header :: header"></div>
+<!-- 헤더: 로고와 네비게이션 -->
+<header layout.fragment="header"></header>
+<body layout:fragment="content">
 
 <!-- 메인 콘텐츠 -->
 <div class="main-content">
@@ -171,9 +289,7 @@
         </ul>
     </div>
 </div>
-
-<!-- 푸터 포함 -->
-<div th:replace="fragments/footer :: footer"></div>
-
 </body>
+<!-- 푸터 섹션 -->
+<footer layout.fragment="footer"></footer>
 </html>

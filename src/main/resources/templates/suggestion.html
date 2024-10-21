@@ -1,5 +1,7 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragments/layout}">
 <head>
     <meta charset="UTF-8">
     <title>제안하기 | 먹코살코</title>
@@ -7,27 +9,10 @@
 
     <!-- 파비콘 설정 -->
     <link rel="shortcut icon" th:href="@{/images/mini_logo.jpg}">
-    <!-- 헤더 스타일시트 -->
-    <link rel="stylesheet" th:href="@{/css/fragments/header.css}">
-    <!-- 푸터 스타일시트 -->
-    <link rel="stylesheet" th:href="@{/css/fragment/footer.css}">
+    <link rel="stylesheet" href="/css/headerFooter.css">
 
     <!-- 메인 스타일시트 -->
     <style>
-        /* 기본 리셋 및 스타일 */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: "맑은 고딕", sans-serif;
-            background-color: #f9f9f9;
-            color: #333;
-            line-height: 1.6;
-        }
-
         /* 메인 콘텐츠 스타일 */
         .main-content {
             width: 800px;
@@ -122,15 +107,13 @@
         .button-container .cancel-button:hover {
             background-color: #999;
         }
-
     </style>
 </head>
 <body>
-
-<!-- 헤더 불러오기 -->
-<div th:replace="fragments/header :: header"></div>
-
+<!-- 헤더: 로고와 네비게이션 -->
+<header layout.fragment="header"></header>
 <!-- 메인 콘텐츠: 회원 제안 폼 -->
+<body layout:fragment="content">
 <div class="main-content">
     <div class="subtitle">
         <h2>회원 제안</h2>
@@ -163,10 +146,6 @@
         </div>
     </form>
 </div>
-
-<!-- 푸터 포함 -->
-<div th:replace="fragments/footer :: footer"></div>
-
 <!-- 스크립트 -->
 <script>
     // 유효성 검사 함수 (필요 시 추가)
@@ -184,4 +163,6 @@
     }
 </script>
 </body>
+<!-- 푸터 섹션 -->
+<footer layout.fragment="footer"></footer>
 </html>
