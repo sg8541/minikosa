@@ -629,7 +629,7 @@ button {
 .place_info_detail {
     line-height: 22px;
     min-height: 22px;
-    padding-bottom: 10px;
+    padding-bottom: 5px;
 }
 
 .place_info_detail .info_title_detail {
@@ -661,7 +661,7 @@ button {
 
 .place_location .address_num_text {
     color: #666;
-    display: block;
+ /*   display: block;*/
     height: 17px;
     line-height: 17px;
     padding-top: 3px;
