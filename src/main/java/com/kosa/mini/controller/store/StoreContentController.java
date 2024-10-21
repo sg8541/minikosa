@@ -35,8 +35,14 @@ public class StoreContentController {
         if (loggedInUser == null) {
             return "redirect:/login";
         }
-        
+
         StoreContentDTO store = service.storeInfo(num);
+
+        // 가게가 존재하지 않는 경우 access-denied로 이동
+        if (store.getStoreName() == null) {
+            return "access-denied";
+        }
+
         List<Menu> menu = service.getStoreMenuAll(num);
         List<ReviewReplyDTO> review = service.getStoreReplyAll(num);
         model.addAttribute("content", store);
