@@ -52,7 +52,7 @@ public class SuggestionController {
 
         suggestionService.createSuggestion(suggestionDTO);
         model.addAttribute("successMessage", "제안이 성공적으로 접수되었습니다.");
-        return "home";
+        return "redirect:/home";
     }
 
 }
