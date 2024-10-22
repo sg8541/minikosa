@@ -99,7 +99,7 @@ uBtn.forEach(function (btn) {
 /*사장 댓글 관련 기능*/
 
 /*답글 클릭 시*/
-function pWriteBox(reviewId, replyContainer) {
+function pWriteBox(reviewId, me) {
     let box = document.createElement("li");
     box.className = 'reply_comment_list';
     box.innerHTML =
@@ -116,7 +116,10 @@ function pWriteBox(reviewId, replyContainer) {
                     </div>
                 </div>
          </div>`;
-    let reviewBox = document.querySelector(".review_list");
+    let reviewBox = me.parentNode.parentNode.parentNode;
+//    document.querySelector(".review_list");
+//    console.log(me.parentNode);
+//    console.log("me.parentNode.parentNode.parentNode : " + me.parentNode.parentNode.parentNode);
     reviewBox.appendChild(box);
 
     // 작성완료 버튼 선택
@@ -145,10 +148,7 @@ pBtn.forEach(function (btn) {
     btn.addEventListener('click', function (e) {
         e.preventDefault();
         let result = false;
-        const reviewItem = btn.closest('li');
-//        const replyContainer = btn.closest('.reply_comment_list');
-        const replyContainer = btn.closest('.comment_info');
-
+        const replyContainer = btn.closest('.reply_comment_list');
         if (this.getAttribute('data-result') == 'p-reply') {
             message = "해당 리뷰에 답글을 작성하시겠습니까?";
             result = getMessage(message);
@@ -156,7 +156,7 @@ pBtn.forEach(function (btn) {
                 sessionStorage.setItem('scrollPosition', window.pageYOffset);
                 btn.style.display = 'none';
                 const reviewId = this.getAttribute('data-review-id');
-                pWriteBox(reviewId, replyContainer);
+                pWriteBox(reviewId, this);
             }
         } else if (this.getAttribute('data-result') === 'p-modify') {
             const reviewId = this.getAttribute('data-review-id'); // 리뷰 ID 가져오기
