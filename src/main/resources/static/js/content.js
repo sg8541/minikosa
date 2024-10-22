@@ -145,7 +145,9 @@ pBtn.forEach(function (btn) {
     btn.addEventListener('click', function (e) {
         e.preventDefault();
         let result = false;
-        const replyContainer = btn.closest('.reply_comment_list');
+        const reviewItem = btn.closest('li');
+//        const replyContainer = btn.closest('.reply_comment_list');
+        const replyContainer = btn.closest('.comment_info');
 
         if (this.getAttribute('data-result') == 'p-reply') {
             message = "해당 리뷰에 답글을 작성하시겠습니까?";
