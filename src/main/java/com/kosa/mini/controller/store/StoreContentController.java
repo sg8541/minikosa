@@ -104,11 +104,16 @@ public class StoreContentController {
     // 가게 정보 수정
     @GetMapping("/admin/edit")
     public String editeStore(long storeId,
-                             StoreDTO storeDTO,
                              Model model) {
-        storeDTO = storeService.storeInfo(storeId);
+        StoreContentDTO storeContentDTO = service.storeInfo((int) storeId);
+        StoreDTO storeDTO = storeService.storeInfo(storeId);
+        List<Menu> menu = service.getStoreMenuAll((int) storeId);
+
         System.out.println("가게 수정 페이지로 이동~~~~~~~~~~~~~~");
+        model.addAttribute("storePhoto", storeContentDTO.getStorePhoto());
         model.addAttribute("storeDTO", storeDTO);
+        model.addAttribute("menu", menu);
+
         return "admin_edit_store";
     }
 
