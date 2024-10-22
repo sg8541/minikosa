@@ -304,6 +304,20 @@
         `;
         }
 
+        // 사용자 제거 함수
+        function removeUser() {
+            selectedUser = null;
+            const selectedUserBox = document.getElementById('selectedUserBox');
+            selectedUserBox.innerHTML = '선택된 사용자가 없습니다.';
+        }
+
+        // 가게 제거 함수
+        function removeStore() {
+            selectedStore = null;
+            const selectedStoreBox = document.getElementById('selectedStoreBox');
+            selectedStoreBox.innerHTML = '선택된 가게가 없습니다.';
+        }
+
         // 가게 검색 함수 수정
         function searchStore() {
             const storeName = document.getElementById('searchStore').value.trim();
