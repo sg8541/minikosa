@@ -6,6 +6,7 @@
     <meta charset="UTF-8">
     <title>팀 소개 | 먹코살코</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <!-- 파비콘 설정 -->
     <link rel="shortcut icon" th:href="@{/images/mini_logo.jpg}">
     <link rel="stylesheet" href="/css/headerFooter.css">
@@ -21,6 +22,48 @@
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             border-radius: 8px;
             margin-bottom: 100px;
+        }
+
+        /* 탭 버튼 그룹 스타일 */
+        .tab-buttons {
+            width: 40%;
+            display: flex;
+            justify-content: center;
+            margin-bottom: 50px;
+            border: 1px solid #FF885B;
+            border-radius: 5px;
+            overflow: hidden;
+            margin: 0 auto 30px auto;
+        }
+
+        .tab-buttons button {
+            padding: 10px 20px;
+            border: none;
+            background-color: #fff;
+            color: #FF885B;
+            font-size: 16px;
+            cursor: pointer;
+            flex: 1;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .tab-buttons button.active {
+            background-color: #FF885B;
+            color: #fff;
+        }
+
+        .tab-buttons button:hover {
+            background-color: #e07a4d;
+            color: #fff;
+        }
+
+        /* 콘텐츠 섹션 숨기기 */
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
         }
 
         /* subtitle 스타일 */
@@ -49,14 +92,14 @@
             margin-bottom: 20px;
         }
 
-        /* 팀 소개 스타일 */
-        .team-list {
+        /* 팀 소개 및 프로젝트 소개 스타일 */
+        .team-list, .project-list {
             display: flex;
             flex-wrap: wrap;
             justify-content: space-around;
         }
 
-        .team-list li {
+        .team-list li, .project-list li {
             list-style: none;
             text-align: center;
             margin: 20px;
@@ -72,7 +115,27 @@
             margin-bottom: 15px;
         }
 
-        .team-list h4 {
+        .police-station-photo {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 15px;
+        }
+
+        .kosa-photo {
+            width: 220px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 15px;
+        }
+
+        .project-image {
+            border-radius: 8px;
+        }
+
+        .team-list h4, .project-list h4 {
             font-size: 22px;
             margin-bottom: 10px;
             color: #333;
@@ -82,6 +145,7 @@
             font-size: 16px;
             color: #666;
             line-height: 1.6;
+            margin-top: 10px;
         }
 
         .txt a {
@@ -93,9 +157,11 @@
         .txt a:hover {
             color: #e07a4d;
         }
-        .social-icons {
-            display: flex;
-            gap: 10px;
+
+        /* 프로젝트 주요 기능 */
+        .project-list li .features {
+            margin-top: 30px;
+            margin-bottom: 15px;
         }
 
         .social-icons a img {
@@ -208,7 +274,7 @@
                 justify-content: center;
             }
 
-            .team-list li {
+            .team-list li, .project-list li {
                 flex: 1 1 100%;
                 max-width: 100%;
             }
@@ -223,7 +289,7 @@
                 font-size: 14px;
             }
 
-            .team-list h4 {
+            .team-list h4, .project-list h4 {
                 font-size: 18px;
             }
 
@@ -232,6 +298,35 @@
             }
         }
     </style>
+
+    <!-- JavaScript for Tab Toggle -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const tabButtons = document.querySelectorAll(".tab-buttons button");
+            const tabContents = document.querySelectorAll(".tab-content");
+
+            tabButtons.forEach(button => {
+                button.addEventListener("click", () => {
+                    // Remove active class from all buttons
+                    tabButtons.forEach(btn => btn.classList.remove("active"));
+                    // Add active class to clicked button
+                    button.classList.add("active");
+
+                    // Hide all tab contents
+                    tabContents.forEach(content => content.classList.remove("active"));
+                    // Show the corresponding tab content
+                    const target = button.getAttribute("data-target");
+                    document.getElementById(target).classList.add("active");
+                });
+            });
+
+            // Initialize first tab as active
+            if (tabButtons.length > 0 && tabContents.length > 0) {
+                tabButtons[0].classList.add("active");
+                tabContents[0].classList.add("active");
+            }
+        });
+    </script>
 </head>
 <!-- 헤더: 로고와 네비게이션 -->
 <header layout.fragment="header"></header>
@@ -239,54 +334,100 @@
 
 <!-- 메인 콘텐츠 -->
 <div class="main-content">
-    <div class="subtitle">
-        <h2>팀 소개</h2>
-        <img th:src="@{/images/main_logo.png}" alt="Main Logo">
-        <p class="description">먹 코 살 코 팀원을 소개합니다.</p>
+    <div class="tab-buttons">
+        <button data-target="project">프로젝트 소개</button>
+        <button data-target="team">팀 소개</button>
     </div>
-    <div class="about_box">
-        <ul class="team-list">
-            <li>
-                <img src="images/kim.png" alt="김슬기" class="team-photo">
-                <h4>김슬기</h4>
-                <p class="txt">
-                    귀요미<br>
-                    역할: 백엔드<br>
-                    이메일: <a href="mailto:logging2021@gmail.com">logging2021@gmail.com</a><br>
-                    깃허브: <a href="https://github.com/sg8541">github.com/sg8541</a>
-                </p>
-            </li>
-            <li>
-                <img src="images/jang.jpg" alt="장현수" class="team-photo">
-                <h4>장현수</h4>
-                <p class="txt">
-                     코딩하는 또라이<br>
-                    역할: 팀장, 백엔드<br>
-                    이메일: <a href="mailto:jhsnex3768@gmail.com">jhsnex3768@gmail.com</a><br>
-                    깃허브: <a href="https://github.com/jhsnex123">github.com/jhsnex123</a>
-                </p>
-            </li>
-            <li>
-                <img src="images/jung.jpg" alt="정지용" class="team-photo">
-                <h4>정지용</h4>
-                <p class="txt">
-                    깜찍이<br>
-                    역할: 프론트엔드<br>
-                    이메일: <a href="mailto:rjchung47@gmail.com">rjchung47@gmail.com</a><br>
-                    깃허브: <a href="https://github.com/RyanJeeyong">github.com/RyanJeeyong</a>
-                </p>
-            </li>
-            <li>
-                <img src="images/han.jpg" alt="한규현" class="team-photo">
-                <h4>한규현</h4>
-                <p class="txt">
-                    불타는 고구마<br>
-                    역할: 백엔드<br>
-                    이메일: <a href="mailto:khh5345@naver.com">khh5345@naver.com</a><br>
-                    깃허브: <a href="https://github.com/kyudori">github.com/kyudori</a>
-                </p>
-            </li>
-        </ul>
+
+    <!-- 프로젝트 소개 섹션 -->
+    <div id="project" class="tab-content">
+        <div class="subtitle">
+            <h2>프로젝트 소개</h2>
+            <img th:src="@{/images/main_logo.png}" alt="Main Logo">
+            <p class="description">먹코살코는 경찰병원역 3호선 맛집을 소개하는 맛집 커뮤니티 입니다.</p>
+        </div>
+        <div class="about_box">
+            <ul class="project-list">
+                <li>
+                <img src="images/police_station.png" alt="경찰병원역 3호선 이미지" class="police-station-photo">
+                <img src="images/kosa.jpg" alt="KOSA 로고" class="kosa-photo">
+                    <p class="txt">
+                        경찰병원역과 KOSA 근처의 맛집을
+                    </p>
+                    <p class="txt">
+                        자유롭게 소개하고 공유할 수 있습니다.
+                    </p>
+                    <div class="features">
+                        <h2>주요 기능</h2>
+                        <p class="txt">
+                            1. 맛집 정보(리뷰) 제공
+                        </p>
+                        <p class="txt">
+                            2. 맛집 리뷰(평점) 작성
+                        </p>
+                        <p class="txt">
+                            3. 사장님 손님 소통
+                        </p>
+                    </div>
+                    <p class="txt">
+                        프로젝트 저장소: <a href="https://github.com/sg8541/minikosa" target="_blank">github.com/sg8541/minikosa</a>
+                    </p>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- 팀 소개 섹션 -->
+    <div id="team" class="tab-content">
+        <div class="subtitle">
+            <h2>팀 소개</h2>
+            <img th:src="@{/images/main_logo.png}" alt="Main Logo">
+            <p class="description">먹 코 살 코 팀원을 소개합니다.</p>
+        </div>
+        <div class="about_box">
+            <ul class="team-list">
+                <li>
+                    <img src="images/kim.png" alt="김슬기" class="team-photo">
+                    <h4>김슬기</h4>
+                    <p class="txt">
+                        귀요미<br>
+                        역할: 백엔드<br>
+                        이메일: <a href="mailto:logging2021@gmail.com">logging2021@gmail.com</a><br>
+                        깃허브: <a href="https://github.com/sg8541">github.com/sg8541</a>
+                    </p>
+                </li>
+                <li>
+                    <img src="images/jang.jpg" alt="장현수" class="team-photo">
+                    <h4>장현수</h4>
+                    <p class="txt">
+                        코딩하는 또라이<br>
+                        역할: 팀장, 백엔드<br>
+                        이메일: <a href="mailto:jhsnex3768@gmail.com">jhsnex3768@gmail.com</a><br>
+                        깃허브: <a href="https://github.com/jhsnex123">github.com/jhsnex123</a>
+                    </p>
+                </li>
+                <li>
+                    <img src="images/jung.jpg" alt="정지용" class="team-photo">
+                    <h4>정지용</h4>
+                    <p class="txt">
+                        깜찍이<br>
+                        역할: 프론트엔드<br>
+                        이메일: <a href="mailto:rjchung47@gmail.com">rjchung47@gmail.com</a><br>
+                        깃허브: <a href="https://github.com/RyanJeeyong">github.com/RyanJeeyong</a>
+                    </p>
+                </li>
+                <li>
+                    <img src="images/han.jpg" alt="한규현" class="team-photo">
+                    <h4>한규현</h4>
+                    <p class="txt">
+                        불타는 고구마<br>
+                        역할: 백엔드<br>
+                        이메일: <a href="mailto:khh5345@naver.com">khh5345@naver.com</a><br>
+                        깃허브: <a href="https://github.com/kyudori">github.com/kyudori</a>
+                    </p>
+                </li>
+            </ul>
+        </div>
     </div>
 </div>
 </body>
