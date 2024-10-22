@@ -57,8 +57,8 @@
                         <span> 건</span>
                     </div>
                     <div class="result-sort">
-                        <a href="#" onclick="submitSortForm('latest', 'store')"><span>최신순</span></a>
-                        <a href="#" onclick="submitSortForm('rating', 'store')"><span>평점순</span></a>
+                        <a href="#" onclick="submitSortForm('latest', 'store')"><span id="latest">최신순</span></a>
+                        <a href="#" onclick="submitSortForm('rating', 'store')"><span id="rating">평점순</span></a>
                     </div>
                 </div>
 
@@ -125,8 +125,8 @@
                         <span> 건</span>
                     </div>
                     <div class="result-sort">
-                        <a href="#" onclick="submitSortForm('latest', 'review')"><span>최신순</span></a>
-                        <a href="#" onclick="submitSortForm('rating', 'review')"><span>평점순</span></a>
+                        <a href="#" onclick="submitSortForm('latest', 'review')"><span id="latest-r">최신순</span></a>
+                        <a href="#" onclick="submitSortForm('rating', 'review')"><span id="rating-r">평점순</span></a>
                     </div>
                 </div>
 
@@ -276,6 +276,34 @@
                     }
                 }
             }
+
+            // 현재 URL에서 'sort' 파라미터 값 가져오기
+            const urlParams = new URLSearchParams(window.location.search);
+            const sortValue = urlParams.get('sort');
+
+            if (sortValue === 'latest') {
+                document.getElementById('latest').style.fontWeight = 'bold';
+                document.getElementById('latest').style.color = '#000000';
+                document.getElementById('rating').style.fontWeight = 'normal';
+                document.getElementById('rating').style.color = '';
+                document.getElementById('latest-r').style.fontWeight = 'bold';
+                document.getElementById('latest-r').style.color = '#000000';
+                document.getElementById('rating-r').style.fontWeight = 'normal';
+                document.getElementById('rating-r').style.color = '';
+            } else {
+                document.getElementById('latest').style.fontWeight = 'normal';
+                document.getElementById('latest').style.color = '';
+                document.getElementById('rating').style.fontWeight = 'bold';
+                document.getElementById('rating').style.color = '#000000';
+                document.getElementById('latest-r').style.fontWeight = 'normal';
+                document.getElementById('latest-r').style.color = '';
+                document.getElementById('rating-r').style.fontWeight = 'bold';
+                document.getElementById('rating-r').style.color = '#000000';
+            }
+
+
+
+
         </script>
 </body>
 <!-- 푸터 섹션 -->
