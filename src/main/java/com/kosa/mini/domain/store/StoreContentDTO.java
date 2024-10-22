@@ -2,6 +2,7 @@ package com.kosa.mini.domain.store;
 
 import lombok.Data;
 
+import java.util.Date;
 import java.util.List;
 
 @Data
@@ -14,6 +15,8 @@ public class StoreContentDTO {
    private String extraAddress;
    private String storeDescription;
    private String webSiteInfo;
+   private Date openingTime;
+   private Date closingTime;
    private String contactNumber;
    private String storePhoto;
    private int ownerId;
