@@ -344,7 +344,8 @@
             <div id="divPaging">
                 <!-- 이전 페이지 버튼 -->
                 <th:block th:if="${currentPage > 1}">
-                    <a th:href="@{/admin/suggestion/list(page=${currentPage - 1}, size=${pageSize})}">
+                    <a th:href="@{/admin/suggestion/list(page=${currentPage - 1}, size=${pageSize})}"
+                       onclick="sessionStorage.setItem('scrollPosition', window.scrollY);">
                         <div>◀</div>
                     </a>
                 </th:block>
@@ -356,13 +357,15 @@
 <!--                    <div th:if="${pageNum != currentPage}">-->
 <!--                        <a th:href="@{/admin/suggestion/list(page=${pageNum}, size=${pageSize})}" th:text="${pageNum}"></a>-->
 <!--                    </div>-->
-                    <a th:if="${pageNum != currentPage}" th:href="@{/admin/suggestion/list(page=${pageNum}, size=${pageSize})}">
+                    <a th:if="${pageNum != currentPage}" th:href="@{/admin/suggestion/list(page=${pageNum}, size=${pageSize})}"
+                       onclick="sessionStorage.setItem('scrollPosition', window.scrollY);">
                         <span th:text="${pageNum}"></span>
                     </a>
                 </th:block>
                 <!-- 다음 페이지 버튼 -->
                 <th:block th:if="${currentPage < totalPages}">
-                    <a th:href="@{/admin/suggestion/list(page=${currentPage + 1}, size=${pageSize})}">
+                    <a th:href="@{/admin/suggestion/list(page=${currentPage + 1}, size=${pageSize})}"
+                       onclick="sessionStorage.setItem('scrollPosition', window.scrollY);">
                         <div>▶</div>
                     </a>
                 </th:block>
@@ -389,6 +392,13 @@
             logoutLink.style.display = 'none';
         }
     });
+    window.onload = function () {
+    const scrollPosition = sessionStorage.getItem('scrollPosition');
+        if (scrollPosition) {
+            window.scrollTo(0, scrollPosition);
+            sessionStorage.removeItem('scrollPosition');
+        }
+    }
 </script>
 </body>
 <!-- 푸터 섹션 -->

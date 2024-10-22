@@ -28,7 +28,7 @@ public interface SuggestionMapper {
     })
     List<ContactUs> getSuggestionsWithPagination(@Param("offset") int offset, @Param("limit") int limit);
 
-    @Select("SELECT cu.title, cu.created_at, m.name, cu.views, cu.content " +
+    @Select("SELECT cu.title, cu.created_at, m.name, cu.views, cu.content, contact_id " +
             "FROM contact_us cu " +
             "LEFT JOIN `members` m ON cu.member_id = m.member_id " +
             "WHERE cu.contact_id = #{contactId}")
