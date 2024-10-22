@@ -87,6 +87,19 @@
                         </div>
                     </div>
                     </th:block>
+                    <th:block th:if="${not #strings.isEmpty(content.openingTime)}">
+                    <div class="place_info_detail place_business_hours" style="margin-top: 5px;">
+                        <h4 class="info_title_detail">
+                            <span class="place_info_icon">영업시간</span>
+                            <img src="https://img.icons8.com/forma-thin/48/clock.png" width="16px" height="16px" class="homepage_icon">
+                        </h4>
+                        <div class="place_location">
+                            <div class="business_hours_text" style="padding-top: 2px;">
+                                <span class="hours_text" th:text="|${#dates.format(content.openingTime, 'HH:mm')} - ${#dates.format(content.closingTime, 'HH:mm')}|"></span>
+                            </div>
+                        </div>
+                    </div>
+                    </th:block>
                     <div class="place_info_detail place_phone">
                         <h4 class="info_title_detail">
                             <span class="place_info_icon">전화번호</span>
