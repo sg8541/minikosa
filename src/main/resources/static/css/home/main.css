@@ -350,7 +350,7 @@ a:focus {
         }
 
         .footer-section {
-            flex: 1 1 200px;
+            flex: auto;
         }
 
         .footer-section h4 {
@@ -821,8 +821,6 @@ li {
 .footer_section {
     background-color: #FF885B;
     color: #ffffff;
-    padding: 30px 100px 10px 0;
-    /* text-align: center;*/
 }
 
 .footer_section h4 {

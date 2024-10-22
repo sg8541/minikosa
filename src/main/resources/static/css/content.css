@@ -265,7 +265,7 @@ footer {
 }
 
 .footer-section {
-    flex: 1 1 200px;
+    flex: auto;
 }
 
 .footer-section h4 {
@@ -344,7 +344,6 @@ footer {
     }
 
     .footer-section {
-        flex: 1 1 100%;
         text-align: center;
     }
 
@@ -372,10 +371,6 @@ footer {
         padding: 10px 0;
         font-size: 14px;
         margin: 10px 0;
-    }
-
-    .footer-section {
-        text-align: center;
     }
 }
 
