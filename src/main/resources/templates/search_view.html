@@ -154,8 +154,11 @@
                                         <th:block th:switch="${session.loggedInUser.roleId}">
                                             <!--/* 관리자 상태 (roleId가 2일 때) */-->
                                             <th:block th:case="2">
-                                                <button type="button" class="comment_user_button">수정</button>
-                                                <button type="button" class="comment_user_button">삭제</button>
+                                                <form method="post" th:action="|store/${review.storeId}/review/${review.memberId}|">
+                                                    <input type="hidden" name="reviewId" th:value="${review.reviewId}">
+                                                    <input type="hidden" name="memberId" th:value="${review.memberId}">
+                                                <button type="submit" class="comment_user_button" onclick="del(event);">삭제</button>
+                                                </form>
                                                 <a th:href="@{'/store/' + ${review.storeId}}" class="comment_user_button">리뷰 보러가기</a>
                                             </th:block>
                                             <!--/* 일반 유저 상태 (roleId가 2가 아닐 때) */-->
@@ -299,6 +302,14 @@
                 document.getElementById('latest-r').style.color = '';
                 document.getElementById('rating-r').style.fontWeight = 'bold';
                 document.getElementById('rating-r').style.color = '#000000';
+            }
+
+            function del(e) {
+                e.preventDefault();
+                const form = e.target.closest('form');
+                if (confirm('해당 리뷰를 삭제하시겠습니까?')) {
+                    form.submit();
+               }
             }
 
 
