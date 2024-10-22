@@ -113,43 +113,44 @@
 <!-- 헤더: 로고와 네비게이션 -->
 <header layout.fragment="header"></header>
 <!-- 메인 콘텐츠: 회원 제안 폼 -->
-<body layout:fragment="content">
-<div class="main-content">
-    <div class="subtitle">
-        <h2>회원 제안</h2>
-        <img th:src="@{/images/main_logo.png}" alt="Main Logo">
-        <p class="description">서비스를 위해 제안을 보내주세요.</p>
-    </div>
-
-    <!-- 오류 메시지 표시 -->
-    <div th:if="${errorMessage}" class="description" th:text="${errorMessage}"></div>
-    <!-- 성공 메시지 표시 -->
-    <div th:if="${successMessage}" class="description" th:text="${successMessage}"></div>
-
-    <form th:action="@{/suggestion}" th:object="${suggestionDTO}" method="post" onsubmit="return validateForm()">
-        <div class="form-group">
-            <label for="title">제목</label>
-            <input type="text" id="title" name="title" th:field="*{title}" placeholder="장소 제안 / 장소 수정 / 사장님 등록 요청 등" required>
+<div layout:fragment="content">
+    <div class="main-content">
+        <div class="subtitle">
+            <h2>회원 제안</h2>
+            <img th:src="@{/images/main_logo.png}" alt="Main Logo">
+            <p class="description">서비스를 위해 제안을 보내주세요.</p>
         </div>
-        <div class="form-group">
-            <label for="storeName">가게 명</label>
-            <input type="text" id="storeName" name="storeName" th:field="*{storeName}" placeholder="가게 명을 입력해 주세요." required>
-        </div>
-        <div class="form-group">
-            <label for="content">내용</label>
-            <textarea id="content" name="content" th:field="*{content}" placeholder="제안 내용:
+
+        <!-- 오류 메시지 표시 -->
+        <div th:if="${errorMessage}" class="description" th:text="${errorMessage}"></div>
+        <!-- 성공 메시지 표시 -->
+        <div th:if="${successMessage}" class="description" th:text="${successMessage}"></div>
+
+        <form th:action="@{/suggestion}" th:object="${suggestionDTO}" method="post" onsubmit="return validateForm(event)">
+            <div class="form-group">
+                <label for="title">제목</label>
+                <input type="text" id="title" name="title" th:field="*{title}" placeholder="장소 제안 / 장소 수정 / 사장님 등록 요청 등" required>
+            </div>
+            <div class="form-group">
+                <label for="storeName">가게 명</label>
+                <input type="text" id="storeName" name="storeName" th:field="*{storeName}" placeholder="가게 명을 입력해 주세요." required>
+            </div>
+            <div class="form-group">
+                <label for="content">내용</label>
+                <textarea id="content" name="content" th:field="*{content}" placeholder="제안 내용:
 (사장님 등록 요청의 경우 이메일을 정확하게 입력해 주세요.)" required></textarea>
-        </div>
-        <div class="button-container">
-            <input type="submit" value="등록" onclick="alert('작성 완료!')">
-            <button type="button" class="cancel-button" onclick="location.href='@{/home}'">취소</button>
-        </div>
-    </form>
+            </div>
+            <div class="button-container">
+                <input type="submit" value="등록">
+                <button type="button" class="cancel-button" onclick="history.back()">취소</button>
+            </div>
+        </form>
+    </div>
 </div>
 <!-- 스크립트 -->
 <script>
     // 유효성 검사 함수 (필요 시 추가)
-    function validateForm() {
+    function validateForm(event) {
         const title = document.getElementById('title').value.trim();
         const storeName = document.getElementById('storeName').value.trim();
         const content = document.getElementById('content').value.trim();
@@ -159,6 +160,8 @@
             return false;
         }
 
+        // 폼 제출 시 작성 완료 알림 표시
+        alert('작성 완료!');
         return true;
     }
 </script>
