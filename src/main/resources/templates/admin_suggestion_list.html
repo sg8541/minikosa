@@ -14,6 +14,11 @@
 
     <!-- 메인 스타일시트 -->
     <style>
+        a {
+            text-decoration-line: none;
+            color : #666;
+        }
+
         /* 메인 콘텐츠 스타일 */
         .main-content {
             width: 800px;
@@ -185,26 +190,30 @@
             margin: 0 5px;
         }
 
-        #divPaging div {
-            padding: 4px 8px;
-            border: 1px solid #ccc;
+        #divPaging a {
+            padding: 4px 15px;
+            /*border: 1px solid #ccc;*/
             border-radius: 4px;
             cursor: pointer;
             transition: background-color 0.3s, color 0.3s;
             text-decoration-line: none;
         }
 
-        #divPaging div:hover {
+        #divPaging a:hover {
+            border: 1px solid #FF885B;
+            color: #FF885B;
+        }
+
+        #divPaging div {
+            text-decoration-line: none;
+
+        }
+
+        #divPaging div span{
+            padding: 6px 12px;
             background-color: #FF885B;
             color: #fff;
-        }
-
-        #divPaging div a {
-            text-decoration-line: none;
-        }
-
-        #divPaging div b {
-            padding: 6px 12px;
+            border-radius: 4px;
         }
 
         /* 반응형 디자인 */
@@ -334,22 +343,29 @@
         <li>
             <div id="divPaging">
                 <!-- 이전 페이지 버튼 -->
-                <div th:if="${currentPage > 1}">
-                    <a th:href="@{/admin/suggestion/list(page=${currentPage - 1}, size=${pageSize})}">◀</a>
-                </div>
+                <th:block th:if="${currentPage > 1}">
+                    <a th:href="@{/admin/suggestion/list(page=${currentPage - 1}, size=${pageSize})}">
+                        <div>◀</div>
+                    </a>
+                </th:block>
                 <!-- 페이지 번호 -->
-                <div th:each="pageNum : ${#numbers.sequence(1, totalPages)}">
+                <th:block th:each="pageNum : ${#numbers.sequence(1, totalPages)}">
                     <div th:if="${pageNum == currentPage}">
-                        <b th:text="${pageNum}"></b>
+                        <span th:text="${pageNum}"></span>
                     </div>
-                    <div th:if="${pageNum != currentPage}">
-                        <a th:href="@{/admin/suggestion/list(page=${pageNum}, size=${pageSize})}" th:text="${pageNum}"></a>
-                    </div>
-                </div>
+<!--                    <div th:if="${pageNum != currentPage}">-->
+<!--                        <a th:href="@{/admin/suggestion/list(page=${pageNum}, size=${pageSize})}" th:text="${pageNum}"></a>-->
+<!--                    </div>-->
+                    <a th:if="${pageNum != currentPage}" th:href="@{/admin/suggestion/list(page=${pageNum}, size=${pageSize})}">
+                        <span th:text="${pageNum}"></span>
+                    </a>
+                </th:block>
                 <!-- 다음 페이지 버튼 -->
-                <div th:if="${currentPage < totalPages}">
-                    <a th:href="@{/admin/suggestion/list(page=${currentPage + 1}, size=${pageSize})}">▶</a>
-                </div>
+                <th:block th:if="${currentPage < totalPages}">
+                    <a th:href="@{/admin/suggestion/list(page=${currentPage + 1}, size=${pageSize})}">
+                        <div>▶</div>
+                    </a>
+                </th:block>
             </div>
         </li>
     </ul>
