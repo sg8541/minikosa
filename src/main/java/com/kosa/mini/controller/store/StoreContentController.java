@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @Controller
-@RequestMapping("/store/")
+@RequestMapping("/store")
 public class StoreContentController {
 
     private StoreContentService service;
@@ -104,12 +104,34 @@ public class StoreContentController {
     // 가게 정보 수정
     @GetMapping("/admin/edit")
     public String editeStore(long storeId,
-                             StoreDTO storeDTO,
                              Model model) {
-        storeDTO = storeService.storeInfo(storeId);
+        StoreContentDTO storeContentDTO = service.storeInfo((int) storeId);
+        StoreDTO storeDTO = storeService.storeInfo(storeId);
+        List<Menu> menu = service.getStoreMenuAll((int) storeId);
+        storeDTO.setStoreId(storeId);
         System.out.println("가게 수정 페이지로 이동~~~~~~~~~~~~~~");
+        model.addAttribute("storePhoto", storeContentDTO.getStorePhoto());
         model.addAttribute("storeDTO", storeDTO);
+        model.addAttribute("menu", menu);
+
         return "admin_edit_store";
+    }
+
+    // 가게 정보 수정 처리
+    @PostMapping("/admin/edit")
+    public String updateStore(@ModelAttribute("storeDTO") StoreDTO storeDTO,
+                              Model model) {
+        try {
+            // storeDTO 내부의 menuDTOs 리스트를 이용하여 업데이트
+            storeService.updateStore(storeDTO, storeDTO.getMenuDTOs());
+            model.addAttribute("successMessage", "가게 정보가 성공적으로 수정되었습니다.");
+        } catch (Exception e) {
+            e.printStackTrace();
+            model.addAttribute("errorMessage", "가게 정보 수정 중 오류가 발생했습니다.");
+        }
+
+        // 수정 후 가게 상세 페이지로 리다이렉트
+        return "redirect:/store/" + storeDTO.getStoreId();
     }
 
     // 가게 정보 삭제

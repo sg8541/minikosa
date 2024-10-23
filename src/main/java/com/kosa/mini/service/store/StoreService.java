@@ -10,6 +10,8 @@ import java.util.List;
 public interface StoreService {
     void createStore(StoreDTO storeDTO, List<MenuDTO> menuDTOs) throws Exception;
 
+    void updateStore(StoreDTO storeDTO, List<MenuDTO> menuDTOs) throws Exception;
+
     void assignOwnerAndUpdateRole(Long storeId, Long ownerId);
 
     List<Member> searchMembersByEmail(String email);
