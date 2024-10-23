@@ -16,6 +16,25 @@ public interface StoreMapper {
     @Options(useGeneratedKeys = true, keyProperty = "storeId")
     void insertStore(Store store);
 
+    // 가게 정보 업데이트
+    @Update("UPDATE stores SET " +
+            "store_name = #{storeName}, " +
+            "postcode = #{postcode}, " +
+            "road_address = #{roadAddress}, " +
+            "detail_address = #{detailAddress}, " +
+            "extra_address = #{extraAddress}, " +
+            "category_id = #{categoryId}, " +
+            "store_photo = #{storePhoto}, " +
+            "store_description = #{storeDescription}, " +
+            "website_info = #{websiteInfo}, " +
+            "contact_number = #{contactNumber}, " +
+            "opening_time = #{openingTime}, " +
+            "closing_time = #{closingTime}, " +
+            "updated_at = #{updatedAt}, " +
+            "is_modified = #{isModified} " +
+            "WHERE store_id = #{storeId}")
+    void updateStore(Store store);
+
     @Insert({
             "<script>",
             "INSERT INTO menus (store_id, menu_name, price, menu_photo) VALUES ",
@@ -25,6 +44,10 @@ public interface StoreMapper {
             "</script>"
     })
     void insertMenus(@Param("storeId") Long storeId, @Param("menus") List<Menu> menus);
+
+    // 기존 메뉴 삭제
+    @Delete("DELETE FROM menus WHERE store_id = #{storeId}")
+    void deleteMenusByStoreId(@Param("storeId") Long storeId);
 
     // 사장님 할당 메서드
     @Update("UPDATE stores SET owner_id = #{ownerId} WHERE store_id = #{storeId}")
@@ -49,5 +72,6 @@ public interface StoreMapper {
             "from stores " +
             "where store_id = #{storeId}")
     StoreDTO findStore(long storeId);
+
 }
 

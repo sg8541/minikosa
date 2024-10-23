@@ -114,6 +114,71 @@ public class StoreServiceImpl implements StoreService {
         return storeMapper.findByOwnerId(ownerId);
     }
 
+    @Transactional
+    @Override
+    public void updateStore(StoreDTO storeDTO, List<MenuDTO> menuDTOs) throws Exception {
+        Store store = new Store();
+        store.setStoreId(storeDTO.getStoreId());
+        System.out.println(store.getStoreId()+"storeId");
+        store.setStoreName(storeDTO.getStoreName());
+        store.setPostcode(storeDTO.getPostcode());
+        store.setRoadAddress(storeDTO.getRoadAddress());
+        store.setDetailAddress(storeDTO.getDetailAddress());
+        store.setExtraAddress(storeDTO.getExtraAddress());
+        store.setCategoryId(storeDTO.getCategoryId());
+        store.setStoreDescription(storeDTO.getStoreDescription());
+
+        if (storeDTO.getOpeningTime() != null && !storeDTO.getOpeningTime().isEmpty()) {
+            store.setOpeningTime(LocalTime.parse(storeDTO.getOpeningTime()));
+        }
+        if (storeDTO.getClosingTime() != null && !storeDTO.getClosingTime().isEmpty()) {
+            store.setClosingTime(LocalTime.parse(storeDTO.getClosingTime()));
+        }
+
+        store.setWebsiteInfo(storeDTO.getWebsiteInfo());
+        store.setContactNumber(storeDTO.getContactNumber());
+
+        // 가게 사진 업데이트 처리
+        MultipartFile storePhoto = storeDTO.getStorePhoto();
+        if (storePhoto != null && !storePhoto.isEmpty()) {
+            String storePhotoPath = saveFile(storePhoto, storePhotoDir);
+            store.setStorePhoto("/uploads/stores/" + storePhotoPath);
+        } else {
+            store.setStorePhoto(storeDTO.getStorePhotoPath());
+        }
+
+        store.setUpdatedAt(LocalDateTime.now());
+        store.setIsModified(true);
+
+        // 가게 정보 업데이트
+        storeMapper.updateStore(store);
+        System.out.println("Updated store with storeId: " + store.getStoreId());
+
+        // 기존 메뉴 삭제
+        storeMapper.deleteMenusByStoreId(store.getStoreId());
+
+        // 새로운 메뉴 저장
+        if (menuDTOs != null && !menuDTOs.isEmpty()) {
+            List<Menu> menus = new ArrayList<>();
+            for (MenuDTO menuDTO : menuDTOs) {
+                Menu menu = new Menu();
+                menu.setStoreId(store.getStoreId());
+                menu.setMenuName(menuDTO.getMenuName());
+                menu.setPrice(menuDTO.getPrice());
+
+                MultipartFile menuPhoto = menuDTO.getStorePhoto();
+                if (menuPhoto != null && !menuPhoto.isEmpty()) {
+                    String menuPhotoPath = saveFile(menuPhoto, menuPhotoDir);
+                    menu.setMenuPhoto("/uploads/menus/" + menuPhotoPath);
+                }
+
+                menus.add(menu);
+            }
+            storeMapper.insertMenus(store.getStoreId(), menus);
+            System.out.println("Inserting menus for storeId: " + store.getStoreId());
+        }
+    }
+
     private String saveFile(MultipartFile file, String directory) throws IOException {
         File uploadDir = new File(directory);
         if (!uploadDir.exists() && !uploadDir.mkdirs()) {
@@ -130,6 +195,7 @@ public class StoreServiceImpl implements StoreService {
         return uniqueFilename;
     }
 
+    @Override
     public StoreDTO storeInfo(long storeId){
         return storeMapper.findStore(storeId);
     }
