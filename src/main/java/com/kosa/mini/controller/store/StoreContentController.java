@@ -110,7 +110,6 @@ public class StoreContentController {
         List<Menu> menu = service.getStoreMenuAll((int) storeId);
         storeDTO.setStoreId(storeId);
         System.out.println("가게 수정 페이지로 이동~~~~~~~~~~~~~~");
-        System.out.println(storeDTO.getStoreId()+"GETMapping");
         model.addAttribute("storePhoto", storeContentDTO.getStorePhoto());
         model.addAttribute("storeDTO", storeDTO);
         model.addAttribute("menu", menu);
@@ -124,7 +123,6 @@ public class StoreContentController {
                               Model model) {
         try {
             // storeDTO 내부의 menuDTOs 리스트를 이용하여 업데이트
-            System.out.println(storeDTO.getStoreId()+"storeId Postmapping");
             storeService.updateStore(storeDTO, storeDTO.getMenuDTOs());
             model.addAttribute("successMessage", "가게 정보가 성공적으로 수정되었습니다.");
         } catch (Exception e) {
@@ -135,7 +133,6 @@ public class StoreContentController {
         // 수정 후 가게 상세 페이지로 리다이렉트
         return "redirect:/store/" + storeDTO.getStoreId();
     }
-
 
     // 가게 정보 삭제
     @PostMapping("/{num}/close")

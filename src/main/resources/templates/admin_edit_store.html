@@ -234,7 +234,7 @@
     <div th:if="${successMessage}" class="description" th:text="${successMessage}"></div>
     <form th:action="@{/store/admin/edit}" th:object="${storeDTO}" method="post" enctype="multipart/form-data" onsubmit="return validateForm()">
         <!-- 가게 ID (hidden field) -->
-        <input type="hidden" th:field="*{storeId}" />
+        <input type="hidden" name="storeId" th:field="*{storeId}">
 
         <!-- 가게 이름 -->
         <div class="form-group">
@@ -291,7 +291,7 @@
 
             <!-- storePhoto가 없는 경우 -->
             <img th:unless="${storePhoto != null}"
-                 th:src="@{/images/1.jpg}"
+                 th:src="@{/images/1.png}"
                  alt="가게 사진 미리보기"
                  style="width: 150px; height: auto; margin-top: 10px; border: 1px solid #ddd; border-radius: 5px;">
         </div>
@@ -327,20 +327,20 @@
         <div class="form-group">
             <label>메뉴</label>
             <div id="menus">
-                <th:block th:each="menuItem, iterStat : ${storeDTO.menuDTOs}">
+                <th:block th:each="menuItem, iterStat : ${menu}">
                     <div class="menu-section" th:attr="data-index=${iterStat.index}">
                         <button type="button" class="remove-menu" onclick="removeMenu(this)">×</button>
                         <div class="form-group">
                             <label>메뉴 이름</label>
                             <input type="text"
-                                   th:name="'menuDTOs[' + ${iterStat.index} + '].menuName'"
+                                   th:name="'menu[' + ${iterStat.index} + '].menuName'"
                                    th:value="${menuItem.menuName}"
                                    placeholder="메뉴 이름을 입력해 주세요." required>
                         </div>
                         <div class="form-group">
                             <label>가격</label>
                             <input type="number"
-                                   th:name="'menuDTOs[' + ${iterStat.index} + '].price'"
+                                   th:name="'menu[' + ${iterStat.index} + '].price'"
                                    th:value="${menuItem.price}"
                                    placeholder="가격을 입력해 주세요." required>
                         </div>
@@ -349,7 +349,7 @@
                             <button type="button" class="custom-file-button menu_photo_button" onclick="triggerMenuPhoto(this)">메뉴 사진 선택</button>
                             <span class="file-name" th:text="${menuItem.menuPhoto != null ? menuItem.menuPhoto : '선택된 파일 없음'}"></span>
                             <input type="file"
-                                   th:name="'menuDTOs[' + ${iterStat.index} + '].storePhoto'"
+                                   th:name="'menu[' + ${iterStat.index} + '].menuPhoto'"
                                    accept="image/*"
                                    class="hidden-file-input menu_photo_input"
                                    onchange="previewMenuPhoto(this)">
@@ -362,7 +362,7 @@
 
                             <!-- menuPhoto가 없는 경우 -->
                             <img th:unless="${menuItem.menuPhoto != null}"
-                                 th:src="@{/images/1.jpg}"
+                                 th:src="@{/images/1.png}"
                                  alt="메뉴 사진 미리보기"
                                  style="width: 100px; height: auto; margin-top: 10px; border: 1px solid #ddd; border-radius: 5px;">
                         </div>
@@ -371,7 +371,6 @@
             </div>
             <button type="button" class="add-menu-button" onclick="addMenu()">+ 메뉴 추가</button>
         </div>
-
         <!-- 버튼 컨테이너 -->
         <div class="button-container">
             <input type="submit" value="수정">
@@ -411,7 +410,7 @@
             reader.readAsDataURL(file);
             filenameSpan.textContent = file.name;
         } else {
-            preview.src = '@{/images/1.jpg}';
+            preview.src = '@{/images/1.png}';
             preview.style.display = 'block';
             filenameSpan.textContent = '선택된 파일 없음';
         }
@@ -460,7 +459,7 @@
                 <button type="button" class="custom-file-button menu_photo_button" onclick="triggerMenuPhoto(this)">메뉴 사진 선택</button>
                 <span class="file-name">선택된 파일 없음</span>
                 <input type="file" name="menu[${menuIndex}].menuPhoto" accept="image/*" class="hidden-file-input menu_photo_input" onchange="previewMenuPhoto(this)">
-                <img class="menu_photo_preview" src="@{/images/1.jpg}" alt="메뉴 사진 미리보기" style="width: 100px; height: auto; margin-top: 10px; border: 1px solid #ddd; border-radius: 5px;">
+                <img class="menu_photo_preview" src="@{/images/1.png}" alt="메뉴 사진 미리보기" style="width: 100px; height: auto; margin-top: 10px; border: 1px solid #ddd; border-radius: 5px;">
             </div>
         `;
         menus.appendChild(menuSection);
