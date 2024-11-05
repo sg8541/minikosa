@@ -152,6 +152,7 @@
     </div>
 
     <form id="loginForm" th:action="@{/login}" method="post" th:object="${loginDTO}" onsubmit="return handleLogin(event)">
+        <!-- 입력 필드: 이메일 -->
         <div class="form-group">
             <label for="userid">아이디 (이메일)</label>
             <input type="email" id="userid" name="email" placeholder="이메일을 입력해 주세요. Ex) example@domain.com" th:field="*{email}" required>
