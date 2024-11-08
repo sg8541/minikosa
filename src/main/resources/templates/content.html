@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{fragments/layout}">
+
+<head>
+    <meta charset="UTF-8">
+    <title>[[${content.storeName}]]</title>
+
+    <!--타이틀 옆 이미지 아이콘-->
+    <link rel="shortcut icon" th:href="@{/images/mini_logo.jpg}">
+    <link rel="stylesheet" href="/css/content.css">
+    <link rel="stylesheet" href="/css/headerFooter.css">
+    <script type="text/javascript" src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=913010ecf61096ff085a9717807d98df&libraries=services"></script>
+</head>
+
+<header layout.fragment="header"></header>
+<body layout:fragment="content">
+
+<div class="wap">
+    <div id="" class="container">
+        <div class="content_out_line">
+            <div class="content_inner">
+                <div class="content_top_line">
+                    <div class="top_image_line">
+                            <span class="image_present" th:style="'background-image: url(' + ${content.storePhoto} + ')'">
+                            </span>
+                        <span class="frame_g">
+                            </span>
+
+                        <!--가게 title(브랜드, 상호명, 평점 등)-->
+                        <div class="place_out_line">
+                            <!--관리자만 보이는 버튼-->
+                            <div class="btn_box">
+                                <th:block th:if="${session.loggedInUser.roleId} == 2">
+                                    <form>
+                                        <input type="hidden" name="storeId" th:value="${content.storeId}">
+                                        <button type="submit" class="admin_button" data-result="modify" >수정</button>
+                                        <button type="submit" class="admin_button" data-result="del" th:data-action="|/store/${content.storeId}/close|">삭제</button>
+                                    </form>
+                                </th:block>
+                            </div>
+                            <div class="place_inner">
+                                <h2 class="restaurant_title" th:text="${content.storeName}"></h2>
+                                <div class="evalution_box">
+                                    <img width="48" height="48" src="https://img.icons8.com/color/48/filled-star--v1.png" alt="filled-star--v1" class="icon_star" />
+                                    <span class="evalution_link">평점 : </span>
+                                    <span class="evalution_link" th:text="${content.ratingAvg}">###5</span>
+                                    <span class="bar"></span>
+                                    <span class="evalution_link">리뷰 : </span>
+                                    <a href="#none" class="evalution_link" th:text="${content.countReview}">###1</a>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <!--가게 상세 정보(info)-->
+                <div class="place_info_box">
+                    <h3 class="detail_info_title">상세정보</h3>
+                    <div class="place_info_detail">
+                        <h4 class="info_title_detail">
+                            <span class="place_info_icon address_icon">위치</span>
+                            <img src="/images/ico_location.png" class="address_icon">
+                        </h4>
+                        <div class="place_location">
+                                <span class="address_text">
+                                    [[${content.roadAddress}]] [[${content.detailAddress}]] (우) [[${content.postcode}]]
+                                </span>
+                            <span class="address_num_text">
+                                    상세주소
+                                    <span class="bar"></span>
+                                    [[${content.extraAddress}]]
+                                </span>
+                        </div>
+                    </div>
+                    <th:block th:if="${not #strings.isEmpty(content.webSiteInfo)}">
+                    <div class="place_info_detail place_homepage">
+                        <h4 class="info_title_detail">
+                            <span class="place_info_icon">홈페이지</span>
+                            <img src="/images/icon-internet.png" width="14px" height="14px;" class="homepage_icon">
+                        </h4>
+                        <div class="place_location">
+                            <div class="homepage_text">
+                                <a href="#" class="link_homepage">[[${content.webSiteInfo}]]</a>
+                            </div>
+                        </div>
+                    </div>
+                    </th:block>
+                    <th:block th:if="${not #strings.isEmpty(content.openingTime)}">
+                    <div class="place_info_detail place_business_hours" style="margin-top: 5px;">
+                        <h4 class="info_title_detail">
+                            <span class="place_info_icon">영업시간</span>
+                            <img src="https://img.icons8.com/forma-thin/48/clock.png" width="16px" height="16px" class="homepage_icon">
+                        </h4>
+                        <div class="place_location">
+                            <div class="business_hours_text" style="padding-top: 2px;">
+                                <span class="hours_text" th:text="|${#dates.format(content.openingTime, 'HH:mm')} - ${#dates.format(content.closingTime, 'HH:mm')}|"></span>
+                            </div>
+                        </div>
+                    </div>
+                    </th:block>
+                    <div class="place_info_detail place_phone">
+                        <h4 class="info_title_detail">
+                            <span class="place_info_icon">전화번호</span>
+                            <img src="/images/icon_phone.png" class="phone_icon">
+                        </h4>
+                        <div class="place_location">
+                                <span class="phone_text">
+
+                                    <span class="phone_num_text">[[${content.contactNumber}]]</span>
+                                    <span></span>
+                                </span>
+                        </div>
+                    </div>
+                    <div class="place_info_detail">
+                        <h4 class="info_title_detail">
+                            <span class="place_info_icon">소개</span>
+                            <img src="/images/icon-desc.png" class="icon_desc">
+                        </h4>
+                        <div class="place_location">
+                                <span class="title_info_text">
+                                    [[${content.storeDescription}]]
+                                </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!--메뉴 박스 시작-->
+            <div class="menu_info">
+                <div class="menu_info_title_box">
+                    <h3 class="detail_info_title">메뉴</h3>
+                </div>
+                <div class="menu_image_wrap">
+                    <div class="menu_image_present">
+                    </div>
+                    <!--메뉴 목록 : 추후 기능 확장 때 고려하기-->
+                    <strong class="screen_out">메뉴 목록</strong>
+                    <ul class="menu_list">
+                        <th:block th:each="menu : ${menu}">
+                            <li>
+                                <a href="#none" class="link_photo">
+                                        <span class="inner_photo">
+                                            <img th:src="${menu.menuPhoto}" class="img_thumb" width="106" height="90">
+                                        </span>
+                                </a>
+                                <div class="menu_title_box">
+                                    <em class="screen_out">명 : </em>
+                                    <span class="menu_text" th:text="${menu.menuName}"></span>
+                                    <em class="screen_out">가격 : </em>
+                                    <span class="price_menu" th:text="${#numbers.formatInteger(menu.price, 1, 'COMMA') + '원'}"></span>
+                                </div>
+                            </li>
+                        </th:block>
+                    </ul>
+                </div>
+            </div>
+            <!--댓글 평가 및 작성-->
+            <div class="rate_container">
+                <form method="post" th:action="|/store/${content.storeId}/review|" id="userWrite">
+                    <input type="hidden" name="memberId" th:value="${session.loggedInUser.memberId}">
+                    <input type="hidden" name="storeId" th:value="${content.storeId}">
+                    <input type="hidden" name="reviewId" value=0>
+                    <div class="rate_box">
+                        <div class="rate_intro">
+                            <p class="desc_rate_username" th:text="${session.loggedInUser.nickname}">###닉네임</p>
+                            <p class="desc_rate">님! 이 장소의 후기를 남겨주세요</p>
+                            <div class="user_rate">
+                                <div class="grade_star_box">
+                                        <span class="ico_star_rate ">
+                                            <span class="ico_star_rate inner_star"></span>
+                                        </span>
+                                </div>
+                            </div>
+                            <div class="star-rating space-x-4 mx-auto" >
+                                <input type="radio" id="5-stars" name="rating" value="5" v-model="ratings" checked/>
+                                <label for="5-stars" class="star pr-4">★</label>
+                                <input type="radio" id="4-stars" name="rating" value="4" v-model="ratings" />
+                                <label for="4-stars" class="star">★</label>
+                                <input type="radio" id="3-stars" name="rating" value="3" v-model="ratings" />
+                                <label for="3-stars" class="star">★</label>
+                                <input type="radio" id="2-stars" name="rating" value="2" v-model="ratings" />
+                                <label for="2-stars" class="star">★</label>
+                                <input type="radio" id="1-star" name="rating" value="1" v-model="ratings" />
+                                <label for="1-star" class="star">★</label>
+                            </div>
+                        </div>
+                        <!--댓글 작성 및 버튼 부분-->
+                        <div class="comment_write_box">
+                            <textarea class="comment_write" name="reviewText" id="u-comment-write"></textarea>
+                            <div class="button_box">
+                                <button class="select_button" type="reset">다시쓰기</button>
+                                <button class="select_button" id="u-write" type="submit">작성완료</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <!--유저 댓글 시작-->
+            <div class="comments_box">
+                <strong class="total_comment">전체
+                    <span class="color_b" th:text="${content.countReview}">###20</span></strong>
+                <div class="user_grade_box">
+                    <strong class="screen_out">후기 요약</strong>
+                    <div class="grade_star">
+                        <img width="48" height="48" src="https://img.icons8.com/color/48/filled-star--v1.png" alt="filled-star--v1" class="icon_star" />
+                        <em class="num_rate" th:text="${content.ratingAvg}">5
+                            <span class="text_score">점</span>
+                        </em>
+                        <span class="ico_star_rate ">
+                                <span class="ico_star_rate inner_star" style="width: 100%"></span>
+                            </span>
+                    </div>
+                </div>
+
+                <strong class="screen_out">추천 포인트</strong>
+                <!--리뷰 댓글 시작-->
+                <form method="post" id="reviewList" th:action="|/store/${content.storeId}/review/${session.loggedInUser.memberId}|">
+                    <input type="hidden" name="storeId" th:value="${content.storeId}" />
+                    <input type="hidden" name="reviewId" value="" />
+                    <input type="hidden" name="replyId" value="" />
+                    <input type="hidden" name="ownerId" th:value="${content.ownerId}" />
+                    <div class="review_box">
+                        <strong class="screen_out">후기 리스트</strong>
+                        <th:block th:each="review : ${review}">
+                            <ul class="review_list">
+                                <li>
+                                    <div class="unit_info">
+                                        <em class="screen_out">작성자 : </em>
+                                        <a href="#none" class="link_user">
+                                            <div class="inner_user">
+                                                <span class="text_username" th:text="${review.nickname}">###닉네임</span>
+                                            </div>
+                                        </a>
+                                        <span class="bar"></span>
+                                        <span class="text_item">별점 : </span>
+                                        <span class="text_desc" th:text="${review.rating}">###5</span>
+                                        <span class="bar"></span>
+                                        <span class="text_item">작성일 : </span>
+                                        <span class="time_write" th:text="${#dates.format(review.createdAt, 'yyyy.MM.dd.')}"></span>
+                                    </div>
+                                    <div class="photo_group">
+                                        <ul class="list_photo">
+                                        </ul>
+                                    </div>
+                                    <div class="comment_info">
+                                        <p class="text_comment">
+                                            <span th:text="${review.reviewText}">### 맛있는 보노 보노의 하트 아주 조았어요!</span>
+                                        </p>
+                                    </div>
+
+                                    <div class="wrap_util">
+                                        <!--나중에 타임리프에서 답글이 하나라도 달려있으면 답글 버튼이 안보이도록 수정하기-->
+                                        <th:block th:if="${content.ownerId} == ${session.loggedInUser.memberId}">
+                                            <button type="submit" class="comment_pd_button" data-result="p-reply" th:data-review-id="${review.reviewId}">답글</button>
+                                        </th:block>
+                                        <th:block th:if="${review.memberId} == ${session.loggedInUser.memberId}">
+                                            <button type="submit" class="comment_user_button" data-result="u-modify" th:data-review-id="${review.reviewId}">수정</button>
+                                            <button type="submit" class="comment_user_button" data-result="u-del" th:data-review-id="${review.reviewId}" >삭제</button>
+                                        </th:block>
+                                    </div>
+                                </li>
+                                <li class="reply_comment_list" th:if="${review.replyId != 0}">
+                                    <a href="#none" class="reply_img">
+                                        <img width="16" height="16" src="https://img.icons8.com/small/16/down-right.png" alt="down-right" class="icon_reply" />
+                                    </a>
+                                    <div class="unit_info_admin">
+                                        <em class="screen_out">사장 : </em>
+                                        <div class="comment_info_reply">
+                                            <p class="text_comment" id="reply">
+
+                                                <span id="re-comment" th:text="${review.replyText}">### 맛있게 드셔주셔서 감사합니다!</span>
+
+                                            </p>
+                                        </div>
+                                        <div class="wrap_util">
+                                            <th:block th:if="${content.ownerId} == ${session.loggedInUser.memberId}">
+                                                <button type="button" class="comment_pd_button" id="p-modify" data-result="p-modify"th:data-review-id="${review.reviewId}" th:data-reply-id="${review.replyId}" >수정</button>
+                                                <button type="submit" class="comment_pd_button" data-result="p-del" th:data-reply-id="${review.replyId}">삭제</button>
+                                            </th:block>
+                                        </div>
+                                    </div>
+
+                                </li>
+                            </ul>
+                        </th:block>
+                    </div>
+                </form>
+                <!--/*
+                <a href="#none" class="link_more">
+                    <span class="txt_more">후기 더보기</span>
+                    <span class="ico_comm ico_more"></span>
+                </a>*/-->
+            </div>
+        </div>
+        <!--지도 시작-->
+        <div class="map_container">
+            <h3 class="detail_info_title">찾아가는 길</h3>
+            <div class="map_box">
+                <h4 class="screen_out">지도 보기</h4>
+                <div class="view_map" style="overflow: hidden; background: url(/images/256x256.png)">
+                    <div style="position: absolute; left: 0px; top: 0px; width: 100%;">
+                        <!--cursor: url(/images/)-->
+                        <!--style="width:500px;height:400px;"-->
+                        <div id="map" style="width:100%;height:350px;"></div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script th:inline="javascript">
+    var storeLocation = "|[(${content.roadAddress})] [(${content.detailAddress})]|";
+    var mapContainer = document.getElementById('map'), // 지도를 표시할 div
+        mapOption = {
+            center: new kakao.maps.LatLng(37.564214, 126.977943), // 지도의 중심좌표
+            level: 3
+        };
+    var map = new kakao.maps.Map(mapContainer, mapOption);
+    var geocoder = new kakao.maps.services.Geocoder();
+    geocoder.addressSearch(storeLocation, function(result, status) {
+         if (status === kakao.maps.services.Status.OK) {
+            var coords = new kakao.maps.LatLng(result[0].y, result[0].x);
+            var marker = new kakao.maps.Marker({
+                map: map,
+                position: coords
+            });
+            var infowindow = new kakao.maps.InfoWindow({
+                content: '<div style="width:150px;text-align:center;padding:6px 0;">'+"[(${content.storeName})]"+'</div>'
+            });
+            infowindow.open(map, marker);
+            map.setCenter(coords);
+        }
+    });
+</script>
+<script src="/js/content.js"></script>
+</body>
+<footer layout.fragment="footer"></footer>
+
+</html>

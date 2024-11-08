@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragments/layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>제안하기 | 먹코살코</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- 파비콘 설정 -->
+    <link rel="shortcut icon" th:href="@{/images/mini_logo.jpg}">
+    <link rel="stylesheet" href="/css/headerFooter.css">
+
+    <!-- 메인 스타일시트 -->
+    <style>
+        /* 메인 콘텐츠 스타일 */
+        .main-content {
+            width: 800px;
+            margin: 75px auto; /* 상단 여백 추가 및 가운데 정렬 */
+            background-color: #fff;
+            padding: 30px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            margin-bottom: 100px;
+        }
+
+        .main-content h2 {
+            font-size: 28px;
+            color: #FF885B;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .main-content img {
+            display: block;
+            margin: 0 auto 20px auto; /* 가운데 정렬 및 하단 여백 추가 */
+            width: 150px; /* 원하는 크기로 조정 */
+            height: auto;
+        }
+
+        /* 폼 요소 스타일 */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #333;
+        }
+
+        .form-group input[type="text"],
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1.5px solid #FF885B;
+            border-radius: 5px;
+            font-size: 16px;
+            resize: none;
+            box-sizing: border-box;
+            font-family: "맑은 고딕", sans-serif;
+        }
+
+        .form-group textarea {
+            height: 200px;
+            line-height: 1.5;
+        }
+
+        /* 플레이스홀더 스타일 */
+        textarea::placeholder {
+            white-space: pre-line;
+            color: #999;
+        }
+
+        /* 버튼 컨테이너 스타일 */
+        .button-container {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        /* 버튼 스타일 */
+        .button-container input[type="submit"],
+        .button-container .cancel-button {
+            background-color: #FF885B;
+            color: #fff;
+            border: none;
+            padding: 12px 30px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin: 0 10px;
+        }
+
+        /* 취소 버튼 별도 스타일 */
+        .button-container .cancel-button {
+            background-color: #ccc;
+            color: #333;
+        }
+
+        /* 버튼 호버 효과 */
+        .button-container input[type="submit"]:hover {
+            background-color: #e07a4d;
+        }
+
+        .button-container .cancel-button:hover {
+            background-color: #999;
+        }
+    </style>
+</head>
+<body>
+<!-- 헤더: 로고와 네비게이션 -->
+<header layout.fragment="header"></header>
+<!-- 메인 콘텐츠: 회원 제안 폼 -->
+<div layout:fragment="content">
+    <div class="main-content">
+        <div class="subtitle">
+            <h2>회원 제안</h2>
+            <img th:src="@{/images/main_logo.png}" alt="Main Logo">
+            <p class="description">서비스를 위해 제안을 보내주세요.</p>
+        </div>
+
+        <!-- 오류 메시지 표시 -->
+        <div th:if="${errorMessage}" class="description" th:text="${errorMessage}"></div>
+        <!-- 성공 메시지 표시 -->
+        <div th:if="${successMessage}" class="description" th:text="${successMessage}"></div>
+
+        <form th:action="@{/suggestion}" th:object="${suggestionDTO}" method="post" onsubmit="return validateForm(event)">
+            <div class="form-group">
+                <label for="title">제목</label>
+                <input type="text" id="title" name="title" th:field="*{title}" placeholder="장소 제안 / 장소 수정 / 사장님 등록 요청 등" required>
+            </div>
+            <div class="form-group">
+                <label for="storeName">가게 명</label>
+                <input type="text" id="storeName" name="storeName" th:field="*{storeName}" placeholder="가게 명을 입력해 주세요." required>
+            </div>
+            <div class="form-group">
+                <label for="content">내용</label>
+                <textarea id="content" name="content" th:field="*{content}" placeholder="제안 내용:
+(사장님 등록 요청의 경우 이메일을 정확하게 입력해 주세요.)" required></textarea>
+            </div>
+            <div class="button-container">
+                <input type="submit" value="등록">
+                <button type="button" class="cancel-button" onclick="history.back()">취소</button>
+            </div>
+        </form>
+    </div>
+</div>
+<!-- 스크립트 -->
+<script>
+    // 유효성 검사 함수 (필요 시 추가)
+    function validateForm(event) {
+        const title = document.getElementById('title').value.trim();
+        const storeName = document.getElementById('storeName').value.trim();
+        const content = document.getElementById('content').value.trim();
+
+        if (title === '' || storeName === '' || content === '') {
+            alert('제목, 가게명, 내용을 모두 입력해 주세요.');
+            return false;
+        }
+
+        // 폼 제출 시 작성 완료 알림 표시
+        alert('작성 완료!');
+        return true;
+    }
+</script>
+</body>
+<!-- 푸터 섹션 -->
+<footer layout.fragment="footer"></footer>
+</html>

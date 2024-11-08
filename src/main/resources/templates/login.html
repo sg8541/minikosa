@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragments/layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>로그인 | 먹코살코</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- 파비콘 설정 -->
+    <link rel="shortcut icon" th:href="@{/images/mini_logo.jpg}">
+    <link rel="stylesheet" href="/css/headerFooter.css">
+
+    <!-- 메인 스타일시트 -->
+    <style>
+        /* 메인 콘텐츠 스타일 */
+        .main-content {
+            width: 800px;
+            margin: 75px auto; /* 상단 여백 추가 및 가운데 정렬 */
+            background-color: #fff;
+            padding: 30px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            margin-bottom: 100px;
+        }
+
+        .main-content h2 {
+            font-size: 28px;
+            color: #FF885B;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .main-content img {
+            display: block;
+            margin: 0 auto 20px auto; /* 가운데 정렬 및 하단 여백 추가 */
+            width: 150px; /* 원하는 크기로 조정 */
+            height: auto;
+        }
+
+        .description {
+            text-align: center;
+            font-size: 15px;
+            color: #666;
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+
+        /* 폼 요소 스타일 */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #333;
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="password"],
+        .form-group input[type="email"] {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1.5px solid #FF885B;
+            border-radius: 5px;
+            font-size: 16px;
+            resize: none;
+            box-sizing: border-box;
+            font-family: "맑은 고딕", sans-serif;
+        }
+
+        /* 플레이스홀더 스타일 */
+        input::placeholder {
+            white-space: pre-line;
+            color: #999;
+        }
+
+        /* 버튼 컨테이너 스타일 */
+        .button-container {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        /* 버튼 스타일 */
+        .button-container input[type="submit"],
+        .button-container .cancel-button {
+            background-color: #FF885B;
+            color: #fff;
+            border: none;
+            padding: 12px 30px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin: 0 10px;
+        }
+
+        /* 취소 버튼 별도 스타일 */
+        .button-container .cancel-button {
+            background-color: #ccc;
+            color: #333;
+        }
+
+        /* 버튼 호버 효과 */
+        .button-container input[type="submit"]:hover {
+            background-color: #e07a4d;
+        }
+
+        .button-container .cancel-button:hover {
+            background-color: #999;
+        }
+
+        /* 폼 하단 추가 링크 스타일 */
+        .form-footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .form-footer a {
+            color: #FF885B;
+            text-decoration: none;
+            margin: 0 10px;
+            transition: color 0.3s;
+        }
+
+        .form-footer a:hover {
+            color: #e07a4d;
+        }
+            /* 오류 메시지 스타일 */
+            .error-message {
+                color: red;
+                text-align: center;
+                margin-bottom: 20px;
+            }
+
+    </style>
+</head>
+<body>
+<!-- 헤더: 로고와 네비게이션 -->
+<header layout.fragment="header"></header>
+<!-- 메인 콘텐츠: 로그인 폼 -->
+<body layout:fragment="content">
+<div class="main-content">
+    <div class="subtitle">
+        <h2>로그인</h2>
+        <img th:src="@{/images/main_logo.png}" alt="Main Logo">
+        <p class="description">서비스를 이용하기 위해, 로그인을 해주세요.</p>
+    </div>
+
+    <form id="loginForm" th:action="@{/login}" method="post" th:object="${loginDTO}" onsubmit="return handleLogin(event)">
+        <div class="form-group">
+            <label for="userid">아이디 (이메일)</label>
+            <input type="email" id="userid" name="email" placeholder="이메일을 입력해 주세요. Ex) example@domain.com" th:field="*{email}" required>
+        </div>
+        <div class="form-group">
+            <label for="userpw">비밀번호</label>
+            <input type="password" id="userpw" name="password" placeholder="비밀번호를 입력해 주세요." th:field="*{password}" required>
+        </div>
+
+        <!-- 오류 메시지 표시 -->
+        <div th:if="${errorMessage}" class="error-message">
+            <p th:text="${errorMessage}"></p>
+        </div>
+
+        <div class="button-container">
+            <input type="submit" value="로그인">
+            <button type="button" class="cancel-button" onclick="resetForm()">취소</button>
+        </div>
+
+        <!-- 버튼 아래에 추가된 링크 -->
+        <p class="form-footer">
+            로그인에 문제가 있나요?<br>
+            <a th:href="@{/signup}">회원가입</a>
+            <a th:href="@{/findemail}">ID 찾기</a>
+            <a th:href="@{/reset/password}">PW 초기화</a>
+        </p>
+    </form>
+</div>
+<!-- 스크립트 -->
+<script>
+    // 간단한 폼 검증 함수
+    function handleLogin(event) {
+        const email = document.getElementById('userid').value.trim();
+        const password = document.getElementById('userpw').value.trim();
+
+        if (email === '' || password === '') {
+            alert('모든 필드를 채워주세요.');
+            event.preventDefault();
+            return false;
+        }
+
+        // 추가적인 검증 로직 (예: 이메일 형식 등)이 필요하면 여기에 추가
+
+        return true;
+    }
+
+    // 폼 리셋 함수
+    function resetForm() {
+        document.getElementById('loginForm').reset();
+        // clearMessages();
+        // window.history.back();
+        location.href="/home";
+    }
+
+    // 메시지 초기화 함수
+    function clearMessages() {
+        const errorMsg = document.querySelector('.error-message');
+        if (successMsg) successMsg.innerText = '';
+        if (errorMsg) errorMsg.innerText = '';
+    }
+</script>
+</body>
+<!-- 푸터 섹션 -->
+<footer layout.fragment="footer"></footer>
+</html>

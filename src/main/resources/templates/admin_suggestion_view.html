@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragments/layout}">
+<head>
+  <meta charset="UTF-8">
+  <title>고객 요청 글 | 먹코살코</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- 파비콘 설정 -->
+  <link rel="shortcut icon" th:href="@{/images/mini_logo.jpg}">
+  <link rel="stylesheet" href="/css/headerFooter.css">
+
+  <!-- 메인 스타일시트 -->
+  <style>
+    /* 컨테이너 스타일 */
+    .container {
+      max-width: 1200px;
+      margin: 80px auto 0 auto;
+      padding: 20px;
+    }
+
+    /* 게시글 보기 스타일 */
+    #viewPostWrapper {
+      width: 800px;
+      margin: 75px auto; /* 상단 여백 추가 및 가운데 정렬 */
+      background-color: #fff;
+      padding: 30px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      border-radius: 8px;
+      margin-bottom: 100px;
+    }
+
+    #viewPostWrapper img {
+      display: block;
+      margin: 10px auto;
+      width: 150px;
+      height: auto;
+    }
+
+    #viewPostWrapper h2 {
+      font-size: 28px;
+      color: #FF885B;
+      margin-bottom: 10px;
+      text-align: center;
+    }
+
+    #viewPostWrapper .post-meta {
+      text-align: center;
+      color: #666;
+      margin-bottom: 30px;
+    }
+
+    #viewPostWrapper .post-content {
+      font-size: 16px;
+      line-height: 1.8;
+      margin-bottom: 40px;
+      text-align: center;
+    }
+
+    /* 버튼 스타일 */
+    .button-container {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+    }
+
+    .button-container .add-button,
+    .button-container .register-button,
+    .button-container .delete-button {
+      background-color: #FF885B;
+      border: none;
+      color: white;
+      padding: 12px 30px;
+      font-size: 16px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      text-decoration: none;
+      display: inline-block;
+      text-align: center;
+    }
+
+    .button-container .delete-button {
+      background-color: #e07a4d;
+    }
+
+    .button-container .register-button {
+      background-color: #FF885B;
+    }
+
+    .button-container .add-button:hover,
+    .button-container .register-button:hover {
+      background-color: #e07a4d;
+    }
+
+    .button-container .delete-button:hover {
+      background-color: #c05a3f;
+    }
+
+
+    /* 반응형 디자인 */
+    @media (max-width: 768px) {
+      .header {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .nav {
+        flex-direction: column;
+        gap: 10px;
+        margin-top: 10px;
+      }
+
+      .footer-container {
+        max-width: 1500px;
+        height: 80%;
+        width: 100%; /* 전체 너비 */
+        margin: 0 auto;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        gap: 100px;
+        padding: 10px 0px;
+      }
+
+      #viewPostWrapper {
+        width: 90%;
+        padding: 20px;
+      }
+
+      #viewPostWrapper h2 {
+        font-size: 24px;
+      }
+
+      .button-container {
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .button-container .add-button,
+      .button-container .register-button,
+      .button-container .delete-button {
+        width: 100%;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .header .logo h1 {
+        font-size: 20px;
+      }
+
+      .nav a {
+        font-size: 14px;
+      }
+
+      #viewPostWrapper h2 {
+        font-size: 20px;
+      }
+
+      #viewPostWrapper .post-meta {
+        font-size: 14px;
+      }
+    }
+  </style>
+</head>
+<header layout.fragment="header"></header>
+<!-- 헤더: 로고와 네비게이션 -->
+<body layout:fragment="content">
+<!-- 게시글 보기 섹션 -->
+<div id="viewPostWrapper">
+  <div class="subtitle">
+    <img th:src="@{/images/main_logo.png}" alt="Main Logo">
+    <p class="description">사용자가 서비스 개선을 위해 제안한 내용입니다.</p>
+    <!-- 게시글 제목 -->
+    <h2 th:text="${suggestion.title}"></h2>
+  </div>
+  <!-- 게시글 메타 정보 -->
+  <div class="post-meta">
+    <span>작성자: <span th:text="${suggestion.memberName}"></span></span> |
+    <span>작성일: <span th:text="${#temporals.format(suggestion.createdAt, 'yyyy.MM.dd')}"></span></span> |
+    <span>조회수: <span th:text="${suggestion.views}"></span></span>
+  </div>
+
+  <!-- 게시글 내용 -->
+  <div class="post-content">
+    <p th:text="${suggestion.content}"></p>
+  </div>
+
+  <!-- 버튼 컨테이너 -->
+  <div class="button-container">
+    <!-- 맛집 추가 버튼 -->
+    <a href="/admin/create/store" class="add-button">맛집 추가</a>
+    <!-- 사장 등록 버튼 -->
+    <a href="/admin/register/owner" class="register-button">사장 등록</a>
+    <!-- 글 삭제 버튼 -->
+    <form th:action="@{/admin/suggestion/delete/{id}(id=${suggestion.contactId})}" method="post">
+      <button type="submit" class="delete-button">글 삭제</button>
+    </form>
+  </div>
+</div>
+
+</body>
+<!-- 푸터 섹션 -->
+<footer layout.fragment="footer"></footer>
+</html>

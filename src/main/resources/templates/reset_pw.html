@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragments/layout}">
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>비밀번호 초기화 | 먹코살코</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- 파비콘 설정 -->
+    <link rel="shortcut icon" th:href="@{/images/mini_logo.jpg}">
+    <link rel="stylesheet" href="/css/headerFooter.css">
+
+    <!-- 메인 스타일시트 -->
+    <style>
+        /* 메인 콘텐츠 스타일 */
+        .main-content {
+            width: 800px;
+            margin: 75px auto; /* 상단 여백 추가 및 가운데 정렬 */
+            background-color: #fff;
+            padding: 30px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            margin-bottom: 100px;
+        }
+
+        .main-content h2 {
+            font-size: 28px;
+            color: #FF885B;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .main-content img {
+            display: block;
+            margin: 0 auto 20px auto; /* 가운데 정렬 및 하단 여백 추가 */
+            width: 150px; /* 원하는 크기로 조정 */
+            height: auto;
+        }
+
+        .description {
+            text-align: center;
+            font-size: 15px;
+            color: #666;
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+
+        /* 폼 요소 스타일 */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #333;
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="tel"],
+        .form-group input[type="email"],
+        .form-group input[type="password"],
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1.5px solid #FF885B;
+            border-radius: 5px;
+            font-size: 16px;
+            resize: none;
+            box-sizing: border-box;
+            font-family: "맑은 고딕", sans-serif;
+        }
+
+        /* 플레이스홀더 스타일 */
+        textarea::placeholder,
+        input::placeholder {
+            white-space: pre-line;
+            color: #999;
+        }
+
+        /* 버튼 컨테이너 스타일 */
+        .button-container {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        /* 버튼 스타일 */
+        .button-container input[type="submit"],
+        .button-container .cancel-button {
+            background-color: #FF885B;
+            color: #fff;
+            border: none;
+            padding: 12px 30px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin: 0 10px;
+        }
+
+        /* 취소 버튼 별도 스타일 */
+        .button-container .cancel-button {
+            background-color: #ccc;
+            color: #333;
+        }
+
+        /* 버튼 호버 효과 */
+        .button-container input[type="submit"]:hover {
+            background-color: #e07a4d;
+        }
+
+        .button-container .cancel-button:hover {
+            background-color: #999;
+        }
+
+        /* 폼 하단 추가 링크 스타일 */
+        .form-footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .form-footer a {
+            color: #FF885B;
+            text-decoration: none;
+            margin: 0 10px;
+            transition: color 0.3s;
+        }
+
+        .form-footer a:hover {
+            color: #e07a4d;
+        }
+    </style>
+</head>
+<body>
+<!-- 헤더: 로고와 네비게이션 -->
+<header layout.fragment="header"></header>
+<body layout:fragment="content">
+<!-- 메인 콘텐츠: 비밀번호 초기화 통합 폼 -->
+<div class="main-content">
+    <div class="subtitle">
+        <h2>비밀번호 초기화</h2>
+        <img th:src="@{/images/main_logo.png}" alt="Main Logo">
+        <p class="description">비밀번호를 초기화하기 위해 필요한 정보를 입력해 주세요.</p>
+    </div>
+
+    <!-- 오류 메시지 표시 -->
+    <div th:if="${errorMessage}" style="color: red; text-align: center; margin-bottom: 20px;">
+        <p th:text="${errorMessage}"></p>
+    </div>
+
+    <!-- 성공 메시지 표시 -->
+    <div th:if="${successMessage}" style="color: green; text-align: center; margin-bottom: 20px;">
+        <p th:text="${successMessage}"></p>
+    </div>
+
+    <!-- 사용자 정보 확인 폼 -->
+    <form th:action="@{/search/member}" method="post" th:if="${!passwordReset}">
+        <div id="userInfoSection">
+            <div class="form-group">
+                <label for="name">이름</label>
+                <input type="text" id="name" name="name" placeholder="가입 시 입력한 이름을 입력해 주세요. Ex) 홍길동" required>
+            </div>
+            <div class="form-group">
+                <label for="contact">연락처</label>
+                <input type="tel" id="contact" name="phoneNumber" placeholder="'-'를 포함한 연락처를 입력해 주세요. Ex) 010-1234-5678" required pattern="^[0-9\-+() ]+$" title="유효한 연락처를 입력해 주세요.">
+            </div>
+            <div class="form-group">
+                <label for="email">이메일</label>
+                <input type="email" id="email" name="email" placeholder="가입 시 사용한 이메일을 입력해 주세요. Ex) example@domain.com" required>
+            </div>
+            <div class="button-container">
+                <input type="submit" value="회원 조회">
+                <button type="button" class="cancel-button" onclick="resetForm()">취소</button>
+            </div>
+        </div>
+        <!-- 버튼 아래에 추가된 링크 -->
+        <p class="form-footer">
+            로그인에 문제가 있나요?<br>
+            <a th:href="@{/signup}">회원가입</a>
+            <a th:href="@{/findemail}">ID 찾기</a>
+            <a th:href="@{/reset/password}">PW 초기화</a>
+        </p>
+    </form>
+
+    <!-- 비밀번호 초기화 폼 -->
+    <form th:action="@{/reset/password}" method="post" th:if="${passwordReset}">
+        <input type="hidden" name="email" th:value="${email}" />
+        <div id="passwordResetSection">
+
+            <div class="form-group">
+                <label for="new_password">새 비밀번호</label>
+                <input type="password" id="new_password" name="newPassword" placeholder="새로운 비밀번호를 입력해 주세요." required>
+            </div>
+            <div class="form-group">
+                <label for="confirm_password">비밀번호 확인</label>
+                <input type="password" id="confirm_password" name="confirmPassword" placeholder="비밀번호를 다시 입력해 주세요." required>
+            </div>
+            <div class="button-container">
+                <input type="submit" value="비밀번호 초기화">
+                <button type="button" class="cancel-button" onclick="resetForm()">취소</button>
+            </div>
+        </div>
+        <!-- 버튼 아래에 추가된 링크 -->
+        <p class="form-footer">
+            로그인에 문제가 있나요?<br>
+            <a th:href="@{/signup}">회원가입</a>
+            <a th:href="@{/findemail}">ID 찾기</a>
+            <a th:href="@{/reset/password}">PW 초기화</a>
+        </p>
+    </form>
+</div>
+<!-- 스크립트 -->
+<script>
+    function resetForm() {
+        // 페이지를 새로고침하여 폼을 초기화
+        window.location.href = '/login';
+    }
+</script>
+</body>
+<!-- 푸터 섹션 -->
+<footer layout.fragment="footer"></footer>
+</html>

@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragments/layout}">
+
+<head>
+    <meta charset="UTF-8">
+    <title>이메일 찾기 | 먹코살코</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- 파비콘 설정 -->
+    <link rel="shortcut icon" th:href="@{/images/mini_logo.jpg}">
+    <link rel="stylesheet" href="/css/headerFooter.css">
+    <!-- 메인 스타일시트 -->
+    <style>
+        /* 메인 콘텐츠 스타일 */
+        .main-content {
+            width: 800px;
+            margin: 75px auto; /* 상단 여백 추가 및 가운데 정렬 */
+            background-color: #fff;
+            padding: 30px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            margin-bottom: 100px;
+        }
+
+        .main-content h2 {
+            font-size: 28px;
+            color: #FF885B;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .main-content img {
+            display: block;
+            margin: 0 auto 20px auto; /* 가운데 정렬 및 하단 여백 추가 */
+            width: 150px; /* 원하는 크기로 조정 */
+            height: auto;
+        }
+
+        .description {
+            text-align: center;
+            font-size: 15px;
+            color: #666;
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+
+        /* 폼 요소 스타일 */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #333;
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="tel"],
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1.5px solid #FF885B;
+            border-radius: 5px;
+            font-size: 16px;
+            resize: none;
+            box-sizing: border-box;
+            font-family: "맑은 고딕", sans-serif;
+        }
+
+        .form-group textarea {
+            height: 200px;
+            line-height: 1.5;
+        }
+
+        /* 플레이스홀더 스타일 */
+        textarea::placeholder {
+            white-space: pre-line;
+            color: #999;
+        }
+
+        /* 버튼 컨테이너 스타일 */
+        .button-container {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        /* 버튼 스타일 */
+        .button-container input[type="submit"],
+        .button-container .cancel-button {
+            background-color: #FF885B;
+            color: #fff;
+            border: none;
+            padding: 12px 30px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin: 0 10px;
+        }
+
+        /* 취소 버튼 별도 스타일 */
+        .button-container .cancel-button {
+            background-color: #ccc;
+            color: #333;
+        }
+
+        /* 버튼 호버 효과 */
+        .button-container input[type="submit"]:hover {
+            background-color: #e07a4d;
+        }
+
+        .button-container .cancel-button:hover {
+            background-color: #999;
+        }
+
+        /* 폼 하단 추가 링크 스타일 */
+        .form-footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .form-footer a {
+            color: #FF885B;
+            text-decoration: none;
+            margin: 0 10px;
+            transition: color 0.3s;
+        }
+
+        .form-footer a:hover {
+            color: #e07a4d;
+        }
+        /* 이메일 찾기 결과 메시지 스타일 */
+        .result-message {
+            text-align: center;
+            font-size: 16px;
+            color: #333;
+            margin-top: 20px;
+        }
+
+        .result-message.success {
+            color: green;
+        }
+
+        .result-message.error {
+            color: red;
+        }
+    </style>
+</head>
+
+<!-- 헤더: 로고와 네비게이션 -->
+<header layout.fragment="header"></header>
+<body layout:fragment="content">
+<!-- 메인 콘텐츠: 이메일 찾기 폼 -->
+<div class="main-content">
+    <div class="subtitle">
+        <h2>이메일 찾기</h2>
+        <img th:src="@{/images/main_logo.png}" alt="Main Logo">
+        <p class="description">이메일을 찾기 위해 필요한 정보를 입력해 주세요.</p>
+    </div>
+
+    <!-- 오류 메시지 표시 -->
+    <div th:if="${errorMessage}" class="result-message error" th:text="${errorMessage}"></div>
+    <!-- 이메일 찾기 성공 시 이메일 표시 -->
+    <div th:if="${foundEmail}" class="result-message success">
+        <p>찾으신 이메일은 다음과 같습니다:</p>
+        <p th:text="${foundEmail}"></p>
+    </div>
+
+    <form th:action="@{/findemail}" th:object="${findEmailDTO}" method="post" onsubmit="return validateForm()">
+        <div class="form-group">
+            <label for="nickname">닉네임</label>
+            <input type="text" id="nickname" name="nickname" th:field="*{nickname}" placeholder="가입 시 입력한 닉네임을 입력해 주세요. Ex) 홍길동" required>
+        </div>
+        <div class="form-group">
+            <label for="contact">연락처</label>
+            <input type="tel" id="contact" name="contact" th:field="*{phoneNumber}" placeholder="'-'를 포함한 연락처를 입력해 주세요. Ex) 010-1234-5678" required pattern="^[0-9\-+() ]+$" title="유효한 연락처를 입력해 주세요.">
+        </div>
+        <div class="button-container">
+            <input type="submit" value="이메일 찾기">
+            <button type="button" class="cancel-button" onclick="resetForm()">취소</button>
+        </div>
+        <!-- 버튼 아래에 추가된 링크 -->
+        <p class="form-footer">
+            로그인에 문제가 있나요?<br>
+            <a th:href="@{/signup}">회원가입</a>
+            <a th:href="@{/findemail}">ID 찾기</a>
+            <a th:href="@{/reset/password}">PW 초기화</a>
+        </p>
+    </form>
+</div>
+<!-- 스크립트 -->
+<script>
+    // 간단한 폼 검증 함수
+    function validateForm() {
+        const name = document.getElementById('name').value.trim();
+        const contact = document.getElementById('contact').value.trim();
+
+        if (name === '' || contact === '') {
+            alert('모든 필드를 채워주세요.');
+            return false;
+        }
+
+        // 연락처 형식 검증 (정규식 이미 pattern 속성으로 설정됨)
+        const contactPattern = /^[0-9\-+() ]+$/;
+        if (!contactPattern.test(contact)) {
+            alert('올바른 연락처 형식을 입력해주세요.');
+            return false;
+        }
+        return true;
+    }
+    function resetForm() {
+        // 페이지를 새로고침하여 폼을 초기화
+        window.location.href = '/login';
+    }
+</script>
+</body>
+<!-- 푸터 섹션 -->
+<footer layout.fragment="footer"></footer>
+</html>

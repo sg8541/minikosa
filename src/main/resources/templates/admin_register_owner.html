@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragments/layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>사장 등록 | 먹코살코</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- 파비콘 설정 -->
+    <link rel="shortcut icon" th:href="@{/images/mini_logo.jpg}">
+    <link rel="stylesheet" href="/css/headerFooter.css">
+    <!-- 메인 스타일시트 -->
+    <style>
+        /* 관리자 페이지 스타일 */
+        #adminWrapper {
+            width: 800px;
+            margin: 50px auto; /* 상단 여백 유지 */
+            background-color: #fff;
+            padding: 30px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+
+        #adminWrapper h2 {
+            font-size: 28px;
+            color: #FF885B;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        /* 관리자 페이지의 이미지 스타일 수정 */
+        #adminWrapper img {
+            display: block;
+            margin: 0 auto 20px auto; /* 가운데 정렬 및 하단 여백 추가 */
+            width: 150px; /* 원하는 크기로 조정 */
+            height: auto;
+        }
+
+        .section {
+            margin-bottom: 30px;
+        }
+
+        .section h3 {
+            font-size: 20px;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .form-group input[type="text"] {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        .form-group input[type="button"],
+        .form-group button {
+            padding: 10px 20px;
+            background-color: #FF885B;
+            border: none;
+            color: #fff;
+            font-size: 14px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-top: 10px;
+            width: 100px;
+        }
+
+        .form-group input[type="button"]:hover,
+        .form-group button:hover {
+            background-color: #e07a4d;
+        }
+
+        .result-section {
+            margin-top: 20px;
+        }
+
+        .result-section h4 {
+            font-size: 16px;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .result-section ul {
+            list-style: none;
+        }
+
+        .result-section ul li {
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-bottom: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .result-section ul li:hover {
+            background-color: #f1f1f1;
+        }
+
+        /* 선택된 항목 박스 스타일 */
+        .selected-box {
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            padding: 10px;
+            margin-top: 10px;
+            background-color: #f9f9f9;
+            position: relative;
+        }
+
+        .selected-box .remove-btn {
+            position: absolute;
+            top: 5px;
+            right: 10px;
+            background: none;
+            border: none;
+            color: #ff4d4d;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        /* 버튼 컨테이너 스타일 */
+        .button-container {
+            display: flex;
+            justify-content: center;
+            gap: 20px; /* 버튼 간 간격 추가 */
+            margin-top: 40px;
+        }
+
+        .button-container .add-button,
+        .button-container .register-button,
+        .button-container .match-button {
+            background-color: #FF885B;
+            border: none;
+            color: white;
+            padding: 12px 30px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .button-container .match-button {
+            background-color: #FF885B; /* 매칭하기 버튼 */
+        }
+
+        .button-container .add-button:hover,
+        .button-container .match-button:hover {
+            background-color: #e07a4d;
+        }
+
+        .button-container .register-button:hover {
+            background-color: #5941a9;
+        }
+
+
+        /* 선택된 박스 스타일 */
+        .selected-box {
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            padding: 10px;
+            margin-top: 10px;
+            background-color: #f9f9f9;
+            position: relative;
+        }
+
+        .selected-box .remove-btn {
+            position: absolute;
+            top: 5px;
+            right: 10px;
+            background: none;
+            border: none;
+            color: #ff4d4d;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+    <!-- 헤더: 로고와 네비게이션 -->
+<header layout.fragment="header"></header>
+<body layout:fragment="content">
+    <div class="container">
+        <!-- 관리자 페이지 섹션 -->
+        <div id="adminWrapper">
+            <h2>사장 등록 페이지</h2>
+            <img th:src="@{/images/main_logo.png}" alt="Main Logo">
+            <p class="description">가게의 사장님을 등록해 주세요.</p>
+            <!-- 사용자 검색 섹션 -->
+            <div class="section">
+                <h3>사용자 검색</h3>
+                <div class="form-group">
+                    <label for="searchEmail">이메일로 검색:</label>
+                    <input type="text" id="searchEmail" placeholder="사용자 이메일 입력">
+                    <input type="button" value="검색" onclick="searchUser()" />
+                </div>
+                <div class="result-section" id="userResults">
+                    <h4>검색 결과:</h4>
+                    <ul id="userList">
+                        <!-- 검색된 사용자 목록 -->
+                    </ul>
+                </div>
+            </div>
+
+            <!-- 가게 검색 섹션 -->
+            <div class="section">
+                <h3>가게 검색</h3>
+                <div class="form-group">
+                    <label for="searchStore">가게 이름으로 검색:</label>
+                    <input type="text" id="searchStore" placeholder="가게 이름 입력">
+                    <input type="button" value="검색" onclick="searchStore()" />
+                </div>
+                <div class="result-section" id="storeResults">
+                    <h4>검색 결과:</h4>
+                    <ul id="storeList">
+                        <!-- 검색된 가게 목록 표시 -->
+                    </ul>
+                </div>
+            </div>
+
+            <!-- 매칭 섹션 -->
+            <div class="section">
+                <h3>사장과 가게 매칭</h3>
+                <div class="form-group">
+                    <label>선택된 사용자:</label>
+                    <div id="selectedUserBox" class="selected-box">
+                        선택된 사용자가 없습니다.
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>선택된 가게:</label>
+                    <div id="selectedStoreBox" class="selected-box">
+                        선택된 가게가 없습니다.
+                    </div>
+                </div>
+                <div class="button-container">
+                    <button class="match-button" onclick="assignOwner()">매칭하기</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 스크립트 -->
+    <script>
+        let selectedUser = null;
+        let selectedStore = null;
+
+        // 사용자 검색 함수
+        function searchUser() {
+            const email = document.getElementById('searchEmail').value.trim();
+            const userList = document.getElementById('userList');
+            userList.innerHTML = '';
+
+            if (email === '') {
+                alert('이메일을 입력해주세요.');
+                return;
+            }
+
+            fetch(`/admin/search/users?email=${encodeURIComponent(email)}`)
+                .then(response => response.json())
+                .then(users => {
+                    if (users.length === 0) {
+                        userList.innerHTML = '<li>검색 결과가 없습니다.</li>';
+                        return;
+                    }
+
+                    users.forEach(user => {
+                        const li = document.createElement('li');
+                        li.textContent = `${user.name} (${user.nickname}) - ${user.email} - ${user.phoneNumber}`;
+                        li.onclick = () => selectUser(user);
+                        userList.appendChild(li);
+                    });
+                })
+                .catch(error => {
+                    console.error('Error fetching users:', error);
+                });
+        }
+
+        // 사용자 선택 함수
+        function selectUser(user) {
+            selectedUser = user;
+            const selectedUserBox = document.getElementById('selectedUserBox');
+            selectedUserBox.innerHTML = `
+            <button class="remove-btn" onclick="removeUser()">×</button>
+            <strong>${user.name} (${user.nickname})</strong><br>
+            이메일: ${user.email}<br>
+            연락처: ${user.phoneNumber}
+        `;
+        }
+
+        // 사용자 제거 함수
+        function removeUser() {
+            selectedUser = null;
+            const selectedUserBox = document.getElementById('selectedUserBox');
+            selectedUserBox.innerHTML = '선택된 사용자가 없습니다.';
+        }
+
+        // 가게 제거 함수
+        function removeStore() {
+            selectedStore = null;
+            const selectedStoreBox = document.getElementById('selectedStoreBox');
+            selectedStoreBox.innerHTML = '선택된 가게가 없습니다.';
+        }
+
+        // 가게 검색 함수 수정
+        function searchStore() {
+            const storeName = document.getElementById('searchStore').value.trim();
+            const storeList = document.getElementById('storeList');
+            storeList.innerHTML = '';
+
+            if (storeName === '') {
+                alert('가게 이름을 입력해주세요.');
+                return;
+            }
+
+            fetch(`/admin/search/stores?storeName=${encodeURIComponent(storeName)}`)
+                .then(response => response.json())
+                .then(stores => {
+                    if (stores.length === 0) {
+                        storeList.innerHTML = '<li>검색 결과가 없습니다.</li>';
+                        return;
+                    }
+
+                    stores.forEach(store => {
+                        const li = document.createElement('li');
+                        li.textContent = `${store.storeName} - ${store.roadAddress}`;
+                        li.onclick = () => selectStore(store);
+                        storeList.appendChild(li);
+                    });
+                })
+                .catch(error => {
+                    console.error('Error fetching stores:', error);
+                });
+        }
+
+        // 가게 선택 함수
+        function selectStore(store) {
+            selectedStore = store;
+            const selectedStoreBox = document.getElementById('selectedStoreBox');
+            selectedStoreBox.innerHTML = `
+            <button class="remove-btn" onclick="removeStore()">×</button>
+            <strong>${store.storeName}</strong><br>
+            주소: ${store.roadAddress}
+        `;
+        }
+
+        // 매칭 함수
+        function assignOwner() {
+            if (!selectedUser || !selectedStore) {
+                alert('사용자와 가게를 모두 선택해주세요.');
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('storeId', selectedStore.storeId);
+            formData.append('ownerId', selectedUser.memberId);
+
+            fetch('/admin/assign/owner', {
+                method: 'POST',
+                body: formData
+            })
+                .then(response => {
+                    if (response.ok) {
+                        alert('사장님이 가게에 성공적으로 매칭되었습니다.');
+                        // 매칭 후 이동
+                        window.location.href = '/content';
+                    } else {
+                        response.text().then(text => {
+                            alert('매칭 실패: ' + text);
+                        });
+                    }
+                })
+                .catch(error => {
+                    console.error('Error assigning owner:', error);
+                    alert('매칭 중 오류가 발생했습니다.');
+                });
+        }
+    </script>
+</body>
+<!-- 푸터 섹션 -->
+<footer layout.fragment="footer"></footer>
+</html>

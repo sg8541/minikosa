@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragments/layout}">
+
+<head>
+    <meta charset="UTF-8">
+    <title>가게 등록 | 먹코살코</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- 파비콘 설정 -->
+    <link rel="shortcut icon" th:href="@{/images/mini_logo.jpg}">
+
+    <!-- 카카오맵 API -->
+    <script type="text/javascript" src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=913010ecf61096ff085a9717807d98df&libraries=services"></script>
+    <!-- Daum Postcode 서비스 -->
+    <script src="https://ssl.daumcdn.net/dmaps/map_js_init/postcode.v2.js"></script>
+
+    <!-- 메인 스타일시트 -->
+    <link rel="stylesheet" href="/css/headerFooter.css">
+    <style>
+        /* 기본 리셋 및 스타일 */
+
+
+        /* 메인 콘텐츠 스타일 */
+        .main-content {
+            width: 800px;
+            margin: 75px auto;
+            background-color: #fff;
+            padding: 30px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            margin-bottom: 100px;
+        }
+
+        .main-content h2 {
+            font-size: 28px;
+            color: #FF885B;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .main-content img {
+            display: block;
+            margin: 0 auto 20px auto;
+            width: 150px;
+            height: auto;
+        }
+
+        .description {
+            text-align: center;
+            font-size: 15px;
+            color: #666;
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+
+        /* 폼 요소 스타일 */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #FF885B;
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="email"],
+        .form-group input[type="password"],
+        .form-group input[type="number"],
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1.5px solid #FF885B;
+            border-radius: 5px;
+            font-size: 16px;
+            resize: none;
+            box-sizing: border-box;
+            font-family: "맑은 고딕", sans-serif;
+        }
+
+        .form-group textarea {
+            height: 200px;
+            line-height: 1.5;
+        }
+
+        /* 파일 업로드 숨기기 */
+        .hidden-file-input {
+            display: none;
+        }
+
+        /* 커스텀 파일 버튼 스타일 */
+        .custom-file-button {
+            display: inline-block;
+            background-color: #FF885B;
+            color: #fff;
+            border: none;
+            padding: 8px 16px;
+            font-size: 14px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-top: 10px;
+            text-align: center;
+            text-decoration: none;
+        }
+
+        .custom-file-button:hover {
+            background-color: #e07a4d;
+        }
+
+        /* 파일명 표시 스타일 */
+        .file-name {
+            display: inline-block;
+            margin-left: 10px;
+            font-size: 14px;
+            color: #333;
+            vertical-align: middle;
+        }
+
+        /* 플레이스홀더 스타일 */
+        textarea::placeholder {
+            white-space: pre-line;
+            color: #999;
+        }
+
+        /* 버튼 컨테이너 스타일 */
+        .button-container {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        /* 버튼 스타일 */
+        .button-container input[type="submit"],
+        .button-container .cancel-button {
+            background-color: #FF885B;
+            color: #fff;
+            border: none;
+            padding: 12px 30px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin: 0 10px;
+        }
+
+        /* 취소 버튼 별도 스타일 */
+        .button-container .cancel-button {
+            background-color: #ccc;
+            color: #333;
+        }
+
+        /* 버튼 호버 효과 */
+        .button-container input[type="submit"]:hover {
+            background-color: #e07a4d;
+        }
+
+        .button-container .cancel-button:hover {
+            background-color: #999;
+        }
+
+        /* 메뉴 추가 버튼 스타일 */
+        .add-menu-button {
+            background-color: #FF885B;
+            color: #fff;
+            border: none;
+            padding: 8px 16px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-top: 10px;
+        }
+
+        .add-menu-button:hover {
+            background-color: #e07a4d;
+        }
+
+        /* 메뉴 섹션 스타일 */
+        .menu-section {
+            margin-bottom: 20px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #f1f1f1;
+            position: relative;
+        }
+
+        .menu-section .remove-menu {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: none;
+            border: none;
+            color: #ff4d4d;
+            font-size: 18px;
+            cursor: pointer;
+        }
+
+        /* 우편번호 찾기 버튼 스타일 */
+        .postcode-button {
+            background-color: #FF885B;
+            color: #fff;
+            border: none;
+            padding: 8px 16px;
+            font-size: 14px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-top: 10px;
+        }
+
+        .postcode-button:hover {
+            background-color: #e07a4d;
+        }
+
+        /* 이미지 미리보기 스타일 */
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+    </style>
+</head>
+<header layout.fragment="header"></header>
+<body layout:fragment="content">
+<!-- 헤더: 로고와 네비게이션 -->
+<!-- 메인 콘텐츠: 가게 등록 폼 -->
+<div class="main-content">
+    <h2>가게 등록</h2>
+    <img th:src="@{/images/main_logo.png}" alt="Main Logo">
+    <p class="description">새로운 가게를 등록하여 맛집 정보를 공유하세요.</p>
+    <!-- 오류 메시지 표시 -->
+    <div th:if="${errorMessage}" class="description" th:text="${errorMessage}"></div>
+    <!-- 성공 메시지 표시 -->
+    <div th:if="${successMessage}" class="description" th:text="${successMessage}"></div>
+    <form th:action="@{/admin/create/store}" th:object="${storeDTO}" method="post" enctype="multipart/form-data" onsubmit="return validateForm()">
+        <!-- 가게 이름 -->
+        <div class="form-group">
+            <label for="store_name">가게 이름</label>
+            <input type="text" id="store_name" name="storeName" th:field="*{storeName}" placeholder="가게 이름을 입력해 주세요." required>
+        </div>
+        <!-- 가게 주소 및 우편번호 검색 -->
+        <div class="form-group">
+            <label for="store_address">가게 주소</label>
+            <input type="text" id="store_address" name="roadAddress" th:field="*{roadAddress}" placeholder="가게 주소를 입력해 주세요." required readonly>
+            <button type="button" class="postcode-button" onclick="openPostcode()">우편번호 찾기</button>
+        </div>
+        <!-- 우편번호 -->
+        <div class="form-group">
+            <label for="postcode">우편번호</label>
+            <input type="text" id="postcode" name="postcode" th:field="*{postcode}" placeholder="우편번호" readonly>
+        </div>
+        <!-- 상세주소 및 참고항목 -->
+        <div class="form-group">
+            <label for="detailAddress">상세주소</label>
+            <input type="text" id="detailAddress" name="detailAddress" th:field="*{detailAddress}" placeholder="상세주소" disabled>
+        </div>
+        <div class="form-group">
+            <label for="extraAddress">참고항목</label>
+            <input type="text" id="extraAddress" name="extraAddress" th:field="*{extraAddress}" placeholder="참고항목" disabled>
+        </div>
+        <!-- 카카오맵 표시 영역 -->
+        <div id="map" style="width:100%;height:350px;margin-bottom:20px;"></div>
+        <!-- 카테고리 선택 -->
+        <div class="form-group">
+            <label for="category_id">카테고리</label>
+            <select id="category_id" name="categoryId" th:field="*{categoryId}" required>
+                <option value="">카테고리를 선택하세요.</option>
+                <option value="1">한식</option>
+                <option value="2">일식</option>
+                <option value="3">중식</option>
+                <option value="4">양식</option>
+                <option value="5">카페</option>
+                <option value="6">디저트</option>
+            </select>
+        </div>
+        <!-- 가게 사진 업로드 및 미리보기 -->
+        <div class="form-group">
+            <label>가게 사진</label>
+            <button type="button" class="custom-file-button" id="store_photo_button">가게 사진 선택</button>
+            <span class="file-name" id="store_photo_filename">선택된 파일 없음</span>
+            <input type="file" id="store_photo" name="storePhoto" accept="image/*" class="hidden-file-input" onchange="previewStorePhoto(this)">
+            <img id="store_photo_preview" src="#" alt="가게 사진 미리보기" style="display: none; width: 150px; height: auto; margin-top: 10px; border: 1px solid #ddd; border-radius: 5px;">
+        </div>
+        <!-- 영업 시간 -->
+        <div class="time-group">
+            <div class="form-group">
+                <label for="opening_time">영업 시작 시간</label>
+                <input type="time" id="opening_time" name="openingTime" th:field="*{openingTime}">
+            </div>
+            <div class="form-group">
+                <label for="closing_time">영업 종료 시간</label>
+                <input type="time" id="closing_time" name="closingTime" th:field="*{closingTime}">
+            </div>
+        </div>
+        <!-- 홈페이지 정보 -->
+        <div class="form-group">
+            <label for="website_info">홈페이지 정보</label>
+            <input type="text" id="website_info" name="websiteInfo" th:field="*{websiteInfo}" placeholder="홈페이지 URL을 입력해 주세요.">
+        </div>
+        <!-- 전화번호 -->
+        <div class="form-group">
+            <label for="phone_number">전화번호</label>
+            <input type="text" id="phone_number" name="contactNumber" th:field="*{contactNumber}" placeholder="전화번호를 입력해 주세요.">
+        </div>
+        <!-- 가게 설명 -->
+        <div class="form-group">
+            <label for="store_description">가게 설명</label>
+            <textarea id="store_description" name="storeDescription" th:field="*{storeDescription}" placeholder="가게에 대한 설명을 입력해 주세요." required></textarea>
+        </div>
+        <!-- 메뉴 섹션 -->
+        <div class="form-group">
+            <label>메뉴</label>
+            <div id="menus">
+                <!-- 초기 메뉴 섹션 -->
+                <div class="menu-section" data-index="0">
+                    <button type="button" class="remove-menu" onclick="removeMenu(this)">×</button>
+                    <div class="form-group">
+                        <label>메뉴 이름</label>
+                        <input type="text" name="menuDTOs[0].menuName" placeholder="메뉴 이름을 입력해 주세요." required>
+                    </div>
+                    <div class="form-group">
+                        <label>가격</label>
+                        <input type="number" name="menuDTOs[0].price" placeholder="가격을 입력해 주세요." required>
+                    </div>
+                    <div class="form-group">
+                        <label>메뉴 사진</label>
+                        <button type="button" class="custom-file-button menu_photo_button" onclick="triggerMenuPhoto(this)">메뉴 사진 선택</button>
+                        <span class="file-name">선택된 파일 없음</span>
+                        <input type="file" name="menuDTOs[0].storePhoto" accept="image/*" class="hidden-file-input menu_photo_input" onchange="previewMenuPhoto(this)">
+                        <img class="menu_photo_preview" src="#" alt="메뉴 사진 미리보기" style="display: none; width: 100px; height: auto; margin-top: 10px; border: 1px solid #ddd; border-radius: 5px;">
+                    </div>
+                </div>
+            </div>
+            <button type="button" class="add-menu-button" onclick="addMenu()">+ 메뉴 추가</button>
+        </div>
+        <!-- 버튼 컨테이너 -->
+        <div class="button-container">
+            <input type="submit" value="등록">
+            <button type="button" class="cancel-button" onclick="location.href='@{/admin/create/store}'">취소</button>
+        </div>
+    </form>
+</div>
+<!-- 스크립트 -->
+<script>
+    let menuIndex = 1; // 메뉴 인덱스 초기값 설정
+
+    // 가게 사진 버튼 클릭 시 파일 입력 트리거
+    document.getElementById('store_photo_button').addEventListener('click', function() {
+        document.getElementById('store_photo').click();
+    });
+
+    // 메뉴 사진 버튼 클릭 시 파일 입력 트리거
+    function triggerMenuPhoto(button) {
+        const fileInput = button.nextElementSibling.nextElementSibling;
+        fileInput.click();
+    }
+
+    // 가게 사진 미리보기 및 파일명 표시 함수
+    function previewStorePhoto(input) {
+        const preview = document.getElementById('store_photo_preview');
+        const filenameSpan = document.getElementById('store_photo_filename');
+        const file = input.files[0];
+
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                preview.src = e.target.result;
+                preview.style.display = 'block';
+            }
+            reader.readAsDataURL(file);
+            filenameSpan.textContent = file.name;
+        } else {
+            preview.src = '#';
+            preview.style.display = 'none';
+            filenameSpan.textContent = '선택된 파일 없음';
+        }
+    }
+
+    // 메뉴 사진 미리보기 및 파일명 표시 함수
+    function previewMenuPhoto(input) {
+        const preview = input.nextElementSibling;
+        const filenameSpan = input.previousElementSibling;
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                preview.src = e.target.result;
+                preview.style.display = 'block';
+            }
+            reader.readAsDataURL(input.files[0]);
+            filenameSpan.textContent = input.files[0].name;
+        } else {
+            preview.src = '#';
+            preview.style.display = 'none';
+            filenameSpan.textContent = '선택된 파일 없음';
+        }
+    }
+
+    // 메뉴 추가 함수
+    function addMenu() {
+        const menus = document.getElementById('menus');
+
+        const menuSection = document.createElement('div');
+        menuSection.className = 'menu-section';
+        menuSection.setAttribute('data-index', menuIndex);
+        menuSection.innerHTML = `
+            <button type="button" class="remove-menu" onclick="removeMenu(this)">×</button>
+            <div class="form-group">
+                <label>메뉴 이름</label>
+                <input type="text" name="menuDTOs[${menuIndex}].menuName" placeholder="메뉴 이름을 입력해 주세요." required>
+            </div>
+            <div class="form-group">
+                <label>가격</label>
+                <input type="number" name="menuDTOs[${menuIndex}].price" placeholder="가격을 입력해 주세요." required>
+            </div>
+            <div class="form-group">
+                <label>메뉴 사진</label>
+                <button type="button" class="custom-file-button menu_photo_button" onclick="triggerMenuPhoto(this)">메뉴 사진 선택</button>
+                <span class="file-name">선택된 파일 없음</span>
+                <input type="file" name="menuDTOs[${menuIndex}].storePhoto" accept="image/*" class="hidden-file-input menu_photo_input" onchange="previewMenuPhoto(this)">
+                <img class="menu_photo_preview" src="#" alt="메뉴 사진 미리보기" style="display: none; width: 100px; height: auto; margin-top: 10px; border: 1px solid #ddd; border-radius: 5px;">
+            </div>
+        `;
+        menus.appendChild(menuSection);
+        menuIndex++; // 인덱스 증가
+    }
+
+    // 메뉴 제거 함수
+    function removeMenu(button) {
+        const menuSection = button.parentElement;
+        menuSection.remove();
+
+        // 인덱스 재정렬
+        const menuSections = document.querySelectorAll('.menu-section');
+        menuIndex = 0; // 인덱스 초기화
+        menuSections.forEach((section) => {
+            section.setAttribute('data-index', menuIndex);
+            // 메뉴 이름 필드
+            const menuNameInput = section.querySelector('input[name^="menuDTOs["][name$="].menuName"]');
+            menuNameInput.setAttribute('name', `menuDTOs[${menuIndex}].menuName`);
+            // 가격 필드
+            const priceInput = section.querySelector('input[name^="menuDTOs["][name$="].price"]');
+            priceInput.setAttribute('name', `menuDTOs[${menuIndex}].price`);
+            // 메뉴 사진 필드
+            const menuPhotoInput = section.querySelector('input[name^="menuDTOs["][name$="].storePhoto"]');
+            menuPhotoInput.setAttribute('name', `menuDTOs[${menuIndex}].storePhoto`);
+            menuIndex++;
+        });
+    }
+
+    // 폼 유효성 검사 함수
+    function validateForm() {
+        const storeName = document.getElementById('store_name').value.trim();
+        const storeAddress = document.getElementById('store_address').value.trim();
+        const categoryId = document.getElementById('category_id').value;
+
+        if (storeName === '' || storeAddress === '' || categoryId === '') {
+            alert('가게 이름, 가게 주소, 카테고리를 모두 입력해 주세요.');
+            return false;
+        }
+
+        return true;
+    }
+
+    // 카카오맵 API 초기화
+    let map;
+    let geocoder;
+    let marker;
+    let infowindow;
+
+    function initMap() {
+        map = new kakao.maps.Map(document.getElementById('map'), {
+            center: new kakao.maps.LatLng(37.5665, 126.9780),
+            level: 3
+        });
+
+        geocoder = new kakao.maps.services.Geocoder();
+    }
+
+    // 우편번호 찾기 팝업 열기
+    function openPostcode() {
+        new daum.Postcode({
+            oncomplete: function(data) {
+                // 선택한 주소 정보를 해당 필드에 입력
+                document.getElementById('postcode').value = data.zonecode;
+
+                // 상세주소 및 참고항목 필드 활성화
+                document.getElementById('detailAddress').disabled = false;
+                document.getElementById('extraAddress').disabled = false;
+
+                // 가게 주소 필드에 도로명 주소를 입력
+                document.getElementById('store_address').value = data.roadAddress;
+
+                // 지도를 업데이트하여 마커를 표시
+                const address = data.roadAddress;
+                const storeName = document.getElementById('store_name').value.trim();
+
+                if (address !== '' && storeName !== '') {
+                    geocoder.addressSearch(address, function(result, status) {
+                        if (status === kakao.maps.services.Status.OK) {
+                            const coords = new kakao.maps.LatLng(result[0].y, result[0].x);
+                            map.setCenter(coords);
+
+                            // 기존 마커 제거
+                            if (marker) {
+                                marker.setMap(null);
+                            }
+
+                            // 마커 표시
+                            marker = new kakao.maps.Marker({
+                                map: map,
+                                position: coords
+                            });
+
+                            // 인포윈도우로 가게 이름 표시
+                            if (infowindow) {
+                                infowindow.close();
+                            }
+
+                            infowindow = new kakao.maps.InfoWindow({
+                                content: `<div style="width:150px;text-align:center;padding:6px 0;">${storeName}</div>`
+                            });
+                            infowindow.open(map, marker);
+                        } else {
+                            alert('주소 검색에 실패했습니다. 정확한 주소를 입력해 주세요.');
+                        }
+                    });
+                }
+            }
+        }).open();
+    }
+
+    // 페이지 로드 시 맵 초기화
+    window.onload = initMap;
+</script>
+</body>
+<!-- 푸터 섹션 -->
+<footer layout.fragment="footer"></footer>
+
+</html>

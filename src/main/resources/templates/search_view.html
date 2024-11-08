@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragments/layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>검색결과 | 먹코살코</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+          crossorigin="anonymous">
+    <!-- 파비콘 설정 -->
+    <link rel="shortcut icon" th:href="@{/images/mini_logo.jpg}">
+    <!-- 커스텀 CSS -->
+    <link rel="stylesheet" href="/css/search.css">
+    <link rel="stylesheet" href="/css/headerFooter.css">
+</head>
+<header layout.fragment="header"></header>
+<!-- 헤더: 로고와 네비게이션 -->
+<body layout:fragment="content">
+<div id="wrapHome" class="search_wrap">
+    <hr class="hide">
+    <div class="wrap_search_header">
+        <div class="wrap_search">
+            <h2 class="screen_out">검색 키워드 입력 창</h2>
+            <div class="search_form">
+                <form id="searchForm" method="get" action="/search" accept-charset="utf-8">
+                    <input type="text" name="q" class="txt_search" id="txt_search" title="검색어입력"
+                           placeholder="검색어를 입력해 주세요." maxlength="20"
+                           th:value="${searchResult.query}">
+                    <input type="hidden" value="latest" name="sort" id="sortInput">
+                    <input type="hidden" value="store" name="type" id="typeInput">
+                    <button type="submit" class="btn btn-search">검색</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div id="searchWrap">
+        <div class="search_header">
+            <div class="tab_search">
+                <ul id="contentsTab" class="inner_tab">
+                    <li class="on"><a href="#mArticle" class="articleTab link_tab">식당</a></li>
+                    <li><a href="#mReview" class="magazineTab link_tab">리뷰</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 식당 검색 결과 -->
+        <div id="mArticle" style="display: block;">
+            <div id="resultArticle" class="search_result" style="display: block; margin-top: 0px;">
+                <div class="result_search">
+                    <div class="search-result">
+                        <span>가게 검색 결과 : </span>
+                        <span th:text="${searchResult.storeCount}">0</span>
+                        <span> 건</span>
+                    </div>
+                    <div class="result-sort">
+                        <a href="#" onclick="submitSortForm('latest', 'store')"><span id="latest">최신순</span></a>
+                        <a href="#" onclick="submitSortForm('rating', 'store')"><span id="rating">평점순</span></a>
+                    </div>
+                </div>
+
+                <!-- 가게 검색 결과가 있을 때 -->
+                <section class="food_section layout_padding-bottom" th:if="${searchResult.storeCount} > 0">
+                    <div class="container">
+                        <!-- 가게 검색 결과 -->
+                        <div class="filters-content">
+                            <div class="row grid">
+                                <th:block th:each="store : ${searchResult.storeResults}">
+                                    <div th:class="'col-sm-6 col-lg-4 all ' + ${store.categoryName}">
+                                        <div class="box">
+                                            <a th:href="@{'/store/' + ${store.storeId}}">
+                                                <div class="img-box">
+                                                    <img th:src="@{${store.storePhoto}}" alt="가게 사진" onerror="this.onerror=null; this.src='/images/main_logo.png';"/>
+                                                </div>
+                                                <div class="detail-box">
+                                                    <h5 th:text="${store.storeName}">가게 이름</h5>
+                                                    <div class="detail-desc-info">
+                                                        <p th:text="${store.storeDescription}">가게 설명</p>
+                                                        <div class="detail-rate">
+                                                            <ul>
+                                                                <li>
+                                                                    <img width="48" height="48"
+                                                                         src="https://img.icons8.com/color/48/filled-star--v1.png"
+                                                                         alt="filled-star--v1" class="icon_star"/>
+                                                                </li>
+                                                                <li>
+                                                                    <span class="rate_num" th:text="${store.ratingAvg}">4.5</span>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </th:block>
+                            </div>
+                        </div>
+                        <!--/*   <div class="btn-box">
+                                <a href="#none" class="link_more">
+                                   <span class="txt_more">가게 더보기</span>
+                                   <span class="ico_comm ico_more"></span>
+                               </a>
+                           </div>  */-->
+                    </div>
+                </section>
+
+                <!-- 가게 검색 결과가 없을 때 -->
+                <div class="no-results" th:if="${searchResult.storeCount} == 0">
+                    <p>가게 검색 결과가 없습니다.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 리뷰 검색 결과 -->
+        <div id="mReview" style="display: none;">
+            <div id="resultReview" class="search_result" style="display: block; margin-top: 0px;">
+                <div class="result_search">
+                    <div class="search-result">
+                        <span>리뷰 검색 결과 : </span>
+                        <span th:text="${searchResult.reviewCount}">0</span>
+                        <span> 건</span>
+                    </div>
+                    <div class="result-sort">
+                        <a href="#" onclick="submitSortForm('latest', 'review')"><span id="latest-r">최신순</span></a>
+                        <a href="#" onclick="submitSortForm('rating', 'review')"><span id="rating-r">평점순</span></a>
+                    </div>
+                </div>
+
+                <!-- 리뷰 검색 결과가 있을 때 -->
+                <th:block th:if="${searchResult.reviewCount} > 0">
+                    <th:block th:each="review : ${searchResult.reviewResults}">
+                        <div class="review-box">
+                            <div class="review-header">
+                                <div class="review-info">
+                                    <a th:href="@{'/store/' + ${review.storeId}}" class="search_store_name"
+                                       th:text="${review.storeName}">가게명</a>
+                                    <div class="grade_star">
+                                        <img width="48" height="48"
+                                             src="https://img.icons8.com/color/48/filled-star--v1.png"
+                                             alt="filled-star--v1" class="icon_star"/>
+                                        <em class="num_rate" th:text="${review.rating}">5</em>
+                                        <span class="text_score">점</span>
+                                    </div>
+                                </div>
+                                <div class="review-actions">
+                                    <th:block th:if="${#strings.isEmpty(session.loggedInUser)}">
+                                        <a th:href="@{'/store/' + ${review.storeId}}" class="comment_user_button">리뷰 보러가기</a>
+                                    </th:block>
+                                    <th:block th:if="${session.loggedInUser != null}">
+                                        <th:block th:switch="${session.loggedInUser.roleId}">
+                                            <!--/* 관리자 상태 (roleId가 2일 때) */-->
+                                            <th:block th:case="2">
+                                                <form method="post" th:action="|store/${review.storeId}/review/${review.memberId}|">
+                                                    <input type="hidden" name="reviewId" th:value="${review.reviewId}">
+                                                    <input type="hidden" name="memberId" th:value="${review.memberId}">
+                                                <button type="submit" class="comment_user_button" onclick="del(event);">삭제</button>
+                                                </form>
+                                                <a th:href="@{'/store/' + ${review.storeId}}" class="comment_user_button">리뷰 보러가기</a>
+                                            </th:block>
+                                            <!--/* 일반 유저 상태 (roleId가 2가 아닐 때) */-->
+                                            <th:block th:case="*">
+                                                <a th:href="@{'/store/' + ${review.storeId}}" class="comment_user_button">리뷰 보러가기</a>
+                                            </th:block>
+                                        </th:block>
+                                    </th:block>
+                                </div>
+                            </div>
+                            <div class="comment_info">
+                                <p class="text_comment">
+                                    <span th:text="${review.reviewText}">리뷰 내용</span>
+                                </p>
+                            </div>
+                            <div class="unit_info">
+                                <span class="text_item">작성자(닉네임) : </span>
+                                <span class="text_username" th:text="${review.memberNickname}">닉네임</span>
+                                <span class="bar"></span>
+                                <span class="text_item">별점 : </span>
+                                <span class="text_desc" th:text="${review.rating}">별점</span>
+                                <span class="bar"></span>
+                                <span class="text_item">작성일 : </span>
+                                <span class="time_write" th:text="${#dates.format(review.createdAt, 'yyyy.MM.dd')}">2024.09.30.</span>
+                            </div>
+                        </div>
+                    </th:block>
+                    <!--/* <div class="btn-box">
+                        <a href="#none" class="link_more">
+                            <span class="txt_more">후기 더보기</span>
+                            <span class="ico_comm ico_more"></span>
+                        </a>
+                    </div> */-->
+                </th:block>
+
+                <!-- 리뷰 검색 결과가 없을 때 -->
+                <div class="no-results" th:if="${searchResult.reviewCount} == 0">
+                    <p>리뷰 검색 결과가 없습니다.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 숨겨진 정렬 폼 -->
+        <form id="sortForm" method="get" action="/search" style="display: none;">
+            <input type="hidden" name="q" th:value="${searchResult.query}">
+            <input type="hidden" name="sort" id="sortInput" value="latest">
+            <input type="hidden" name="type" id="typeInput" value="store">
+        </form>
+
+        <!-- JavaScript -->
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"
+                integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p"
+                crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"
+                integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF"
+                crossorigin="anonymous"></script>
+        <script>
+            // Function to submit the sort form with specified sort type and content type
+            function submitSortForm(sortType, type) {
+                document.getElementById('sortInput').value = sortType;
+                document.getElementById('typeInput').value = type;
+                document.getElementById('searchForm').submit();
+            }
+
+            // Event listener for tab clicks
+            document.getElementById('contentsTab').addEventListener('click', function (e) {
+                if (e.target && e.target.nodeName === "A") {
+                    e.preventDefault();
+                    // Remove 'on' class from all tabs
+                    document.querySelectorAll('#contentsTab li').forEach(li => li.classList.remove('on'));
+                    // Add 'on' class to the clicked tab
+                    e.target.parentElement.classList.add('on');
+
+                    // Show/hide content based on the clicked tab
+                    if (e.target.classList.contains('articleTab')) {
+                        document.getElementById('mArticle').style.display = 'block';
+                        document.getElementById('mReview').style.display = 'none';
+                        document.getElementById('typeInput').value = 'store';
+                    } else if (e.target.classList.contains('magazineTab')) {
+                        document.getElementById('mArticle').style.display = 'none';
+                        document.getElementById('mReview').style.display = 'block';
+                        document.getElementById('typeInput').value = 'review';
+                    }
+                }
+            });
+
+            // Function to get URL parameters
+            function getUrlParameter(name) {
+                name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+                var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+                var results = regex.exec(location.search);
+                return results === null ? null : decodeURIComponent(results[1].replace(/\+/g, ' '));
+            }
+
+            // On page load, set the active tab based on the 'type' parameter
+            window.onload = function() {
+                var type = getUrlParameter('type');
+                // Remove 'on' class from all tabs
+                document.querySelectorAll('#contentsTab li').forEach(li => li.classList.remove('on'));
+
+                if (type === 'review') {
+                    // Activate the 리뷰 (Review) tab
+                    var reviewTab = document.querySelector('.magazineTab');
+                    if (reviewTab) {
+                        reviewTab.parentElement.classList.add('on');
+                        document.getElementById('mArticle').style.display = 'none';
+                        document.getElementById('mReview').style.display = 'block';
+                        document.getElementById('typeInput').value = 'review';
+                    }
+                } else {
+                    // Default to 식당 (Store) tab
+                    var storeTab = document.querySelector('.articleTab');
+                    if (storeTab) {
+                        storeTab.parentElement.classList.add('on');
+                        document.getElementById('mArticle').style.display = 'block';
+                        document.getElementById('mReview').style.display = 'none';
+                        document.getElementById('typeInput').value = 'store';
+                    }
+                }
+            }
+
+            // 현재 URL에서 'sort' 파라미터 값 가져오기
+            const urlParams = new URLSearchParams(window.location.search);
+            const sortValue = urlParams.get('sort');
+
+            if (sortValue === 'latest') {
+                document.getElementById('latest').style.fontWeight = 'bold';
+                document.getElementById('latest').style.color = '#000000';
+                document.getElementById('rating').style.fontWeight = 'normal';
+                document.getElementById('rating').style.color = '';
+                document.getElementById('latest-r').style.fontWeight = 'bold';
+                document.getElementById('latest-r').style.color = '#000000';
+                document.getElementById('rating-r').style.fontWeight = 'normal';
+                document.getElementById('rating-r').style.color = '';
+            } else {
+                document.getElementById('latest').style.fontWeight = 'normal';
+                document.getElementById('latest').style.color = '';
+                document.getElementById('rating').style.fontWeight = 'bold';
+                document.getElementById('rating').style.color = '#000000';
+                document.getElementById('latest-r').style.fontWeight = 'normal';
+                document.getElementById('latest-r').style.color = '';
+                document.getElementById('rating-r').style.fontWeight = 'bold';
+                document.getElementById('rating-r').style.color = '#000000';
+            }
+
+            function del(e) {
+                e.preventDefault();
+                const form = e.target.closest('form');
+                if (confirm('해당 리뷰를 삭제하시겠습니까?')) {
+                    form.submit();
+               }
+            }
+
+
+
+
+        </script>
+</body>
+<!-- 푸터 섹션 -->
+<footer layout.fragment="footer"></footer>
+</html>
