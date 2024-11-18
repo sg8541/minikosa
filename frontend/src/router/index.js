@@ -10,6 +10,7 @@ import EditProfile from '../views/EditProfile.vue'
 import AdminSuggestionList from '../views/admin/AdminSuggestionList.vue'
 import AdminSuggestionView from '../views/admin/AdminSuggestionView.vue'
 import RegisterOwner from '../views/admin/RegisterOwner.vue'
+import StoreView from '../views/stores/StoreView.vue'
 // 다른 뷰를 추가로 임포트
 
 import { useAuthStore } from '../stores/auth'
@@ -64,12 +65,6 @@ const routes = [
     path: '/admin/suggestion/:id',
     name: 'AdminSuggestionView',
     component: AdminSuggestionView,
-    meta: { requiresAuth: true, requiresAdmin: true },
-  },
-  {
-    path: '/admin/register/owner',
-    name: 'RegisterOwner',
-    component: RegisterOwner,
     meta: { requiresAuth: true, requiresAdmin: true },
   },
   // 기타 라우트
